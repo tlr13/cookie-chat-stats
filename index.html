@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WhatsApp Chat Statistics &amp; Evidence Dashboard — Cookie 🐱 &amp; iMung</title>
-  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <title>WhatsApp Chat Statistics & Evidence Dashboard (Cookie 🐱 & iMung)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style id="standalone-theme">
     :root {
@@ -19,6 +18,11 @@
       --success: #16a34a;
       --error: #dc2626;
       --warning: #d97706;
+    }
+    body {
+      background-color: var(--background);
+      color: var(--foreground);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
   </style>
 </head>
@@ -70,10 +74,14 @@
           <span class="font-semibold text-[var(--muted-foreground)]">1. ASSUMPTION STATISTIC</span>
           <span id="kpi-a-total" class="font-mono text-xs px-1.5 py-0.5 rounded bg-[var(--background)]">58 total</span>
         </div>
-        <div class="flex items-baseline justify-between">
+        <div class="flex items-baseline justify-between gap-1">
           <div>
-            <span id="kpi-a-wrong-pct" class="text-2xl font-bold font-mono text-[var(--error)]">91.4%</span>
-            <span id="kpi-a-wrong-cnt" class="text-xs text-[var(--muted-foreground)] ml-1">Wrong (53)</span>
+            <span id="kpi-a-wrong-pct" class="text-xl font-bold font-mono text-[var(--error)]">58.6%</span>
+            <span id="kpi-a-wrong-cnt" class="text-xs text-[var(--muted-foreground)] block">Wrong (34)</span>
+          </div>
+          <div class="text-center">
+            <span id="kpi-a-unp-pct" class="text-sm font-bold font-mono text-[var(--warning)]">32.8%</span>
+            <span id="kpi-a-unp-cnt" class="text-xs text-[var(--muted-foreground)] block">Unproven (19)</span>
           </div>
           <div class="text-right">
             <span id="kpi-a-corr-pct" class="text-sm font-bold font-mono text-[var(--success)]">8.6%</span>
@@ -82,9 +90,10 @@
         </div>
         <div class="w-full h-2 rounded-full bg-[var(--background)] overflow-hidden flex">
           <div id="bar-a-corr" class="h-full bg-[var(--success)]" style="width: 8.6%"></div>
-          <div id="bar-a-wrong" class="h-full bg-[var(--error)]" style="width: 91.4%"></div>
+          <div id="bar-a-unp" class="h-full bg-[var(--warning)]" style="width: 32.8%"></div>
+          <div id="bar-a-wrong" class="h-full bg-[var(--error)]" style="width: 58.6%"></div>
         </div>
-        <p class="text-xs text-[var(--muted-foreground)]">Assumptions about iMung proven Wrong vs Correct</p>
+        <p class="text-xs text-[var(--muted-foreground)]">Proven Wrong vs Unproven (Pending Proof) vs Correct</p>
       </div>
 
       <!-- KPI 2 -->
@@ -416,7 +425,7 @@
           <div>
             <label class="block text-[var(--muted-foreground)] mb-1">Category Sheet</label>
             <select id="new-cat" onchange="updateModalFields()" class="w-full px-2.5 py-1.5 rounded bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)]">
-              <option value="assumptions">1. Assumption Statistic (Correct / Wrong)</option>
+              <option value="assumptions">1. Assumption Statistic (Correct / Wrong / Unproven)</option>
               <option value="requests">2. Cookie's Request (Yes / No)</option>
               <option value="agreements">3. Agree vs Disagree</option>
             </select>
@@ -425,6 +434,7 @@
             <label class="block text-[var(--muted-foreground)] mb-1">Verdict</label>
             <select id="new-verdict" class="w-full px-2.5 py-1.5 rounded bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)]">
               <option value="0">Wrong / No / Disagree</option>
+              <option value="2">Unproven (Pending Proof — Assumptions)</option>
               <option value="1">Correct / Yes / Agree</option>
             </select>
           </div>
@@ -481,38 +491,38 @@
 
   <script>
 const A_DATA = [
-[1, 5348, 5357, "2026-11-01", "19:53", "17:23", "I played MLBB until 10 PM IST and ignored her on purpose", 0, "Fell asleep while waiting in the MLBB lobby; latest match history shows the last match played was with her", "MLBB Match History + Sleep Log", "Match History Screenshot / Sleep Log (22:00 IST)", "", "Ignoring that you were online in MLBB till 10 pm", "i fall asleep while in the lobby, if we play again i would wake up by the vibration of match found. even the previous rank i already sleep a", [[5347, "19:43", "17:13", 1, "stay?"]]],
-[2, 5252, 5258, "2026-10-31", "17:59", "15:29", "I always sleep during the daytime too whenever she asks to play", 0, "I don't sleep during the daytime; MLBB match history shows I normally play morning till evening", "MLBB Match History", "Daytime Activity / Match History", "", "Even during day I asked it's always like this", "no, during day i dont sleep", [[5251, "17:35", "15:05", 1, "sorry :("]]],
+[1, 5348, 5357, "2026-11-01", "19:53", "17:23", "I played MLBB until 10 PM IST and ignored her on purpose", 2, "Fell asleep while waiting in the MLBB lobby; latest match history shows the last match played was with her", "MLBB Match History + Sleep Log", "Match History Screenshot / Sleep Log (22:00 IST)", "", "Ignoring that you were online in MLBB till 10 pm", "i fall asleep while in the lobby, if we play again i would wake up by the vibration of match found. even the previous rank i already sleep a", [[5347, "19:43", "17:13", 1, "stay?"]]],
+[2, 5252, 5258, "2026-10-31", "17:59", "15:29", "I always sleep during the daytime too whenever she asks to play", 2, "I don't sleep during the daytime; MLBB match history shows I normally play morning till evening", "MLBB Match History", "Daytime Activity / Match History", "", "Even during day I asked it's always like this", "no, during day i dont sleep", [[5251, "17:35", "15:05", 1, "sorry :("]]],
 [3, 5253, 5259, "2026-10-31", "17:59", "15:29", "I ignored her messages all day since morning on Oct 31", 0, "Almost the entire city had a total electricity & signal blackout since morning; proven via official PLN ULP Melak WhatsApp channel announcement", "PLN Official Channel Link", "https://whatsapp.com/channel/0029VbDRN7v96H4PRKv3Lw2F", "https://whatsapp.com/channel/0029VbDRN7v96H4PRKv3Lw2F", "Today you didn't even revert me since morning", "my almost entire city is blackout since morning, no signal also", [[5252, "17:59", "15:29", 0, "Even during day I asked it's always like this"]]],
 [4, 5262, 5268, "2026-10-31", "18:16", "15:46", "The city-wide blackout was just a 'coincidence' / excuse like previous days", 0, "Daily rotating outages only affect a few villages by turn, whereas Oct 31 was an entire-city outage announced by PLN", "PLN Official Channel Link", "https://whatsapp.com/channel/0029VbDRN7v96H4PRKv3Lw2F", "https://whatsapp.com/channel/0029VbDRN7v96H4PRKv3Lw2F", "Last time also this happened", "no, today only that entire city", [[5261, "18:16", "15:46", 1, "you can check my mlbb history usually play around morning till evening"]]],
 [5, 5315, 5319, "2026-11-01", "01:04", "22:34", "I enjoyed lying and ignoring her as usual on Oct 31 night", 0, "Was genuinely offline due to city blackout and regular sleep schedule, not lying or ignoring", "Chat History + PLN Link", "Chat Timestamps & PLN Announcement", "", "Enjoyed lying and ignoring me as usual", "i dont ignore you", [[5314, "00:55", "22:25", 0, "Why lie"]]],
-[6, 5324, 5329, "2026-11-01", "15:52", "13:22", "I went away / traveled somewhere without telling her on Nov 1", 0, "I didn't go away anywhere; I stayed at home", "Home Activity Log", "Additional Proof (Nov 1, 2026)", "", "That you couldn't tell me that you will be away", "i am not away, i stay at home", [[5323, "15:51", "13:21", 0, "In game...weren't you online and playing you got stars too"]]],
+[6, 5324, 5329, "2026-11-01", "15:52", "13:22", "I went away / traveled somewhere without telling her on Nov 1", 2, "I didn't go away anywhere; I stayed at home", "Home Activity Log", "Additional Proof (Nov 1, 2026)", "", "That you couldn't tell me that you will be away", "i am not away, i stay at home", [[5323, "15:51", "13:21", 0, "In game...weren't you online and playing you got stars too"]]],
 [7, 5327, 5333, "2026-11-01", "15:52", "13:22", "I hate her and want to maintain distance from her", 0, "I don't hate her; I consistently reply and play together when awake and free", "Chat History", "110,000+ Total Chat Messages", "", "Idk what you get from it...but if you hate me this much just maintain your distance from me... instead of lying", "i dont hate you", [[5326, "15:52", "13:22", 0, "You are doing it all in purpose"]]],
 [8, 5354, 5362, "2026-11-01", "20:05", "17:35", "I posted a story and deliberately didn't tell her before going offline", 0, "Posted before knowing the internet/electricity would go down completely", "Chat History", "Timestamp comparison before blackout", "", "Also that you posted story but couldn't tell me", "yeah i didnt know the internet would gone entirely", [[5353, "19:55", "17:25", 0, "I cropped some part now😅😅😅"]]],
 [9, 11, 16, "2026-09-06", "18:15", "15:45", "I previously said I only 'heard' the anime was good rather than saying it is good", 0, "In earlier chat I stated 'it's good', not 'I've heard it's good'", "Chat History", "Earlier WhatsApp chat log", "", "But last week I talked about it and you said you hv heard its good\n\nWhats your review then", "i said its good, not i've heard its good", [[10, "18:15", "15:45", 0, "Even this kissasian for c dramas is not working since past 3 days"]]],
-[10, 2593, 2610, "2026-09-29", "16:04", "13:34", "I lied about falling asleep early after 5:30 PM IST (8:00 PM GMT+8)", 0, "Went to the mosque at 5:30 PM IST (8:00 PM GMT+8) and fell asleep right after getting home before even opening my phone", "Sleep & Activity Log", "Sleep & Activity Log (Sept 28-29)", "", "You want me to believe you fell asleep at 5pm?", "its not 5 p.m. 5:30 P.M. i go to mosque, after go home, i am too sleepy not even open phone already sleep", [[2592, "16:04", "13:34", 0, "It's the same..."]]],
-[11, 2594, 2611, "2026-09-29", "16:05", "13:35", "I ignored her because she asked if there was an issue between us", 0, "I was already asleep before opening WhatsApp, not avoiding her question", "Sleep & Activity Log", "Sleep & Activity Log", "", "You ignored me because I asked you if there is any issue and why do you ignore me", "no", [[2593, "16:04", "13:34", 0, "You want me to believe you fell asleep at 5pm?"]]],
+[10, 2593, 2610, "2026-09-29", "16:04", "13:34", "I lied about falling asleep early after 5:30 PM IST (8:00 PM GMT+8)", 2, "Went to the mosque at 5:30 PM IST (8:00 PM GMT+8) and fell asleep right after getting home before even opening my phone", "Sleep & Activity Log", "Sleep & Activity Log (Sept 28-29)", "", "You want me to believe you fell asleep at 5pm?", "its not 5 p.m. 5:30 P.M. i go to mosque, after go home, i am too sleepy not even open phone already sleep", [[2592, "16:04", "13:34", 0, "It's the same..."]]],
+[11, 2594, 2611, "2026-09-29", "16:05", "13:35", "I ignored her because she asked if there was an issue between us", 2, "I was already asleep before opening WhatsApp, not avoiding her question", "Sleep & Activity Log", "Sleep & Activity Log", "", "You ignored me because I asked you if there is any issue and why do you ignore me", "no", [[2593, "16:04", "13:34", 0, "You want me to believe you fell asleep at 5pm?"]]],
 [12, 2604, 2613, "2026-09-29", "16:12", "13:42", "I gaslight her into believing lies about my sleep schedule", 0, "My sleep schedule (~9:00-9:30 PM IST / 11:30 PM-12:00 AM GMT+8) is consistent across 17 months of chat timestamps", "Chat Timestamp Analysis", "17-Month Chat Hourly Distribution", "", "Yeah but you gaslight me into believing your lies", "its not lie", [[2603, "16:10", "13:40", 0, "And then you will realise how much stupid someone has to be to accept these lies"]]],
-[13, 2717, 2720, "2026-09-30", "18:18", "15:48", "I am busy 80% of the time and only sleep 20% (4-5 hours)", 0, "I sleep 7-8 hours per day (29%-33% of 24 hours), not 4-5 hours (20%)", "Sleep & Activity Log", "Digital Wellbeing + Sleep Timestamps", "", "80% of the time you are", "i dont think so, even my sleep is atleast 30%", [[2716, "17:50", "15:20", 1, "currently i am not busy"]]],
-[14, 2797, 2808, "2026-10-01", "14:02", "11:32", "When phone usage screenshots proved I wasn't on my phone at night, she assumed I use my computer at night instead", 0, "Already sent Digital Wellbeing album [msgs #2787-2790] showing zero night phone usage; I was already sleeping at night, not using my computer", "Digital Wellbeing Screenshot + Sleep Log", "Digital Wellbeing Album + Additional Proof", "", "You use your computer at night", "how to proof i am not using computer at night?", [[2796, "14:02", "11:32", 0, "Maybe you don't use your phone"]]],
+[13, 2717, 2720, "2026-09-30", "18:18", "15:48", "I am busy 80% of the time and only sleep 20% (4-5 hours)", 2, "I sleep 7-8 hours per day (29%-33% of 24 hours), not 4-5 hours (20%)", "Sleep & Activity Log", "Digital Wellbeing + Sleep Timestamps", "", "80% of the time you are", "i dont think so, even my sleep is atleast 30%", [[2716, "17:50", "15:20", 1, "currently i am not busy"]]],
+[14, 2797, 2808, "2026-10-01", "14:02", "11:32", "When phone usage screenshots proved I wasn't on my phone at night, she assumed I use my computer at night instead", 2, "Already sent Digital Wellbeing album [msgs #2787-2790] showing zero night phone usage; I was already sleeping at night, not using my computer", "Digital Wellbeing Screenshot + Sleep Log", "Digital Wellbeing Album + Additional Proof", "", "You use your computer at night", "how to proof i am not using computer at night?", [[2796, "14:02", "11:32", 0, "Maybe you don't use your phone"]]],
 [15, 3018, 3023, "2026-10-03", "22:52", "20:22", "I was acting aloof on purpose towards her red hair dye joke", 0, "I genuinely didn't realize it was a joke and thought she naturally/actually dyed it", "Chat History", "Chat messages #2969-#3041", "", "But you really are acting so aloof for my jokes", "i am not acting", [[3017, "22:05", "19:35", 1, "so you dont have to worry about it"]]],
 [16, 3098, 3103, "2026-10-05", "13:10", "10:40", "I don't want her interacting with my Instagram", 0, "Clarified it was a misunderstanding and she is completely welcome to interact on Instagram", "Chat History", "Chat message #3103", "", "If you don't want to text just say it lol \n\nDidn't I stop interacting with your insta because you didn't want me to\n\nSo I can do this too bu", "i think there is misunderstanding, you can interacting with me in insta no problem", [[3097, "13:09", "10:39", 0, "Talking less too"]]],
 [17, 3106, 3111, "2026-10-05", "15:22", "12:52", "I find her toxic or a narcissist", 0, "Explicitly confirmed 'no', I do not think she is toxic or narcissistic", "Chat History", "Chat message #3111", "", "Maybe you find me toxic or narcissist", "no", [[3105, "15:21", "12:51", 0, "If you are hiding things that means you do not want me to see or interact with them"]]],
-[18, 3137, 3143, "2026-10-06", "01:21", "22:51", "I talk less to her because I am talking more to other people in another language", 0, "The amount I talk daily is the exact same; I am naturally quiet unless spoken to", "Chat History", "Chat message #3143", "", "Maybe you talk to people of other language more now", "no, the amount of i talk in daily is the same", [[3136, "01:21", "22:51", 0, "It improved a lot...earlier"]]],
-[19, 3186, 3191, "2026-10-06", "19:30", "17:00", "I was still working late in the evening at 7:30 PM GMT+8", 0, "Already went home in the evening; normal office hours end before evening", "Chat History", "Chat message #3191", "", "Are you still working?", "no, go home at evening", [[3185, "18:49", "16:19", 0, "In which year you started working?"]]],
-[20, 3209, 3214, "2026-10-07", "00:03", "21:33", "I made up excuses when she asked to play at 00:03 AM GMT+8 (9:33 PM IST)", 0, "She messaged at 00:03 AM GMT+8 (midnight my time); I was already asleep", "Chat Timestamp & Sleep Log", "Timestamp 00:03 GMT+8 + Sleep Log", "", "I asked to play and again excuses", "sorry, i already sleep :(((", [[3210, "00:03", "21:33", 0, "Let it be then better not ask"]]],
-[21, 3644, 3649, "2026-10-10", "22:49", "20:19", "My family texts me frequently on social media because I post every few days", 0, "My family is not active on social media and only texts when there is something important", "Chat History", "Chat message #3649", "", "But you post something every few days? And they send text or something from time to time?", "my family doesnt active in social media. They dont text me if there is nothing important", [[3643, "22:48", "20:18", 0, "You don't know skating too?"]]],
+[18, 3137, 3143, "2026-10-06", "01:21", "22:51", "I talk less to her because I am talking more to other people in another language", 2, "The amount I talk daily is the exact same; I am naturally quiet unless spoken to", "Chat History", "Chat message #3143", "", "Maybe you talk to people of other language more now", "no, the amount of i talk in daily is the same", [[3136, "01:21", "22:51", 0, "It improved a lot...earlier"]]],
+[19, 3186, 3191, "2026-10-06", "19:30", "17:00", "I was still working late in the evening at 7:30 PM GMT+8", 2, "Already went home in the evening; normal office hours end before evening", "Chat History", "Chat message #3191", "", "Are you still working?", "no, go home at evening", [[3185, "18:49", "16:19", 0, "In which year you started working?"]]],
+[20, 3209, 3214, "2026-10-07", "00:03", "21:33", "I made up excuses when she asked to play at 00:03 AM GMT+8 (9:33 PM IST)", 2, "She messaged at 00:03 AM GMT+8 (midnight my time); I was already asleep", "Chat Timestamp & Sleep Log", "Timestamp 00:03 GMT+8 + Sleep Log", "", "I asked to play and again excuses", "sorry, i already sleep :(((", [[3210, "00:03", "21:33", 0, "Let it be then better not ask"]]],
+[21, 3644, 3649, "2026-10-10", "22:49", "20:19", "My family texts me frequently on social media because I post every few days", 2, "My family is not active on social media and only texts when there is something important", "Chat History", "Chat message #3649", "", "But you post something every few days? And they send text or something from time to time?", "my family doesnt active in social media. They dont text me if there is nothing important", [[3643, "22:48", "20:18", 0, "You don't know skating too?"]]],
 [22, 3659, 3666, "2026-10-11", "14:16", "11:46", "I know how to skate / use a skateboard or hoverboard", 0, "I don't know skating; roads in my area aren't suited for it", "Chat History", "Chat message #3648 & #3666", "", "I thought you knew skating and stuff", "wkwkkwkw no", [[3658, "13:09", "10:39", 0, "Maybe there are people like you and your family who contact each other sometimes... So far I have not came acr"]]],
 [23, 3690, 3696, "2026-10-11", "20:28", "17:58", "I was upset and ignoring her on Oct 11 evening", 0, "Was not upset or ignoring her at all", "Chat History", "Chat message #3696", "", "Are you ignoring me? \n👉👈\nI did say that it's fine every family is different and didn't disrespect your family...\nWhy are you upset 🥺", "i am not ignoring you wkkwkw, what make you think i upset", [[3689, "20:22", "17:52", 0, "Today is Sunday didn't go in the morning?"]]],
 [24, 3977, 3982, "2026-10-14", "19:05", "16:35", "I was deliberately trying to talk less to her on Oct 14", 0, "Not trying to talk less; my message volume is directly proportional to hers", "Chat Timestamp Analysis", "Message count correlation in chat log", "", "Are you trying to talk less to me 🤔", "no wkwkkw", [[3976, "18:25", "15:55", 0, "What's the point of keeping it all in inventory"]]],
 [25, 3988, 3996, "2026-10-14", "22:46", "20:16", "I don't want to gift her anything in MLBB", 0, "I had already agreed and said 'okay' to gifting her in message #3980", "Chat History", "Chat message #3980 & #3996", "", "Just say you don't want to gift me anything 😔", "no, i already said okay i gift you", [[3987, "22:46", "20:16", 0, "Only you"]]],
-[26, 4280, 4286, "2026-10-18", "17:08", "14:38", "I hid my Instagram story from her for an entire month", 0, "It was only for a few days, not a month, and was already unhidden", "Chat History", "Chat message #4286 & #4825", "", "But you his your story for a month from me", "i dont think its a month, only few days. But dont worry, its not happen again", [[4281, "17:08", "14:38", 0, "And even if I ask you don't share anything"]]],
+[26, 4280, 4286, "2026-10-18", "17:08", "14:38", "I hid my Instagram story from her for an entire month", 2, "It was only for a few days, not a month, and was already unhidden", "Chat History", "Chat message #4286 & #4825", "", "But you his your story for a month from me", "i dont think its a month, only few days. But dont worry, its not happen again", [[4281, "17:08", "14:38", 0, "And even if I ask you don't share anything"]]],
 [27, 4560, 4563, "2026-10-23", "21:07", "18:37", "I hate her, ignore her, and hold grudges because we had arguments", 0, "An argument is just a difference of opinion without negative emotion or hate", "Chat History", "Chat messages #4563, #4574, #4575, #4588", "", "Why do you hate me", "i am not wkkwkw", [[4559, "20:32", "18:02", 0, "Well it's fine not everyone like cats"]]],
 [28, 4711, 4717, "2026-10-25", "22:23", "19:53", "I never agree to anything she says and always say no when she asks to play", 0, "I literally agreed with her a few messages above, and accepted the majority of her play invites", "Chat History", "Request & Agreement statistics across full chat", "", "Anyways you don't agree to anything but even if I ask to play sometimes even in them you only have excuses", "i literally agree with you few message above", [[4710, "22:21", "19:51", 0, "Are you or not?"]]],
 [29, 4802, 4809, "2026-10-26", "18:43", "16:13", "I said 'let's play' twice and disappeared within 10 minutes", 0, "It was only once late at night when I fell asleep", "Chat History", "Chat timestamps on Oct 25-26", "", "You said let's play twice and then disappeared within 10 mins of it", "wasnt it only once last night? and it is already night, so i fall asleep easily", [[4801, "18:26", "15:56", 1, "what did i deny, Cookie?"]]],
 [30, 4807, 4812, "2026-10-26", "18:48", "16:18", "I only invite/call her to play around 6 AM when she can't play", 0, "Invited her to play at around 12:00 PM IST (2:30 PM GMT+8) that very day, not early morning", "Chat History", "Call/Invite timestamp at ~12:00 IST", "", "Also when I ask to ask me to play or something you only ask or call around 6 am where either I am sleeping or got up to worship", "i invite you to play today at around 12:00 IST, not in early morning", [[4806, "18:44", "16:14", 0, "Anything I ask"]]],
 [31, 4875, 4883, "2026-10-27", "12:38", "10:08", "I was offline because my girlfriend was angry that I talk to Cookie", 0, "I don't have a girlfriend (confirmed in #2005) and was working in another village (with photo proof sent in #4892)", "Chat Photo Proof", "Field work photo sent in message #4892", "", "Is your gf angry that you talk to me?", "no, i was in other village", [[4874, "12:31", "10:01", 0, "Why block me"]]],
-[32, 4900, 4904, "2026-10-27", "17:15", "14:45", "My job is fixing truck tires", 0, "My job at Bapenda is checking taxable objects, not fixing truck tires", "Chat History", "Chat message #4904", "", "Your job is to fix truck tires?", "no wkwkkw, we check taxable objects", [[4899, "17:15", "14:45", 0, "Not sambal then just chillies"]]],
+[32, 4900, 4904, "2026-10-27", "17:15", "14:45", "My job is fixing truck tires", 2, "My job at Bapenda is checking taxable objects, not fixing truck tires", "Chat History", "Chat message #4904", "", "Your job is to fix truck tires?", "no wkwkkw, we check taxable objects", [[4899, "17:15", "14:45", 0, "Not sambal then just chillies"]]],
 [33, 5103, 5107, "2026-10-30", "14:48", "12:18", "I only talked to her to learn English from her and ignored her for 1.5 months", 0, "Learning English was not the only reason, and being quiet before getting close is my normal personality with everyone", "Chat History", "Chat messages #5107 & #5119", "", "Yeah you only talked to me to learn English from me...I figured it out", "not only", [[5102, "14:45", "12:15", 0, "Met as in person?"]]],
 [34, 5224, 5226, "2026-10-30", "22:23", "19:53", "I would get offended and react angrily if someone called my religion wrong or mocked it", 0, "I remain calm and neutral even if someone criticizes or mocks it", "Chat History", "Chat messages #5226 & #5233", "", "If someone will call your religion wrong you will feel offended", "no, i am okay with that", [[5223, "22:23", "19:53", 1, "yeah, exactly"]]],
 [35, 5538, 5543, "2026-11-02", "19:03", "16:33", "I get annoyed whenever she asks too many questions", 0, "I do not get annoyed by her questions", "Chat History", "Chat messages #5534 & #5543", "", "You do...if I ask too many questions sometimes your response seems annoyed 🤭", "i dont think so", [[5537, "19:03", "16:33", 0, "Is there something that irritates you?"]]],
@@ -525,20 +535,20 @@ const A_DATA = [
 [42, 5984, 5993, "2026-11-06", "20:09", "17:39", "I bully her on purpose when I misunderstood her Indonesian typo", 0, "I genuinely didn't recognize the misspelled word as Indonesian", "Chat History", "Chat messages #5992 & #5993", "", "You bully me on purpose", "no", [[5983, "20:06", "17:36", 0, "Just because of typo you deny knowing the entire word 😔"]]],
 [43, 5999, 6006, "2026-11-06", "21:00", "18:30", "I don't even know what my housemates do in their free time or their hobbies", 1, "Confirmed: 'i dont :(' — even though we are friends, I don't track what they do in their free time", "Chat History", "Chat messages #6006 & #6010", "", "You do not even know what your housemates do in their free time? Or their hobbies etc? Are you friends with them or just housemates", "i dont :(", [[5998, "21:00", "18:30", 0, "Yeah but if I can I will try"]]],
 [44, 6053, 6056, "2026-11-07", "00:15", "21:45", "I play Selena well in MLBB", 1, "Confirmed: 'yeah i know 😎'", "MLBB Match History", "Chat message #6056", "", "You play selena well 😋😋😋", "yeah i know 😎", [[6052, "00:14", "21:44", 0, "Anyways it was fun 🤩🤩"]]],
-[45, 6113, 6120, "2026-11-07", "13:50", "11:20", "My uncle's catfish is kept as a pet and not eaten as food", 0, "I have eaten my uncle's farmed catfish many times (there are multiple ponds, not just the 30-year-old catfish)", "Chat History", "Chat messages #6120 & #6146", "", "😒😒😒 he is not food just like your uncle's catfish is not food", "i ate my uncle's catfish many time", [[6112, "13:48", "11:18", 0, "What do guys even do with long lashes 🥴"]]],
-[46, 6237, 6245, "2026-11-08", "12:38", "10:08", "I travel to a different place every single weekend", 0, "Most weekends I stay at home", "Chat History", "Chat message #6245", "", "Why you travel to different place every weekend \nWhat's the point of having weekends then", "i dont think so, most weekend i stay at home", [[6236, "12:38", "10:08", 0, "I fell asleep anyways wkwkw"]]],
+[45, 6113, 6120, "2026-11-07", "13:50", "11:20", "My uncle's catfish is kept as a pet and not eaten as food", 2, "I have eaten my uncle's farmed catfish many times (there are multiple ponds, not just the 30-year-old catfish)", "Chat History", "Chat messages #6120 & #6146", "", "😒😒😒 he is not food just like your uncle's catfish is not food", "i ate my uncle's catfish many time", [[6112, "13:48", "11:18", 0, "What do guys even do with long lashes 🥴"]]],
+[46, 6237, 6245, "2026-11-08", "12:38", "10:08", "I travel to a different place every single weekend", 2, "Most weekends I stay at home", "Chat History", "Chat message #6245", "", "Why you travel to different place every weekend \nWhat's the point of having weekends then", "i dont think so, most weekend i stay at home", [[6236, "12:38", "10:08", 0, "I fell asleep anyways wkwkw"]]],
 [47, 6253, 6262, "2026-11-08", "16:52", "14:22", "My internet doesn't work on most weekends", 0, "Most weekends my internet works fine; outages are occasional", "Chat History", "Weekend gaming & chat logs", "", "But most weekends your net doesn't work", "i dont think so, mostly it works", [[6252, "16:52", "14:22", 0, "I said putting blanket but keeping toes out"]]],
 [48, 6736, 6742, "2026-11-13", "19:04", "16:34", "I previously said I don't use a blanket", 1, "Confirmed: 'yeah its been months i dont use blanket' (only rarely when cold)", "Chat History", "Chat messages #6742 & #6752", "", "You said you don't use blanket", "yeah its been months i dont use blanket", [[6735, "18:53", "16:23", 1, "yeah"]]],
-[49, 6760, 6767, "2026-11-13", "22:33", "20:03", "I went back to ignoring her on Nov 13 night because she raised an issue", 0, "I was watching something and fell asleep without opening my phone at all", "Sleep & Activity Log", "Sleep & Activity Log (Nov 13 night)", "", "Back to ignoring me...\nFine...", "sorry was watching something then fall asleep, didnt open phone at all", [[6759, "22:30", "20:00", 0, "Where are you?"]]],
-[50, 6981, 6988, "2026-11-16", "10:41", "08:11", "I played our MLBB match unseriously while she did her best", 0, "I played my best and achieved a match rating score over 10.0", "MLBB Match History", "MLBB Match Result Screenshot (Score > 10.0)", "", "Here I do my best so I don't make you lose the game and you play it unseriously 😒", "i did my best also, got score more than 10.0", [[6980, "10:41", "08:11", 0, "😒😒😒😒"]]],
+[49, 6760, 6767, "2026-11-13", "22:33", "20:03", "I went back to ignoring her on Nov 13 night because she raised an issue", 2, "I was watching something and fell asleep without opening my phone at all", "Sleep & Activity Log", "Sleep & Activity Log (Nov 13 night)", "", "Back to ignoring me...\nFine...", "sorry was watching something then fall asleep, didnt open phone at all", [[6759, "22:30", "20:00", 0, "Where are you?"]]],
+[50, 6981, 6988, "2026-11-16", "10:41", "08:11", "I played our MLBB match unseriously while she did her best", 2, "I played my best and achieved a match rating score over 10.0", "MLBB Match History", "MLBB Match Result Screenshot (Score > 10.0)", "", "Here I do my best so I don't make you lose the game and you play it unseriously 😒", "i did my best also, got score more than 10.0", [[6980, "10:41", "08:11", 0, "😒😒😒😒"]]],
 [51, 7023, 7026, "2026-11-16", "19:58", "17:28", "I deny buying anything or doing anything for her willingly", 0, "I do many things for her willingly; I only declined items with extreme shipping/price inefficiency (like 4,000 INR for 1 bottle of milk)", "Chat History", "Chat messages #7026, #7053, #7070", "", "You deny me buying anything", "no", [[7022, "19:58", "17:28", 0, "Min only 5 k"]]],
 [52, 7031, 7037, "2026-11-16", "22:46", "20:16", "I got myself an Aspirant skin and never told her how to get skins the cheaper way", 0, "I explained the exact method at least 6 different times earlier in the chat (quoted directly as proof in messages #7045-#7052, starting from Sept 6 msg #25)", "Chat History", "Quoted proof messages #25, #7045-#7052", "", "You got yourself aspirant skin and didn't tell me how to get it in cheaper way...", "i told you many times", [[7030, "22:45", "20:15", 0, "So..spending money on me is not worth it for you?"]]],
 [53, 7101, 7106, "2026-11-17", "18:06", "15:36", "I deny everything she asks — '99% no' (or even '100% no, data speaks otherwise')", 0, "Actual chat data across all logged requests shows I say YES to the vast majority (>75%) of her requests, far from 99% No", "Full Chat Data Analysis", "Sheet 2: Request Yes/No Statistics", "", "But it is about you denying everything I ask", "not everything you ask i deny", [[7100, "18:06", "15:36", 0, "Yeah it can"]]],
 [54, 7238, 7248, "2026-11-19", "19:02", "16:32", "I have been much busier than usual on Nov 19", 0, "I was not busier than usual and even played MLBB matches that day", "MLBB Match History", "Chat messages #7248 & #7267", "", "More busy than usual", "am i? i didnt count the time precisely", [[7239, "19:02", "16:32", 0, "I am doing one meal a day challenge for 30 days"]]],
 [55, 7414, 7418, "2026-11-22", "09:04", "06:34", "I sleep 'so early' every day when I sleep around 9:00-9:30 PM IST", 0, "9:30 PM IST is 12:00 AM (midnight) in my timezone (GMT+8), which is normal bedtime, not early", "Timezone Math + Chat Log", "GMT+8 vs IST (+2.5 hours difference)", "", "Why sleep so early everyday", "its not early, its almost midnight here", [[7413, "09:04", "06:34", 0, "Today no sleep at night we play?"]]],
-[56, 7416, 7419, "2026-11-22", "09:09", "06:39", "If my other friends ask me to play, I stay up late for them", 0, "Even when my friends played games last night, I went to sleep at my usual time", "Sleep Log + MLBB Match History", "Sleep Log (Nov 21 night) + MLBB Match History", "", "If your other friends ask you stay up late", "no, last night my friend play game also and i sleep", [[7415, "09:05", "06:35", 0, "Stay up somedays?"]]],
+[56, 7416, 7419, "2026-11-22", "09:09", "06:39", "If my other friends ask me to play, I stay up late for them", 2, "Even when my friends played games last night, I went to sleep at my usual time", "Sleep Log + MLBB Match History", "Sleep Log (Nov 21 night) + MLBB Match History", "", "If your other friends ask you stay up late", "no, last night my friend play game also and i sleep", [[7415, "09:05", "06:35", 0, "Stay up somedays?"]]],
 [57, 7420, 7424, "2026-11-22", "10:09", "07:39", "I stay awake until 2:00 AM (or 12:00 AM IST / 2:30 AM GMT+8) watching things anyway", 0, "99.6% of my Sept-Nov 2026 messages stop before midnight GMT+8 (0.0% messages at 2-3 AM GMT+8), proving I am already asleep at that hour", "17-Month Chat Timestamp Log", "17-Month Chat Timestamp Distribution", "", "But you stay awake till 2 am anyways", "usually already sleep around 9 P.M. ist", [[7419, "09:34", "07:04", 1, "no, last night my friend play game also and i sleep"]]],
-[58, 7430, 7432, "2026-11-22", "10:23", "07:53", "I play late at night with my other friends often while ignoring her", 0, "My friends play almost every night while I am already sleeping; I very rarely play at night", "Sleep Log + MLBB Match History", "Sleep Log + MLBB Match History", "", "Yeah so you do play with them late night often", "not often", [[7429, "10:22", "07:52", 0, "It is for you"]]]
+[58, 7430, 7432, "2026-11-22", "10:23", "07:53", "I play late at night with my other friends often while ignoring her", 2, "My friends play almost every night while I am already sleeping; I very rarely play at night", "Sleep Log + MLBB Match History", "Sleep Log + MLBB Match History", "", "Yeah so you do play with them late night often", "not often", [[7429, "10:22", "07:52", 0, "It is for you"]]]
 ];
 const R_DATA = [
 [1, 5465, 5487, "2026-11-02", "12:56", "10:26", "Open iShowSpeed's Miles Morales cosplay post and see it", 1, "Opened the page and viewed the post (#5499: 'yeah i see it')", 1, "Just open the page and see?", "ohhh okok", [[5466, "12:56", "10:26", 0, "Wdym no 😒"]]],
@@ -748,7 +758,7 @@ let state = {
 // Load baked overrides (from exported HTML) or localStorage overrides if available
 try {
   const baked = window.__BAKED_OVERRIDES__;
-  const saved = localStorage.getItem('whatsapp_cookie_imung_overrides_v1');
+  const saved = localStorage.getItem('whatsapp_cookie_imung_overrides_v2');
   const parsed = saved ? JSON.parse(saved) : baked;
   if (parsed) {
     if (parsed.assumptions) state.assumptions = parsed.assumptions;
@@ -759,10 +769,11 @@ try {
 
 function persistState() {
   try {
-    localStorage.setItem('whatsapp_cookie_imung_overrides_v1', JSON.stringify({
+    localStorage.setItem('whatsapp_cookie_imung_overrides_v2', JSON.stringify({
       assumptions: state.assumptions,
       requests: state.requests,
-      agreements: state.agreements
+      agreements: state.agreements,
+      sleepSchedule: state.sleepSchedule
     }));
   } catch (e) {}
 }
@@ -772,18 +783,26 @@ function escapeHtml(s) {
 }
 
 function updateKPIs() {
-  // 1. Assumptions
+  // 1. Assumptions (0 = Wrong, 1 = Correct, 2 = Unproven)
   const aTot = state.assumptions.length;
   const aCorr = state.assumptions.filter(x => x.verdict === 1).length;
-  const aWrong = aTot - aCorr;
+  const aUnp = state.assumptions.filter(x => x.verdict === 2).length;
+  const aWrong = state.assumptions.filter(x => x.verdict === 0).length;
   const aCorrPct = aTot ? ((aCorr / aTot) * 100).toFixed(1) : '0.0';
+  const aUnpPct = aTot ? ((aUnp / aTot) * 100).toFixed(1) : '0.0';
   const aWrongPct = aTot ? ((aWrong / aTot) * 100).toFixed(1) : '0.0';
   document.getElementById('kpi-a-total').textContent = `${aTot} total`;
   document.getElementById('kpi-a-wrong-pct').textContent = `${aWrongPct}%`;
   document.getElementById('kpi-a-wrong-cnt').textContent = `Wrong (${aWrong})`;
+  const unpPctEl = document.getElementById('kpi-a-unp-pct');
+  const unpCntEl = document.getElementById('kpi-a-unp-cnt');
+  if (unpPctEl) unpPctEl.textContent = `${aUnpPct}%`;
+  if (unpCntEl) unpCntEl.textContent = `Unproven (${aUnp})`;
   document.getElementById('kpi-a-corr-pct').textContent = `${aCorrPct}%`;
   document.getElementById('kpi-a-corr-cnt').textContent = `Correct (${aCorr})`;
   document.getElementById('bar-a-corr').style.width = `${aCorrPct}%`;
+  const barUnpEl = document.getElementById('bar-a-unp');
+  if (barUnpEl) barUnpEl.style.width = `${aUnpPct}%`;
   document.getElementById('bar-a-wrong').style.width = `${aWrongPct}%`;
   document.getElementById('tab-assumptions').textContent = `1. Assumptions (${aTot})`;
 
@@ -850,7 +869,7 @@ function switchTab(tab) {
   filterControls.classList.remove('hidden');
 
   if (tab === 'assumptions') {
-    vf.innerHTML = `<option value="ALL">All Assumptions</option><option value="0">Wrong Only</option><option value="1">Correct Only</option>`;
+    vf.innerHTML = `<option value="ALL">All Assumptions</option><option value="0">Wrong Only (Proven)</option><option value="2">Unproven (Pending Proof)</option><option value="1">Correct Only</option>`;
     pf.classList.remove('hidden');
   } else if (tab === 'requests') {
     vf.innerHTML = `<option value="ALL">All Requests</option><option value="1">Answered Yes</option><option value="0">Answered No</option><option value="ORIG">Original 7 in Excel</option>`;
@@ -873,6 +892,7 @@ function getFilteredItems() {
   return list.filter(item => {
     if (vf === '0' && item.verdict !== 0) return false;
     if (vf === '1' && item.verdict !== 1) return false;
+    if (vf === '2' && item.verdict !== 2) return false;
     if (vf === 'ORIG' && !item.isOrig) return false;
     if (tab === 'assumptions' && pf !== 'ALL') {
       if (!(item.proofType || '').toLowerCase().includes(pf.toLowerCase())) return false;
@@ -923,9 +943,13 @@ function renderCurrentTable() {
     const isSel = item.no === (items[state.selectedIndex]?.no ?? items[0].no);
     let badgeHtml = '';
     if (tab === 'assumptions') {
-      badgeHtml = item.verdict === 1
-        ? `<span class="px-2 py-0.5 rounded font-bold bg-[var(--success)] text-[var(--primary-foreground)]">Correct</span>`
-        : `<span class="px-2 py-0.5 rounded font-bold bg-[var(--error)] text-[var(--primary-foreground)]">Wrong</span>`;
+      if (item.verdict === 1) {
+        badgeHtml = `<span class="px-2 py-0.5 rounded font-bold bg-[var(--success)] text-[var(--primary-foreground)]">Correct</span>`;
+      } else if (item.verdict === 2) {
+        badgeHtml = `<span class="px-2 py-0.5 rounded font-bold bg-[var(--warning)] text-[var(--primary-foreground)]">Unproven</span>`;
+      } else {
+        badgeHtml = `<span class="px-2 py-0.5 rounded font-bold bg-[var(--error)] text-[var(--primary-foreground)]">Wrong</span>`;
+      }
     } else if (tab === 'requests') {
       badgeHtml = item.verdict === 1
         ? `<span class="px-2 py-0.5 rounded font-bold bg-[var(--success)] text-[var(--primary-foreground)]">Yes</span>`
@@ -993,8 +1017,16 @@ function renderInspector(item) {
 
   const pill = document.getElementById('insp-verdict-pill');
   if (tab === 'assumptions') {
-    pill.textContent = item.verdict === 1 ? 'CORRECT ASSUMPTION' : 'WRONG ASSUMPTION';
-    pill.className = `px-2.5 py-1 rounded text-xs font-bold ${item.verdict === 1 ? 'bg-[var(--success)] text-[var(--primary-foreground)]' : 'bg-[var(--error)] text-[var(--primary-foreground)]'}`;
+    if (item.verdict === 1) {
+      pill.textContent = 'CORRECT ASSUMPTION';
+      pill.className = 'px-2.5 py-1 rounded text-xs font-bold bg-[var(--success)] text-[var(--primary-foreground)]';
+    } else if (item.verdict === 2) {
+      pill.textContent = 'UNPROVEN (PENDING PROOF)';
+      pill.className = 'px-2.5 py-1 rounded text-xs font-bold bg-[var(--warning)] text-[var(--primary-foreground)]';
+    } else {
+      pill.textContent = 'WRONG ASSUMPTION';
+      pill.className = 'px-2.5 py-1 rounded text-xs font-bold bg-[var(--error)] text-[var(--primary-foreground)]';
+    }
   } else if (tab === 'requests') {
     pill.textContent = item.verdict === 1 ? 'ANSWERED: YES' : 'ANSWERED: NO';
     pill.className = `px-2.5 py-1 rounded text-xs font-bold ${item.verdict === 1 ? 'bg-[var(--success)] text-[var(--primary-foreground)]' : 'bg-[var(--error)] text-[var(--primary-foreground)]'}`;
@@ -1118,7 +1150,11 @@ function saveEvidenceUrl() {
   if (!item) return;
   const val = document.getElementById('insp-evidence-url-input').value.trim();
   item.evidenceUrl = val;
+  if (state.currentTab === 'assumptions' && val && item.verdict === 2) {
+    item.verdict = 0; // Automatically mark as Wrong (Proven False) once proof link is attached
+  }
   persistState();
+  updateKPIs();
   renderCurrentTable();
 }
 
@@ -1135,6 +1171,10 @@ function previewLocalFile(event) {
     url,
     name: file.name
   };
+  if (state.currentTab === 'assumptions' && item.verdict === 2) {
+    item.verdict = 0;
+  }
+  updateKPIs();
   renderCurrentTable();
 }
 
@@ -1142,7 +1182,12 @@ function toggleVerdictCurrent() {
   const items = getFilteredItems();
   const item = items[state.selectedIndex] || items[0];
   if (!item) return;
-  item.verdict = item.verdict === 1 ? 0 : 1;
+  if (state.currentTab === 'assumptions') {
+    // Cycle: 0 (Wrong) -> 2 (Unproven) -> 1 (Correct) -> 0 (Wrong)
+    item.verdict = item.verdict === 0 ? 2 : (item.verdict === 2 ? 1 : 0);
+  } else {
+    item.verdict = item.verdict === 1 ? 0 : 1;
+  }
   persistState();
   updateKPIs();
   renderCurrentTable();
@@ -1342,16 +1387,27 @@ function mergeSheetRows(cat, rows) {
     const ist = cellVal(r, offset + 4) || calcIST(gmt8);
     const posFlag = cellVal(r, offset + 5); // Correct / Yes / Agree
     const negFlag = cellVal(r, offset + 6); // Wrong / No / Disagree
-    const verdict = (posFlag && posFlag !== '0') ? 1 : 0;
-    const proof = cellVal(r, offset + 7);
     const prev = existingMap[no];
 
     if (cat === 'assumptions') {
-      const proofType = cellVal(r, offset + 8) || (prev ? prev.proofType : 'Chat History');
-      const rawLink = cellVal(r, offset + 9);
-      const evidenceUrl = (rawLink && !rawLink.startsWith('[Add link:')) ? rawLink : (prev ? prev.evidenceUrl : '');
-      const cookieQuote = cellVal(r, offset + 10) || (prev ? prev.cookieQuote : summary);
-      const yourReply = cellVal(r, offset + 11) || (prev ? prev.yourReply : proof);
+      const unpFlag = cellVal(r, offset + 7); // Unproven (Pending Proof)
+      const proof = cellVal(r, offset + 8) || (prev ? prev.proof : '');
+      const proofType = cellVal(r, offset + 9) || (prev ? prev.proofType : 'Chat History');
+      const rawLink = cellVal(r, offset + 10);
+      const hasSheetLink = rawLink && !rawLink.startsWith('[Add link:');
+      const evidenceUrl = hasSheetLink ? rawLink : (prev ? prev.evidenceUrl : '');
+      const cookieQuote = cellVal(r, offset + 11) || (prev ? prev.cookieQuote : summary);
+      const yourReply = cellVal(r, offset + 12) || (prev ? prev.yourReply : proof);
+      let verdict = 0;
+      if (posFlag && posFlag !== '0') {
+        verdict = 1;
+      } else if (negFlag && negFlag !== '0') {
+        verdict = 0;
+      } else if (unpFlag && unpFlag !== '0') {
+        verdict = hasSheetLink ? 0 : 2;
+      } else {
+        verdict = prev ? prev.verdict : 2;
+      }
       updatedList.push({
         no,
         mid: prev ? prev.mid : (8000 + no),
@@ -1362,6 +1418,8 @@ function mergeSheetRows(cat, rows) {
         extras: prev ? prev.extras : []
       });
     } else if (cat === 'requests') {
+      const verdict = (posFlag && posFlag !== '0') ? 1 : 0;
+      const proof = cellVal(r, offset + 7);
       const cookieQuote = cellVal(r, offset + 8) || (prev ? prev.cookieQuote : summary);
       const yourReply = cellVal(r, offset + 9) || (prev ? prev.yourReply : proof);
       const evidenceUrl = cellVal(r, offset + 10) || (prev ? prev.evidenceUrl : '');
@@ -1376,6 +1434,8 @@ function mergeSheetRows(cat, rows) {
         extras: prev ? prev.extras : []
       });
     } else if (cat === 'agreements') {
+      const verdict = (posFlag && posFlag !== '0') ? 1 : 0;
+      const proof = cellVal(r, offset + 7);
       const cookieQuote = cellVal(r, offset + 8) || (prev ? prev.cookieQuote : summary);
       const yourReply = cellVal(r, offset + 9) || (prev ? prev.yourReply : proof);
       updatedList.push({
@@ -1401,7 +1461,7 @@ state.sleepSchedule = state.sleepSchedule || [
   { no: 1, date: '2026-11-21', startGmt8: '23:30', wakeGmt8: '07:00', note: 'Sample row (edit or overwrite anytime)' }
 ];
 try {
-  const saved = localStorage.getItem('whatsapp_cookie_imung_overrides_v1');
+  const saved = localStorage.getItem('whatsapp_cookie_imung_overrides_v2');
   if (saved) {
     const parsed = JSON.parse(saved);
     if (parsed.sleepSchedule) state.sleepSchedule = parsed.sleepSchedule;
@@ -1503,7 +1563,7 @@ function addSleepRow() {
   const nextNo = state.sleepSchedule.length ? Math.max(...state.sleepSchedule.map(x => x.no)) + 1 : 1;
   state.sleepSchedule.push({ no: nextNo, date, startGmt8, wakeGmt8, note });
   try {
-    localStorage.setItem('whatsapp_cookie_imung_overrides_v1', JSON.stringify({
+    localStorage.setItem('whatsapp_cookie_imung_overrides_v2', JSON.stringify({
       assumptions: state.assumptions,
       requests: state.requests,
       agreements: state.agreements,
