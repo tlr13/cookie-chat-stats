@@ -1,0 +1,1599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WhatsApp Chat Statistics &amp; Evidence Dashboard — Cookie 🐱 &amp; iMung</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style id="standalone-theme">
+    :root {
+      --background: #0f172a;
+      --card: #1e293b;
+      --border: #334155;
+      --card-border: #334155;
+      --foreground: #f8fafc;
+      --muted-foreground: #94a3b8;
+      --primary: #3b82f6;
+      --primary-foreground: #ffffff;
+      --success: #16a34a;
+      --error: #dc2626;
+      --warning: #d97706;
+    }
+  </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] antialiased min-h-screen p-4 md:p-6">
+  <div class="max-w-7xl mx-auto space-y-5">
+
+    <!-- Header Banner -->
+    <header class="p-4 rounded-lg bg-[var(--card)] border border-[var(--border)] flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div class="space-y-1">
+        <div class="flex flex-wrap items-center gap-2">
+          <h1 class="text-lg md:text-xl font-bold tracking-tight text-[var(--foreground)]">
+            WhatsApp Chat Statistics &amp; Evidence Dashboard
+          </h1>
+          <span class="px-2 py-0.5 text-xs font-mono rounded bg-[var(--background)] border border-[var(--border)] text-[var(--primary)]">
+            Cookie 🐱 (IST) &amp; iMung (GMT+8)
+          </span>
+        </div>
+        <p class="text-xs text-[var(--muted-foreground)]">
+          Verified from <strong>110,064 total messages</strong> (June 2025 – Nov 2026) &amp; <strong>7,441 quote-linked messages</strong>. Every row links to authentic WhatsApp chat quotes, dual timezones (GMT+8 &amp; IST), and external proof slots (MLBB / PLN / Media).
+        </p>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <button id="btn-live-sync" onclick="syncFromGoogleSheets(true)" class="px-3 py-1.5 rounded text-xs font-semibold bg-[var(--card)] border border-[var(--primary)] text-[var(--primary)] hover:bg-[var(--background)] transition flex items-center gap-1.5" title="Pull latest rows & proof links live from your Google Spreadsheet">
+          <span id="sync-icon">🔄</span>
+          <span id="sync-status">Live Sync Google Sheets</span>
+        </button>
+        <a href="https://docs.google.com/spreadsheets/d/17j_3cuxKzyKjETkfD6luzvgYRhQDgzsMu3hcFUlhKJc/edit?usp=drivesdk" target="_blank" rel="noopener"
+           class="px-3 py-1.5 rounded text-xs font-semibold bg-[var(--success)] text-[var(--primary-foreground)] hover:opacity-90 transition flex items-center gap-1.5">
+          <span>📊 Open Google Spreadsheet</span>
+        </a>
+        <a href="https://drive.google.com/drive/folders/1OAmAFFx0SSZLPpV3bIN7v1H8BpzmWWxR" target="_blank" rel="noopener"
+           class="px-3 py-1.5 rounded text-xs font-semibold bg-[var(--card)] border border-[var(--border)] text-[var(--foreground)] hover:bg-[var(--background)] transition flex items-center gap-1.5">
+          <span>📁 Additional Proof Folder</span>
+        </a>
+        <button onclick="openAddModal()" class="px-3 py-1.5 rounded text-xs font-semibold bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 transition">
+          + Add Proof / Row
+        </button>
+        <button onclick="exportUpdatedHTML()" class="px-3 py-1.5 rounded text-xs font-medium bg-[var(--card)] border border-[var(--border)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition" title="Download self-contained HTML with all your added proof links & rows baked in">
+          ⬇ Export Shareable HTML
+        </button>
+      </div>
+    </header>
+
+    <!-- 4 KPI Summary Cards -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <!-- KPI 1 -->
+      <div onclick="switchTab('assumptions')" class="cursor-pointer p-3.5 rounded-lg bg-[var(--card)] border border-[var(--border)] hover:border-[var(--primary)] transition space-y-2">
+        <div class="flex items-center justify-between text-xs">
+          <span class="font-semibold text-[var(--muted-foreground)]">1. ASSUMPTION STATISTIC</span>
+          <span id="kpi-a-total" class="font-mono text-xs px-1.5 py-0.5 rounded bg-[var(--background)]">58 total</span>
+        </div>
+        <div class="flex items-baseline justify-between">
+          <div>
+            <span id="kpi-a-wrong-pct" class="text-2xl font-bold font-mono text-[var(--error)]">91.4%</span>
+            <span id="kpi-a-wrong-cnt" class="text-xs text-[var(--muted-foreground)] ml-1">Wrong (53)</span>
+          </div>
+          <div class="text-right">
+            <span id="kpi-a-corr-pct" class="text-sm font-bold font-mono text-[var(--success)]">8.6%</span>
+            <span id="kpi-a-corr-cnt" class="text-xs text-[var(--muted-foreground)] block">Correct (5)</span>
+          </div>
+        </div>
+        <div class="w-full h-2 rounded-full bg-[var(--background)] overflow-hidden flex">
+          <div id="bar-a-corr" class="h-full bg-[var(--success)]" style="width: 8.6%"></div>
+          <div id="bar-a-wrong" class="h-full bg-[var(--error)]" style="width: 91.4%"></div>
+        </div>
+        <p class="text-xs text-[var(--muted-foreground)]">Assumptions about iMung proven Wrong vs Correct</p>
+      </div>
+
+      <!-- KPI 2 -->
+      <div onclick="switchTab('requests')" class="cursor-pointer p-3.5 rounded-lg bg-[var(--card)] border border-[var(--border)] hover:border-[var(--primary)] transition space-y-2">
+        <div class="flex items-center justify-between text-xs">
+          <span class="font-semibold text-[var(--muted-foreground)]">2. COOKIE'S REQUESTS</span>
+          <span id="kpi-r-total" class="font-mono text-xs px-1.5 py-0.5 rounded bg-[var(--background)]">68 total</span>
+        </div>
+        <div class="flex items-baseline justify-between">
+          <div>
+            <span id="kpi-r-yes-pct" class="text-2xl font-bold font-mono text-[var(--success)]">73.5%</span>
+            <span id="kpi-r-yes-cnt" class="text-xs text-[var(--muted-foreground)] ml-1">Yes (50)</span>
+          </div>
+          <div class="text-right">
+            <span id="kpi-r-no-pct" class="text-sm font-bold font-mono text-[var(--error)]">26.5%</span>
+            <span id="kpi-r-no-cnt" class="text-xs text-[var(--muted-foreground)] block">No (18)</span>
+          </div>
+        </div>
+        <div class="w-full h-2 rounded-full bg-[var(--background)] overflow-hidden flex">
+          <div id="bar-r-yes" class="h-full bg-[var(--success)]" style="width: 73.5%"></div>
+          <div id="bar-r-no" class="h-full bg-[var(--error)]" style="width: 26.5%"></div>
+        </div>
+        <p class="text-xs text-[var(--muted-foreground)]">Claimed: <q class="text-[var(--foreground)]">99%–100% No</q> (#7109). Fact: <strong class="text-[var(--success)]">73.5% Yes</strong></p>
+      </div>
+
+      <!-- KPI 3 -->
+      <div onclick="switchTab('agreements')" class="cursor-pointer p-3.5 rounded-lg bg-[var(--card)] border border-[var(--border)] hover:border-[var(--primary)] transition space-y-2">
+        <div class="flex items-center justify-between text-xs">
+          <span class="font-semibold text-[var(--muted-foreground)]">3. AGREE VS DISAGREE</span>
+          <span id="kpi-g-total" class="font-mono text-xs px-1.5 py-0.5 rounded bg-[var(--background)]">109 total</span>
+        </div>
+        <div class="flex items-baseline justify-between">
+          <div>
+            <span id="kpi-g-ag-pct" class="text-2xl font-bold font-mono text-[var(--success)]">67.9%</span>
+            <span id="kpi-g-ag-cnt" class="text-xs text-[var(--muted-foreground)] ml-1">Agree (74)</span>
+          </div>
+          <div class="text-right">
+            <span id="kpi-g-dis-pct" class="text-sm font-bold font-mono text-[var(--warning)]">32.1%</span>
+            <span id="kpi-g-dis-cnt" class="text-xs text-[var(--muted-foreground)] block">Disagree (35)</span>
+          </div>
+        </div>
+        <div class="w-full h-2 rounded-full bg-[var(--background)] overflow-hidden flex">
+          <div id="bar-g-ag" class="h-full bg-[var(--success)]" style="width: 67.9%"></div>
+          <div id="bar-g-dis" class="h-full bg-[var(--warning)]" style="width: 32.1%"></div>
+        </div>
+        <p class="text-xs text-[var(--muted-foreground)]">Claimed: <q class="text-[var(--foreground)]">don't agree to anything</q> (#4711)</p>
+      </div>
+
+      <!-- KPI 4 -->
+      <div onclick="switchTab('sleep')" class="cursor-pointer p-3.5 rounded-lg bg-[var(--card)] border border-[var(--border)] hover:border-[var(--primary)] transition space-y-2">
+        <div class="flex items-center justify-between text-xs">
+          <span class="font-semibold text-[var(--muted-foreground)]">4. SLEEP &amp; ACTIVITY PROOF</span>
+          <span class="font-mono text-xs px-1.5 py-0.5 rounded bg-[var(--background)]">44,547 msgs</span>
+        </div>
+        <div class="flex items-baseline justify-between">
+          <div>
+            <span class="text-2xl font-bold font-mono text-[var(--success)]">0.0%</span>
+            <span class="text-xs text-[var(--muted-foreground)] ml-1">at 2–3 AM GMT+8</span>
+          </div>
+          <div class="text-right">
+            <span class="text-sm font-bold font-mono text-[var(--primary)]">99.6%</span>
+            <span class="text-xs text-[var(--muted-foreground)] block">Asleep &lt; 12 AM</span>
+          </div>
+        </div>
+        <div class="w-full h-2 rounded-full bg-[var(--background)] overflow-hidden flex">
+          <div class="h-full bg-[var(--success)]" style="width: 99.6%"></div>
+          <div class="h-full bg-[var(--error)]" style="width: 0.4%"></div>
+        </div>
+        <p class="text-xs text-[var(--muted-foreground)]">Refutes <q class="text-[var(--foreground)]">awake till 2 AM / 12 AM IST</q> + proof slots</p>
+      </div>
+    </section>
+
+    <!-- Navigation Tabs & Filter Bar -->
+    <div class="p-3 rounded-lg bg-[var(--card)] border border-[var(--border)] flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+      <div class="flex flex-wrap items-center gap-1.5">
+        <button id="tab-assumptions" onclick="switchTab('assumptions')" class="px-3 py-1.5 rounded text-xs font-semibold bg-[var(--primary)] text-[var(--primary-foreground)]">
+          1. Assumptions (58)
+        </button>
+        <button id="tab-requests" onclick="switchTab('requests')" class="px-3 py-1.5 rounded text-xs font-semibold bg-[var(--background)] text-[var(--foreground)] border border-[var(--border)]">
+          2. Cookie's Requests: Yes/No (68)
+        </button>
+        <button id="tab-agreements" onclick="switchTab('agreements')" class="px-3 py-1.5 rounded text-xs font-semibold bg-[var(--background)] text-[var(--foreground)] border border-[var(--border)]">
+          3. Agree vs Disagree (109)
+        </button>
+        <button id="tab-sleep" onclick="switchTab('sleep')" class="px-3 py-1.5 rounded text-xs font-semibold bg-[var(--background)] text-[var(--foreground)] border border-[var(--border)]">
+          4. Sleep Timestamps &amp; Proof Vault
+        </button>
+      </div>
+
+      <div id="filter-controls" class="flex flex-wrap items-center gap-2">
+        <select id="verdict-filter" onchange="renderCurrentTable()" class="px-2.5 py-1 rounded text-xs bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)]">
+          <option value="ALL">All Verdicts</option>
+        </select>
+        <select id="proof-filter" onchange="renderCurrentTable()" class="px-2.5 py-1 rounded text-xs bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)]">
+          <option value="ALL">All Proof Sources</option>
+          <option value="Sleep">Sleep &amp; Activity Log</option>
+          <option value="MLBB">MLBB Match History</option>
+          <option value="PLN">PLN Blackout Channel</option>
+          <option value="Chat">Chat History</option>
+        </select>
+        <input id="search-input" type="text" oninput="renderCurrentTable()" placeholder="Search quote, date, topic, proof..."
+               class="px-2.5 py-1 rounded text-xs bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)] w-48 md:w-60" />
+      </div>
+    </div>
+
+    <!-- Main Split Layout: Data Table (Left 7 cols) + Authentic WhatsApp Bubble Chat & Proof Inspector (Right 5 cols) -->
+    <div id="main-split-view" class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+      <!-- Left Table Area -->
+      <div class="lg:col-span-7 rounded-lg bg-[var(--card)] border border-[var(--border)] overflow-hidden">
+        <div class="px-3.5 py-2.5 border-b border-[var(--card-border)] flex items-center justify-between text-xs">
+          <span id="table-title" class="font-semibold text-[var(--foreground)]">Assumption Statistic</span>
+          <span id="table-count" class="font-mono text-[var(--muted-foreground)]">Showing 58 items (Click any row to view Bubble Chat &amp; Proof)</span>
+        </div>
+        <div class="overflow-x-auto max-h-[640px] overflow-y-auto">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead id="table-head" class="bg-[var(--background)] border-b border-[var(--border)] sticky top-0 z-10"></thead>
+            <tbody id="table-body" class="divide-y divide-[var(--card-border)]"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Right WhatsApp Bubble Chat & External Evidence Inspector -->
+      <div class="lg:col-span-5 rounded-lg bg-[var(--card)] border border-[var(--border)] overflow-hidden sticky top-4 space-y-0">
+        <!-- WhatsApp Header -->
+        <div class="px-4 py-3 border-b border-[var(--card-border)] bg-[var(--background)] flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-full bg-[var(--primary)] text-[var(--primary-foreground)] flex items-center justify-center font-bold text-sm">
+              🐱
+            </div>
+            <div>
+              <div class="text-xs font-bold text-[var(--foreground)] flex items-center gap-1.5">
+                <span>Cookie 🐱 &amp; iMung</span>
+                <span id="insp-badge" class="px-1.5 py-0.5 rounded text-xs font-mono bg-[var(--card)] border border-[var(--border)]">#1</span>
+              </div>
+              <div id="insp-meta" class="text-xs text-[var(--muted-foreground)] font-mono">
+                Select any row to inspect exact WhatsApp bubbles
+              </div>
+            </div>
+          </div>
+          <span id="insp-verdict-pill" class="px-2 py-0.5 rounded text-xs font-bold"></span>
+        </div>
+
+        <!-- Summary & Proof Box -->
+        <div class="p-3.5 border-b border-[var(--card-border)] space-y-2 text-xs">
+          <div>
+            <span id="insp-label-main" class="text-[var(--muted-foreground)] font-medium uppercase">Claim / Assumption:</span>
+            <p id="insp-summary" class="font-semibold text-[var(--foreground)] mt-0.5 text-sm"></p>
+          </div>
+          <div class="p-2.5 rounded bg-[var(--background)] border border-[var(--border)] space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="font-semibold text-[var(--primary)]">Proof / Verification Reason:</span>
+              <span id="insp-proof-type" class="font-mono text-xs px-1.5 py-0.5 rounded bg-[var(--card)] border border-[var(--border)] text-[var(--muted-foreground)]"></span>
+            </div>
+            <p id="insp-proof-text" class="text-[var(--foreground)] leading-relaxed"></p>
+          </div>
+        </div>
+
+        <!-- WhatsApp Chat Bubbles Container -->
+        <div class="px-3.5 py-3 bg-[var(--background)] border-b border-[var(--card-border)] space-y-2.5 max-h-[310px] overflow-y-auto" id="bubble-container">
+        </div>
+
+        <!-- External Proof / Media Attachment Box -->
+        <div class="p-3.5 space-y-2.5 text-xs bg-[var(--card)]">
+          <div class="flex items-center justify-between">
+            <span class="font-semibold text-[var(--foreground)] flex items-center gap-1.5">
+              <span>🎥 Additional Evidence (Video / Screenshot / Link)</span>
+            </span>
+            <button onclick="toggleVerdictCurrent()" class="px-2 py-0.5 rounded border border-[var(--border)] bg-[var(--background)] text-[var(--muted-foreground)] hover:text-[var(--foreground)] text-xs">
+              ⇄ Flip Verdict
+            </button>
+          </div>
+
+          <div id="insp-evidence-display" class="p-2.5 rounded bg-[var(--background)] border border-[var(--border)] space-y-2"></div>
+
+          <!-- Attach URL or Local Video/Image File -->
+          <div class="space-y-1.5 pt-1">
+            <div class="flex gap-1.5">
+              <input id="insp-evidence-url-input" type="text" placeholder="Paste Google Drive proof link / screenshot URL..."
+                     class="flex-1 px-2.5 py-1.5 rounded bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)] text-xs" />
+              <button onclick="saveEvidenceUrl()" class="px-3 py-1.5 rounded font-semibold bg-[var(--primary)] text-[var(--primary-foreground)] text-xs">
+                Save Link
+              </button>
+            </div>
+            <div class="flex items-center justify-between gap-2 pt-1">
+              <label class="cursor-pointer px-2.5 py-1 rounded bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)] hover:border-[var(--primary)] transition inline-flex items-center gap-1.5 text-xs">
+                <span>📂 Load Local Video (.mp4) or Screenshot</span>
+                <input type="file" accept="video/*,image/*" class="hidden" onchange="previewLocalFile(event)" />
+              </label>
+              <a href="https://drive.google.com/drive/folders/1OAmAFFx0SSZLPpV3bIN7v1H8BpzmWWxR" target="_blank" rel="noopener" class="text-[var(--primary)] hover:underline text-xs">
+                Upload to Drive Proof Folder ↗
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 4: Sleep Timestamps & Proof Vault View -->
+    <div id="sleep-vault-view" class="hidden space-y-4">
+
+      <!-- Manual Precision Sleep Schedule Tracker (Synced with Sheet 5: 'Sleep schedule') -->
+      <div class="p-4 rounded-lg bg-[var(--card)] border border-[var(--border)] space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--card-border)] pb-3">
+          <div>
+            <h2 class="text-sm font-bold text-[var(--foreground)]">🛌 Manual Precision Sleep Schedule Tracker (Sheet: <span class="font-mono text-[var(--primary)]">Sleep schedule</span>)</h2>
+            <p class="text-xs text-[var(--muted-foreground)]">
+              Log your exact sleep and wake-up times manually here or in Google Sheets. Dual timezones (GMT+8 &amp; IST) and averages calculate automatically.
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <input id="sl-date" type="date" value="2026-11-22" class="px-2 py-1 rounded text-xs bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)]" />
+            <label class="text-xs text-[var(--muted-foreground)] flex items-center gap-1">
+              Start Sleep (GMT+8):
+              <input id="sl-start" type="time" value="23:30" class="px-2 py-1 rounded text-xs bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)]" />
+            </label>
+            <label class="text-xs text-[var(--muted-foreground)] flex items-center gap-1">
+              Wake Up (GMT+8):
+              <input id="sl-wake" type="time" value="07:00" class="px-2 py-1 rounded text-xs bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)]" />
+            </label>
+            <input id="sl-note" type="text" placeholder="Note (optional)" class="px-2 py-1 rounded text-xs bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)] w-32" />
+            <button onclick="addSleepRow()" class="px-3 py-1 rounded text-xs font-semibold bg-[var(--primary)] text-[var(--primary-foreground)]">
+              + Add Sleep Log
+            </button>
+          </div>
+        </div>
+
+        <!-- 3 Sleep Average Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div class="p-3 rounded bg-[var(--background)] border border-[var(--border)] space-y-1">
+            <div class="text-xs text-[var(--muted-foreground)] font-medium">AVERAGE SLEEP TIME (DURATION)</div>
+            <div class="flex items-baseline justify-between">
+              <span id="avg-sleep-dur" class="text-xl font-bold font-mono text-[var(--success)]">7h 30m</span>
+              <span id="avg-sleep-hrs" class="text-xs font-mono text-[var(--muted-foreground)]">7.50 hrs (31.3% of 24h)</span>
+            </div>
+          </div>
+          <div class="p-3 rounded bg-[var(--background)] border border-[var(--border)] space-y-1">
+            <div class="text-xs text-[var(--muted-foreground)] font-medium">AVERAGE TIME START SLEEPING</div>
+            <div class="flex items-baseline justify-between">
+              <span id="avg-sleep-start-gmt8" class="text-xl font-bold font-mono text-[var(--foreground)]">23:30 GMT+8</span>
+              <span id="avg-sleep-start-ist" class="text-sm font-bold font-mono text-[var(--primary)]">21:00 IST</span>
+            </div>
+          </div>
+          <div class="p-3 rounded bg-[var(--background)] border border-[var(--border)] space-y-1">
+            <div class="text-xs text-[var(--muted-foreground)] font-medium">AVERAGE TIME START WAKE UP</div>
+            <div class="flex items-baseline justify-between">
+              <span id="avg-sleep-wake-gmt8" class="text-xl font-bold font-mono text-[var(--foreground)]">07:00 GMT+8</span>
+              <span id="avg-sleep-wake-ist" class="text-sm font-bold font-mono text-[var(--primary)]">04:30 IST</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Manual Sleep Schedule Table -->
+        <div class="overflow-x-auto max-h-60 overflow-y-auto">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead class="bg-[var(--background)] border-b border-[var(--border)] sticky top-0">
+              <tr>
+                <th class="py-2 px-2.5">No</th>
+                <th class="py-2 px-2.5">Date</th>
+                <th class="py-2 px-2.5">Start Sleeping (GMT+8)</th>
+                <th class="py-2 px-2.5">Start Sleeping (IST)</th>
+                <th class="py-2 px-2.5">Wake Up (GMT+8)</th>
+                <th class="py-2 px-2.5">Wake Up (IST)</th>
+                <th class="py-2 px-2.5">Sleep Duration</th>
+                <th class="py-2 px-2.5">% of 24h</th>
+                <th class="py-2 px-2.5">Notes</th>
+              </tr>
+            </thead>
+            <tbody id="sleep-schedule-tbody" class="divide-y divide-[var(--card-border)]"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        <!-- 24-Hour Distribution Chart -->
+        <div class="lg:col-span-7 p-4 rounded-lg bg-[var(--card)] border border-[var(--border)] space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h2 class="text-sm font-bold text-[var(--foreground)]">24-Hour WhatsApp Message Timestamp Proof (GMT+8 vs IST)</h2>
+              <p class="text-xs text-[var(--muted-foreground)]">
+                Hard data from <strong>44,547 messages sent by iMung</strong> (June 2025 – Nov 2026) &amp; <strong>3,369 messages</strong> in Sept–Nov 2026.
+              </p>
+            </div>
+            <span class="px-2 py-1 rounded text-xs font-mono bg-[var(--background)] border border-[var(--border)] text-[var(--success)]">
+              02:00–03:59 GMT+8 (23:30–01:29 IST) = 0.0% (0 msgs)
+            </span>
+          </div>
+
+          <div class="overflow-x-auto max-h-[520px] overflow-y-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead class="bg-[var(--background)] border-b border-[var(--border)] sticky top-0">
+                <tr>
+                  <th class="py-2 px-2.5">Hour (GMT+8)</th>
+                  <th class="py-2 px-2.5">Hour (IST)</th>
+                  <th class="py-2 px-2.5">Sept–Nov 2026</th>
+                  <th class="py-2 px-2.5 w-44">Visual Distribution</th>
+                  <th class="py-2 px-2.5">All-Time (2025–26)</th>
+                  <th class="py-2 px-2.5">Status</th>
+                </tr>
+              </thead>
+              <tbody id="hourly-table-body" class="divide-y divide-[var(--card-border)]"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Right: Additional Proof Vault -->
+        <div class="lg:col-span-5 p-4 rounded-lg bg-[var(--card)] border border-[var(--border)] space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-sm font-bold text-[var(--foreground)]">🎥 Additional Proof &amp; Evidence Vault</h2>
+              <p class="text-xs text-[var(--muted-foreground)]">Attach external videos, MLBB match screenshots, or PLN links</p>
+            </div>
+            <button onclick="openAddModal('assumptions')" class="px-2.5 py-1 rounded text-xs font-semibold bg-[var(--primary)] text-[var(--primary-foreground)]">
+              + Add External Proof
+            </button>
+          </div>
+          <div id="proof-vault-list" class="space-y-2.5 max-h-[520px] overflow-y-auto pr-1"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for Adding New Row / External Proof -->
+    <div id="add-modal" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+      <div class="w-full max-w-lg rounded-lg bg-[var(--card)] border border-[var(--border)] p-4 space-y-3 text-xs">
+        <div class="flex items-center justify-between border-b border-[var(--card-border)] pb-2">
+          <h3 class="text-sm font-bold text-[var(--foreground)]">+ Add New Entry or External Media / Proof</h3>
+          <button onclick="closeAddModal()" class="text-[var(--muted-foreground)] hover:text-[var(--foreground)] font-bold">✕</button>
+        </div>
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-[var(--muted-foreground)] mb-1">Category Sheet</label>
+            <select id="new-cat" onchange="updateModalFields()" class="w-full px-2.5 py-1.5 rounded bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)]">
+              <option value="assumptions">1. Assumption Statistic (Correct / Wrong)</option>
+              <option value="requests">2. Cookie's Request (Yes / No)</option>
+              <option value="agreements">3. Agree vs Disagree</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[var(--muted-foreground)] mb-1">Verdict</label>
+            <select id="new-verdict" class="w-full px-2.5 py-1.5 rounded bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)]">
+              <option value="0">Wrong / No / Disagree</option>
+              <option value="1">Correct / Yes / Agree</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[var(--muted-foreground)] mb-1">Date</label>
+            <input id="new-date" type="date" value="2026-11-22" class="w-full px-2.5 py-1.5 rounded bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)]" />
+          </div>
+          <div>
+            <label class="block text-[var(--muted-foreground)] mb-1">Time (GMT+8) — IST auto-calculated</label>
+            <input id="new-time" type="time" value="23:30" class="w-full px-2.5 py-1.5 rounded bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)]" />
+          </div>
+        </div>
+        <div>
+          <label class="block text-[var(--muted-foreground)] mb-1">Summary (Assumption / Request / Statement)</label>
+          <input id="new-summary" type="text" placeholder="e.g. She assumed I was awake playing games at 11 PM IST" class="w-full px-2.5 py-1.5 rounded bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)]" />
+        </div>
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-[var(--muted-foreground)] mb-1">Cookie's Quote</label>
+            <input id="new-cquote" type="text" placeholder="Exact message from Cookie..." class="w-full px-2.5 py-1.5 rounded bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)]" />
+          </div>
+          <div>
+            <label class="block text-[var(--muted-foreground)] mb-1">Your Reply</label>
+            <input id="new-yreply" type="text" placeholder="Your response..." class="w-full px-2.5 py-1.5 rounded bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)]" />
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-[var(--muted-foreground)] mb-1">Proof / Reason Explanation</label>
+            <input id="new-proof" type="text" placeholder="e.g. Proof shows lights off and sleeping at that hour" class="w-full px-2.5 py-1.5 rounded bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)]" />
+          </div>
+          <div>
+            <label class="block text-[var(--muted-foreground)] mb-1">Proof Type</label>
+            <select id="new-ptype" class="w-full px-2.5 py-1.5 rounded bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)]">
+              <option value="Sleep &amp; Activity Log">Sleep &amp; Activity Log</option>
+              <option value="MLBB Match History">MLBB Match History</option>
+              <option value="External Video / Photo">External Video / Photo</option>
+              <option value="Chat History">Chat History</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-[var(--muted-foreground)] mb-1">External Evidence URL (Google Drive Proof Link / Screenshot URL)</label>
+          <input id="new-evurl" type="text" placeholder="https://drive.google.com/file/d/..." class="w-full px-2.5 py-1.5 rounded bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)]" />
+        </div>
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-[var(--card-border)]">
+          <button onclick="closeAddModal()" class="px-3 py-1.5 rounded border border-[var(--border)] text-[var(--muted-foreground)]">Cancel</button>
+          <button onclick="submitNewEntry()" class="px-3 py-1.5 rounded font-semibold bg-[var(--primary)] text-[var(--primary-foreground)]">Save Entry</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+const A_DATA = [
+[1, 5348, 5357, "2026-11-01", "19:53", "17:23", "I played MLBB until 10 PM IST and ignored her on purpose", 0, "Fell asleep while waiting in the MLBB lobby; latest match history shows the last match played was with her", "MLBB Match History + Sleep Log", "Match History Screenshot / Sleep Log (22:00 IST)", "", "Ignoring that you were online in MLBB till 10 pm", "i fall asleep while in the lobby, if we play again i would wake up by the vibration of match found. even the previous rank i already sleep a", [[5347, "19:43", "17:13", 1, "stay?"]]],
+[2, 5252, 5258, "2026-10-31", "17:59", "15:29", "I always sleep during the daytime too whenever she asks to play", 0, "I don't sleep during the daytime; MLBB match history shows I normally play morning till evening", "MLBB Match History", "Daytime Activity / Match History", "", "Even during day I asked it's always like this", "no, during day i dont sleep", [[5251, "17:35", "15:05", 1, "sorry :("]]],
+[3, 5253, 5259, "2026-10-31", "17:59", "15:29", "I ignored her messages all day since morning on Oct 31", 0, "Almost the entire city had a total electricity & signal blackout since morning; proven via official PLN ULP Melak WhatsApp channel announcement", "PLN Official Channel Link", "https://whatsapp.com/channel/0029VbDRN7v96H4PRKv3Lw2F", "https://whatsapp.com/channel/0029VbDRN7v96H4PRKv3Lw2F", "Today you didn't even revert me since morning", "my almost entire city is blackout since morning, no signal also", [[5252, "17:59", "15:29", 0, "Even during day I asked it's always like this"]]],
+[4, 5262, 5268, "2026-10-31", "18:16", "15:46", "The city-wide blackout was just a 'coincidence' / excuse like previous days", 0, "Daily rotating outages only affect a few villages by turn, whereas Oct 31 was an entire-city outage announced by PLN", "PLN Official Channel Link", "https://whatsapp.com/channel/0029VbDRN7v96H4PRKv3Lw2F", "https://whatsapp.com/channel/0029VbDRN7v96H4PRKv3Lw2F", "Last time also this happened", "no, today only that entire city", [[5261, "18:16", "15:46", 1, "you can check my mlbb history usually play around morning till evening"]]],
+[5, 5315, 5319, "2026-11-01", "01:04", "22:34", "I enjoyed lying and ignoring her as usual on Oct 31 night", 0, "Was genuinely offline due to city blackout and regular sleep schedule, not lying or ignoring", "Chat History + PLN Link", "Chat Timestamps & PLN Announcement", "", "Enjoyed lying and ignoring me as usual", "i dont ignore you", [[5314, "00:55", "22:25", 0, "Why lie"]]],
+[6, 5324, 5329, "2026-11-01", "15:52", "13:22", "I went away / traveled somewhere without telling her on Nov 1", 0, "I didn't go away anywhere; I stayed at home", "Home Activity Log", "Additional Proof (Nov 1, 2026)", "", "That you couldn't tell me that you will be away", "i am not away, i stay at home", [[5323, "15:51", "13:21", 0, "In game...weren't you online and playing you got stars too"]]],
+[7, 5327, 5333, "2026-11-01", "15:52", "13:22", "I hate her and want to maintain distance from her", 0, "I don't hate her; I consistently reply and play together when awake and free", "Chat History", "110,000+ Total Chat Messages", "", "Idk what you get from it...but if you hate me this much just maintain your distance from me... instead of lying", "i dont hate you", [[5326, "15:52", "13:22", 0, "You are doing it all in purpose"]]],
+[8, 5354, 5362, "2026-11-01", "20:05", "17:35", "I posted a story and deliberately didn't tell her before going offline", 0, "Posted before knowing the internet/electricity would go down completely", "Chat History", "Timestamp comparison before blackout", "", "Also that you posted story but couldn't tell me", "yeah i didnt know the internet would gone entirely", [[5353, "19:55", "17:25", 0, "I cropped some part now😅😅😅"]]],
+[9, 11, 16, "2026-09-06", "18:15", "15:45", "I previously said I only 'heard' the anime was good rather than saying it is good", 0, "In earlier chat I stated 'it's good', not 'I've heard it's good'", "Chat History", "Earlier WhatsApp chat log", "", "But last week I talked about it and you said you hv heard its good\n\nWhats your review then", "i said its good, not i've heard its good", [[10, "18:15", "15:45", 0, "Even this kissasian for c dramas is not working since past 3 days"]]],
+[10, 2593, 2610, "2026-09-29", "16:04", "13:34", "I lied about falling asleep early after 5:30 PM IST (8:00 PM GMT+8)", 0, "Went to the mosque at 5:30 PM IST (8:00 PM GMT+8) and fell asleep right after getting home before even opening my phone", "Sleep & Activity Log", "Sleep & Activity Log (Sept 28-29)", "", "You want me to believe you fell asleep at 5pm?", "its not 5 p.m. 5:30 P.M. i go to mosque, after go home, i am too sleepy not even open phone already sleep", [[2592, "16:04", "13:34", 0, "It's the same..."]]],
+[11, 2594, 2611, "2026-09-29", "16:05", "13:35", "I ignored her because she asked if there was an issue between us", 0, "I was already asleep before opening WhatsApp, not avoiding her question", "Sleep & Activity Log", "Sleep & Activity Log", "", "You ignored me because I asked you if there is any issue and why do you ignore me", "no", [[2593, "16:04", "13:34", 0, "You want me to believe you fell asleep at 5pm?"]]],
+[12, 2604, 2613, "2026-09-29", "16:12", "13:42", "I gaslight her into believing lies about my sleep schedule", 0, "My sleep schedule (~9:00-9:30 PM IST / 11:30 PM-12:00 AM GMT+8) is consistent across 17 months of chat timestamps", "Chat Timestamp Analysis", "17-Month Chat Hourly Distribution", "", "Yeah but you gaslight me into believing your lies", "its not lie", [[2603, "16:10", "13:40", 0, "And then you will realise how much stupid someone has to be to accept these lies"]]],
+[13, 2717, 2720, "2026-09-30", "18:18", "15:48", "I am busy 80% of the time and only sleep 20% (4-5 hours)", 0, "I sleep 7-8 hours per day (29%-33% of 24 hours), not 4-5 hours (20%)", "Sleep & Activity Log", "Digital Wellbeing + Sleep Timestamps", "", "80% of the time you are", "i dont think so, even my sleep is atleast 30%", [[2716, "17:50", "15:20", 1, "currently i am not busy"]]],
+[14, 2797, 2808, "2026-10-01", "14:02", "11:32", "When phone usage screenshots proved I wasn't on my phone at night, she assumed I use my computer at night instead", 0, "Already sent Digital Wellbeing album [msgs #2787-2790] showing zero night phone usage; I was already sleeping at night, not using my computer", "Digital Wellbeing Screenshot + Sleep Log", "Digital Wellbeing Album + Additional Proof", "", "You use your computer at night", "how to proof i am not using computer at night?", [[2796, "14:02", "11:32", 0, "Maybe you don't use your phone"]]],
+[15, 3018, 3023, "2026-10-03", "22:52", "20:22", "I was acting aloof on purpose towards her red hair dye joke", 0, "I genuinely didn't realize it was a joke and thought she naturally/actually dyed it", "Chat History", "Chat messages #2969-#3041", "", "But you really are acting so aloof for my jokes", "i am not acting", [[3017, "22:05", "19:35", 1, "so you dont have to worry about it"]]],
+[16, 3098, 3103, "2026-10-05", "13:10", "10:40", "I don't want her interacting with my Instagram", 0, "Clarified it was a misunderstanding and she is completely welcome to interact on Instagram", "Chat History", "Chat message #3103", "", "If you don't want to text just say it lol \n\nDidn't I stop interacting with your insta because you didn't want me to\n\nSo I can do this too bu", "i think there is misunderstanding, you can interacting with me in insta no problem", [[3097, "13:09", "10:39", 0, "Talking less too"]]],
+[17, 3106, 3111, "2026-10-05", "15:22", "12:52", "I find her toxic or a narcissist", 0, "Explicitly confirmed 'no', I do not think she is toxic or narcissistic", "Chat History", "Chat message #3111", "", "Maybe you find me toxic or narcissist", "no", [[3105, "15:21", "12:51", 0, "If you are hiding things that means you do not want me to see or interact with them"]]],
+[18, 3137, 3143, "2026-10-06", "01:21", "22:51", "I talk less to her because I am talking more to other people in another language", 0, "The amount I talk daily is the exact same; I am naturally quiet unless spoken to", "Chat History", "Chat message #3143", "", "Maybe you talk to people of other language more now", "no, the amount of i talk in daily is the same", [[3136, "01:21", "22:51", 0, "It improved a lot...earlier"]]],
+[19, 3186, 3191, "2026-10-06", "19:30", "17:00", "I was still working late in the evening at 7:30 PM GMT+8", 0, "Already went home in the evening; normal office hours end before evening", "Chat History", "Chat message #3191", "", "Are you still working?", "no, go home at evening", [[3185, "18:49", "16:19", 0, "In which year you started working?"]]],
+[20, 3209, 3214, "2026-10-07", "00:03", "21:33", "I made up excuses when she asked to play at 00:03 AM GMT+8 (9:33 PM IST)", 0, "She messaged at 00:03 AM GMT+8 (midnight my time); I was already asleep", "Chat Timestamp & Sleep Log", "Timestamp 00:03 GMT+8 + Sleep Log", "", "I asked to play and again excuses", "sorry, i already sleep :(((", [[3210, "00:03", "21:33", 0, "Let it be then better not ask"]]],
+[21, 3644, 3649, "2026-10-10", "22:49", "20:19", "My family texts me frequently on social media because I post every few days", 0, "My family is not active on social media and only texts when there is something important", "Chat History", "Chat message #3649", "", "But you post something every few days? And they send text or something from time to time?", "my family doesnt active in social media. They dont text me if there is nothing important", [[3643, "22:48", "20:18", 0, "You don't know skating too?"]]],
+[22, 3659, 3666, "2026-10-11", "14:16", "11:46", "I know how to skate / use a skateboard or hoverboard", 0, "I don't know skating; roads in my area aren't suited for it", "Chat History", "Chat message #3648 & #3666", "", "I thought you knew skating and stuff", "wkwkkwkw no", [[3658, "13:09", "10:39", 0, "Maybe there are people like you and your family who contact each other sometimes... So far I have not came acr"]]],
+[23, 3690, 3696, "2026-10-11", "20:28", "17:58", "I was upset and ignoring her on Oct 11 evening", 0, "Was not upset or ignoring her at all", "Chat History", "Chat message #3696", "", "Are you ignoring me? \n👉👈\nI did say that it's fine every family is different and didn't disrespect your family...\nWhy are you upset 🥺", "i am not ignoring you wkkwkw, what make you think i upset", [[3689, "20:22", "17:52", 0, "Today is Sunday didn't go in the morning?"]]],
+[24, 3977, 3982, "2026-10-14", "19:05", "16:35", "I was deliberately trying to talk less to her on Oct 14", 0, "Not trying to talk less; my message volume is directly proportional to hers", "Chat Timestamp Analysis", "Message count correlation in chat log", "", "Are you trying to talk less to me 🤔", "no wkwkkw", [[3976, "18:25", "15:55", 0, "What's the point of keeping it all in inventory"]]],
+[25, 3988, 3996, "2026-10-14", "22:46", "20:16", "I don't want to gift her anything in MLBB", 0, "I had already agreed and said 'okay' to gifting her in message #3980", "Chat History", "Chat message #3980 & #3996", "", "Just say you don't want to gift me anything 😔", "no, i already said okay i gift you", [[3987, "22:46", "20:16", 0, "Only you"]]],
+[26, 4280, 4286, "2026-10-18", "17:08", "14:38", "I hid my Instagram story from her for an entire month", 0, "It was only for a few days, not a month, and was already unhidden", "Chat History", "Chat message #4286 & #4825", "", "But you his your story for a month from me", "i dont think its a month, only few days. But dont worry, its not happen again", [[4281, "17:08", "14:38", 0, "And even if I ask you don't share anything"]]],
+[27, 4560, 4563, "2026-10-23", "21:07", "18:37", "I hate her, ignore her, and hold grudges because we had arguments", 0, "An argument is just a difference of opinion without negative emotion or hate", "Chat History", "Chat messages #4563, #4574, #4575, #4588", "", "Why do you hate me", "i am not wkkwkw", [[4559, "20:32", "18:02", 0, "Well it's fine not everyone like cats"]]],
+[28, 4711, 4717, "2026-10-25", "22:23", "19:53", "I never agree to anything she says and always say no when she asks to play", 0, "I literally agreed with her a few messages above, and accepted the majority of her play invites", "Chat History", "Request & Agreement statistics across full chat", "", "Anyways you don't agree to anything but even if I ask to play sometimes even in them you only have excuses", "i literally agree with you few message above", [[4710, "22:21", "19:51", 0, "Are you or not?"]]],
+[29, 4802, 4809, "2026-10-26", "18:43", "16:13", "I said 'let's play' twice and disappeared within 10 minutes", 0, "It was only once late at night when I fell asleep", "Chat History", "Chat timestamps on Oct 25-26", "", "You said let's play twice and then disappeared within 10 mins of it", "wasnt it only once last night? and it is already night, so i fall asleep easily", [[4801, "18:26", "15:56", 1, "what did i deny, Cookie?"]]],
+[30, 4807, 4812, "2026-10-26", "18:48", "16:18", "I only invite/call her to play around 6 AM when she can't play", 0, "Invited her to play at around 12:00 PM IST (2:30 PM GMT+8) that very day, not early morning", "Chat History", "Call/Invite timestamp at ~12:00 IST", "", "Also when I ask to ask me to play or something you only ask or call around 6 am where either I am sleeping or got up to worship", "i invite you to play today at around 12:00 IST, not in early morning", [[4806, "18:44", "16:14", 0, "Anything I ask"]]],
+[31, 4875, 4883, "2026-10-27", "12:38", "10:08", "I was offline because my girlfriend was angry that I talk to Cookie", 0, "I don't have a girlfriend (confirmed in #2005) and was working in another village (with photo proof sent in #4892)", "Chat Photo Proof", "Field work photo sent in message #4892", "", "Is your gf angry that you talk to me?", "no, i was in other village", [[4874, "12:31", "10:01", 0, "Why block me"]]],
+[32, 4900, 4904, "2026-10-27", "17:15", "14:45", "My job is fixing truck tires", 0, "My job at Bapenda is checking taxable objects, not fixing truck tires", "Chat History", "Chat message #4904", "", "Your job is to fix truck tires?", "no wkwkkw, we check taxable objects", [[4899, "17:15", "14:45", 0, "Not sambal then just chillies"]]],
+[33, 5103, 5107, "2026-10-30", "14:48", "12:18", "I only talked to her to learn English from her and ignored her for 1.5 months", 0, "Learning English was not the only reason, and being quiet before getting close is my normal personality with everyone", "Chat History", "Chat messages #5107 & #5119", "", "Yeah you only talked to me to learn English from me...I figured it out", "not only", [[5102, "14:45", "12:15", 0, "Met as in person?"]]],
+[34, 5224, 5226, "2026-10-30", "22:23", "19:53", "I would get offended and react angrily if someone called my religion wrong or mocked it", 0, "I remain calm and neutral even if someone criticizes or mocks it", "Chat History", "Chat messages #5226 & #5233", "", "If someone will call your religion wrong you will feel offended", "no, i am okay with that", [[5223, "22:23", "19:53", 1, "yeah, exactly"]]],
+[35, 5538, 5543, "2026-11-02", "19:03", "16:33", "I get annoyed whenever she asks too many questions", 0, "I do not get annoyed by her questions", "Chat History", "Chat messages #5534 & #5543", "", "You do...if I ask too many questions sometimes your response seems annoyed 🤭", "i dont think so", [[5537, "19:03", "16:33", 0, "Is there something that irritates you?"]]],
+[36, 5586, 5590, "2026-11-02", "22:35", "20:05", "I don't like having a beard", 0, "It's not that I dislike beards; I'm just too lazy to shave frequently", "Chat History", "Chat message #5590", "", "Oh? Maybe you don't like beard then...", "i just too lazy to shave my beard every once in a while", [[5585, "22:33", "20:03", 0, "Oh brawl? Wokwowkow"]]],
+[37, 5614, 5626, "2026-11-03", "12:53", "10:23", "There are mostly things I don't know yet (when asked about preferences/topics)", 1, "Confirmed: 'yeah there are a lot of things that i dont know yet'", "Chat History", "Chat message #5626", "", "There are mostly things you don't. Know", "yeah there are a lot of things that i dont know yet", [[5615, "12:53", "10:23", 0, "Idk what to try what if you get offended"]]],
+[38, 5687, 5695, "2026-11-03", "19:38", "17:08", "Whenever she asks me to do something, I make sure to avoid making efforts", 0, "I spent 30+ minutes searching websites, wallpapers, and links for her requests", "Chat History", "Chat messages #5695 & #6263", "", "If I ask you to do something you really make sure to avoid efforts 🥴", "i dont", [[5688, "19:39", "17:09", 0, "I will try to create one from chatgpt"]]],
+[39, 5825, 5836, "2026-11-05", "21:16", "18:46", "I ignored her when she was unwell instead of caring", 0, "I didn't ignore her; I prayed for her to get well soon", "Chat History", "Chat message #5836", "", "That you ignored me and when I told you yesterday...you just said this is how you are instead of being nice to me when I was unwell", "i didnt ignore you, i pray for you to get well soon", [[5824, "21:16", "18:46", 0, "Ok thanks"]]],
+[40, 5908, 5921, "2026-11-06", "13:05", "10:35", "I generally do not start/initiate conversations first and stay silent unless spoken to", 1, "Confirmed: 'yeah, its normal. I mostly silent if nobody talk to me'", "Chat History", "Chat messages #5921 & #5948", "", "You did not..you do not start any conversation 🫠", "yeah, you start conversation, so we did talk", [[5907, "13:05", "10:35", 0, "Why go to mosque late...go early come back early"]]],
+[41, 5942, 5953, "2026-11-06", "15:32", "13:02", "I posted a story that showed up in her DM but was hidden from stories", 0, "I didn't even make or post any story", "Chat History", "Chat message #5953", "", "[Image] And why your story is showing in DM but not in stories? 🥴", "i dont even make story", [[5954, "16:37", "14:07", 1, "wkkwkw i dont know, maybe bug"]]],
+[42, 5984, 5993, "2026-11-06", "20:09", "17:39", "I bully her on purpose when I misunderstood her Indonesian typo", 0, "I genuinely didn't recognize the misspelled word as Indonesian", "Chat History", "Chat messages #5992 & #5993", "", "You bully me on purpose", "no", [[5983, "20:06", "17:36", 0, "Just because of typo you deny knowing the entire word 😔"]]],
+[43, 5999, 6006, "2026-11-06", "21:00", "18:30", "I don't even know what my housemates do in their free time or their hobbies", 1, "Confirmed: 'i dont :(' — even though we are friends, I don't track what they do in their free time", "Chat History", "Chat messages #6006 & #6010", "", "You do not even know what your housemates do in their free time? Or their hobbies etc? Are you friends with them or just housemates", "i dont :(", [[5998, "21:00", "18:30", 0, "Yeah but if I can I will try"]]],
+[44, 6053, 6056, "2026-11-07", "00:15", "21:45", "I play Selena well in MLBB", 1, "Confirmed: 'yeah i know 😎'", "MLBB Match History", "Chat message #6056", "", "You play selena well 😋😋😋", "yeah i know 😎", [[6052, "00:14", "21:44", 0, "Anyways it was fun 🤩🤩"]]],
+[45, 6113, 6120, "2026-11-07", "13:50", "11:20", "My uncle's catfish is kept as a pet and not eaten as food", 0, "I have eaten my uncle's farmed catfish many times (there are multiple ponds, not just the 30-year-old catfish)", "Chat History", "Chat messages #6120 & #6146", "", "😒😒😒 he is not food just like your uncle's catfish is not food", "i ate my uncle's catfish many time", [[6112, "13:48", "11:18", 0, "What do guys even do with long lashes 🥴"]]],
+[46, 6237, 6245, "2026-11-08", "12:38", "10:08", "I travel to a different place every single weekend", 0, "Most weekends I stay at home", "Chat History", "Chat message #6245", "", "Why you travel to different place every weekend \nWhat's the point of having weekends then", "i dont think so, most weekend i stay at home", [[6236, "12:38", "10:08", 0, "I fell asleep anyways wkwkw"]]],
+[47, 6253, 6262, "2026-11-08", "16:52", "14:22", "My internet doesn't work on most weekends", 0, "Most weekends my internet works fine; outages are occasional", "Chat History", "Weekend gaming & chat logs", "", "But most weekends your net doesn't work", "i dont think so, mostly it works", [[6252, "16:52", "14:22", 0, "I said putting blanket but keeping toes out"]]],
+[48, 6736, 6742, "2026-11-13", "19:04", "16:34", "I previously said I don't use a blanket", 1, "Confirmed: 'yeah its been months i dont use blanket' (only rarely when cold)", "Chat History", "Chat messages #6742 & #6752", "", "You said you don't use blanket", "yeah its been months i dont use blanket", [[6735, "18:53", "16:23", 1, "yeah"]]],
+[49, 6760, 6767, "2026-11-13", "22:33", "20:03", "I went back to ignoring her on Nov 13 night because she raised an issue", 0, "I was watching something and fell asleep without opening my phone at all", "Sleep & Activity Log", "Sleep & Activity Log (Nov 13 night)", "", "Back to ignoring me...\nFine...", "sorry was watching something then fall asleep, didnt open phone at all", [[6759, "22:30", "20:00", 0, "Where are you?"]]],
+[50, 6981, 6988, "2026-11-16", "10:41", "08:11", "I played our MLBB match unseriously while she did her best", 0, "I played my best and achieved a match rating score over 10.0", "MLBB Match History", "MLBB Match Result Screenshot (Score > 10.0)", "", "Here I do my best so I don't make you lose the game and you play it unseriously 😒", "i did my best also, got score more than 10.0", [[6980, "10:41", "08:11", 0, "😒😒😒😒"]]],
+[51, 7023, 7026, "2026-11-16", "19:58", "17:28", "I deny buying anything or doing anything for her willingly", 0, "I do many things for her willingly; I only declined items with extreme shipping/price inefficiency (like 4,000 INR for 1 bottle of milk)", "Chat History", "Chat messages #7026, #7053, #7070", "", "You deny me buying anything", "no", [[7022, "19:58", "17:28", 0, "Min only 5 k"]]],
+[52, 7031, 7037, "2026-11-16", "22:46", "20:16", "I got myself an Aspirant skin and never told her how to get skins the cheaper way", 0, "I explained the exact method at least 6 different times earlier in the chat (quoted directly as proof in messages #7045-#7052, starting from Sept 6 msg #25)", "Chat History", "Quoted proof messages #25, #7045-#7052", "", "You got yourself aspirant skin and didn't tell me how to get it in cheaper way...", "i told you many times", [[7030, "22:45", "20:15", 0, "So..spending money on me is not worth it for you?"]]],
+[53, 7101, 7106, "2026-11-17", "18:06", "15:36", "I deny everything she asks — '99% no' (or even '100% no, data speaks otherwise')", 0, "Actual chat data across all logged requests shows I say YES to the vast majority (>75%) of her requests, far from 99% No", "Full Chat Data Analysis", "Sheet 2: Request Yes/No Statistics", "", "But it is about you denying everything I ask", "not everything you ask i deny", [[7100, "18:06", "15:36", 0, "Yeah it can"]]],
+[54, 7238, 7248, "2026-11-19", "19:02", "16:32", "I have been much busier than usual on Nov 19", 0, "I was not busier than usual and even played MLBB matches that day", "MLBB Match History", "Chat messages #7248 & #7267", "", "More busy than usual", "am i? i didnt count the time precisely", [[7239, "19:02", "16:32", 0, "I am doing one meal a day challenge for 30 days"]]],
+[55, 7414, 7418, "2026-11-22", "09:04", "06:34", "I sleep 'so early' every day when I sleep around 9:00-9:30 PM IST", 0, "9:30 PM IST is 12:00 AM (midnight) in my timezone (GMT+8), which is normal bedtime, not early", "Timezone Math + Chat Log", "GMT+8 vs IST (+2.5 hours difference)", "", "Why sleep so early everyday", "its not early, its almost midnight here", [[7413, "09:04", "06:34", 0, "Today no sleep at night we play?"]]],
+[56, 7416, 7419, "2026-11-22", "09:09", "06:39", "If my other friends ask me to play, I stay up late for them", 0, "Even when my friends played games last night, I went to sleep at my usual time", "Sleep Log + MLBB Match History", "Sleep Log (Nov 21 night) + MLBB Match History", "", "If your other friends ask you stay up late", "no, last night my friend play game also and i sleep", [[7415, "09:05", "06:35", 0, "Stay up somedays?"]]],
+[57, 7420, 7424, "2026-11-22", "10:09", "07:39", "I stay awake until 2:00 AM (or 12:00 AM IST / 2:30 AM GMT+8) watching things anyway", 0, "99.6% of my Sept-Nov 2026 messages stop before midnight GMT+8 (0.0% messages at 2-3 AM GMT+8), proving I am already asleep at that hour", "17-Month Chat Timestamp Log", "17-Month Chat Timestamp Distribution", "", "But you stay awake till 2 am anyways", "usually already sleep around 9 P.M. ist", [[7419, "09:34", "07:04", 1, "no, last night my friend play game also and i sleep"]]],
+[58, 7430, 7432, "2026-11-22", "10:23", "07:53", "I play late at night with my other friends often while ignoring her", 0, "My friends play almost every night while I am already sleeping; I very rarely play at night", "Sleep Log + MLBB Match History", "Sleep Log + MLBB Match History", "", "Yeah so you do play with them late night often", "not often", [[7429, "10:22", "07:52", 0, "It is for you"]]]
+];
+const R_DATA = [
+[1, 5465, 5487, "2026-11-02", "12:56", "10:26", "Open iShowSpeed's Miles Morales cosplay post and see it", 1, "Opened the page and viewed the post (#5499: 'yeah i see it')", 1, "Just open the page and see?", "ohhh okok", [[5466, "12:56", "10:26", 0, "Wdym no 😒"]]],
+[2, 5670, 5674, "2026-11-03", "16:48", "14:18", "Help me in finding laptop size 4K Cinnamoroll GIF or video 🥺", 1, "Agreed ('okok') and spent 30+ minutes searching websites for her", 1, "Help me in finding laptop size 4k cinnamoroll gif or video 🥺", "okok", [[5671, "17:21", "14:51", 1, "User Interface"]]],
+[3, 7134, 7135, "2026-11-18", "12:50", "10:20", "Play MLBB together ('Let's play now?')", 1, "Replied 'letsgo' and played together immediately", 1, "Let's play now?", "letsgo", [[7133, "12:49", "10:19", 0, "But data speaks otherwise"]]],
+[4, 6918, 6920, "2026-11-15", "17:04", "14:34", "Play MLBB together after chores ('If chores are done let's play?')", 1, "Replied 'letsgo' and logged into the game", 1, "If chores are done let's play?", "letsgo", [[6917, "17:04", "14:34", 0, "They have to shut down their websites"]]],
+[5, 6729, 6734, "2026-11-13", "18:51", "16:21", "Help get Crimson Desert cracked game / free mod (5k INR game)", 1, "Found and sent the direct OvaGames ElAmigos download link within 2 minutes", 1, "I want to play it...help me get the mod free?", "https://www.ovagames.com/crimson-desert-deluxe-edition-multi14-elamigos.html", [[6728, "18:51", "16:21", 0, "No below it...see that it is asking me to download it"]]],
+[6, 6985, 6989, "2026-11-16", "10:44", "08:14", "Gimmie Kagura new skin", 0, "Too late to get it the cheaper way (requires daily spin & weekly diamond pass from day 1); sent screenshot instead", 1, "Gimmie kagura new skin?", "[Image] here", [[6986, "10:46", "08:16", 0, "Sampoorna is hindi word tho wkwkw"]]],
+[7, 6412, 6423, "2026-11-09", "20:22", "17:52", "Buy & ship Korean milk (Binggrae) to India", 0, "Too expensive (~4,000 INR with international shipping for 1 milk = worth 3 months of my food) & would expire during 2-month shipping", 1, "Girft me", "its available in your area?", [[6411, "20:22", "17:52", 0, "I want to try it"]]],
+[8, 8, 14, "2026-09-06", "18:14", "15:44", "Do the task on home PC setup instead of office", 0, "At home the internet connection is not really good", 0, "Just do it at your home setup?", "at home internet not really good", [[7, "18:14", "15:44", 0, "After july we don't get mangoes in india"]]],
+[9, 9, 15, "2026-09-06", "18:14", "15:44", "Find a drama/anime streaming website that works in India 🥹", 1, "Searched for working sites (though many are blocked by Indian government ISP rules)", 0, "Find a website that works in india 🥹", "not found yet wkkwkw, maybe thats because your government block it", [[8, "18:14", "15:44", 0, "Just do it at your home setup?"]]],
+[10, 11, 16, "2026-09-06", "18:15", "15:45", "Give review of the anime we talked about last week", 1, "Confirmed I already watched it since release and that it is good", 0, "But last week I talked about it and you said you hv heard its good\n\nWhats your review then", "i said its good, not i've heard its good", [[10, "18:15", "15:45", 0, "Even this kissasian for c dramas is not working since past 3 days"]]],
+[11, 25, 36, "2026-09-06", "19:08", "16:38", "Explain what MLBB event the Angela skin is from", 1, "Explained it is the Aspirant event, random draw, and needs ~1,000 diamonds saved beforehand", 0, "Infact it was found that most of these govt servants and ministers are the ones who consume it the most 😭 no wonder these aren't ban", "yeah wkwkkw", [[24, "19:06", "16:36", 0, "Indian government ban everything but corn websites"]]],
+[12, 31, 40, "2026-09-06", "21:34", "19:04", "Play MLBB together ('Kahan ho khelogi?')", 1, "Asked for translation and replied to coordinate playing", 0, "Kahan ho khelogi?", "play what?", [[41, "22:07", "19:37", 1, "niceee, choco cookie"]]],
+[13, 53, 60, "2026-09-06", "22:25", "19:55", "Invite her if I want to play MLBB after her Brawl match", 1, "Agreed ('okok')", 0, "I am playing brawl if want to play invite me", "okok", [[52, "22:24", "19:54", 0, "Are they imported or grown in your country"]]],
+[14, 240, 263, "2026-09-08", "12:02", "09:32", "Help find and get the Hello Kitty folder icons for her PC", 1, "Found and sent the exact wallpapers-clan.com Hello Kitty folder icons link", 0, "[Image] Help me get this", "https://wallpapers-clan.com/folder-icons/hello-kitty?utm_source=Pinterest&utm_medium=organic", [[264, "16:02", "13:32", 1, "https://custom-cursor.com/en/collection/hello-kitty"]]],
+[15, 306, 314, "2026-09-08", "19:55", "17:25", "Help reset her laptop if the custom theme makes it glitch", 1, "Agreed ('ok') to help troubleshoot/reset whenever needed", 0, "Okay if laptop glitches help me reset it?", "ok", [[305, "19:55", "17:25", 0, "Good then"]]],
+[16, 647, 658, "2026-09-10", "23:27", "20:57", "Help get a free PDF viewer for her laptop", 1, "Recommended and sent pdfgear.com", 0, "Help me get a free pdf viewer", "pdfgear.com", [[646, "23:15", "20:45", 0, "Do you think\nI am better off social media\nLike mentally do you see the change when I am too much online vs som"]]],
+[17, 1236, 1243, "2026-09-15", "11:34", "09:04", "Be honest and tell her if she asks something that annoys me", 1, "Agreed ('okay okay, dont worry, Cookie 👌🏻')", 0, "Just be honest and tell me if I ask something that annoys you ..🫠", "okay okay, dont worry, Cookie 👌🏻👌🏻👌🏻", [[1244, "11:58", "09:28", 1, "yeah i know"]]],
+[18, 1266, 1271, "2026-09-15", "12:57", "10:27", "Let her add me back on Instagram and tell her if anything bothers me", 1, "Agreed ('okay okay, dont worry, cookie')", 0, "I add you on Instagram again and if anything I do bothers you ..you tell me okay?", "okay okay, dont worry, cookie", [[1265, "12:42", "10:12", 0, "It's fine...\nI understand you are working 😋"]]],
+[19, 1591, 1596, "2026-09-18", "11:19", "08:49", "Show office photo / setup today", 0, "Was working outside in the field and didn't go to the office that day", 0, "Show me?", "i work outside again, didnt need to go to office today", [[1590, "11:19", "08:49", 0, "But even with it you see indian sweet"]]],
+[20, 1750, 1754, "2026-09-19", "12:49", "10:19", "Show the requested screenshot/view", 1, "Sent the requested image right away", 0, "[Image] Show me this", "[Image]", [[1749, "12:45", "10:15", 0, "Omg you do? How?"]]],
+[21, 1810, 1814, "2026-09-20", "16:12", "13:42", "Play MLBB right now ('Can play npw')", 1, "Replied 'yeah letsgo' and played", 0, "Can play npw", "yeah letsgo", [[1809, "14:11", "11:41", 1, "hiii 👋🏻👋🏻👋🏻"]]],
+[22, 2264, 2270, "2026-09-26", "14:02", "11:32", "Gimmie Angela Cyber skin", 0, "I don't even own the skin myself (required before gifting)", 0, "Gimmie angela cyber skin 😶", "kwkwkkwk i dont even have it", [[2263, "13:44", "11:14", 0, "In north India it is raining since past 48 hours...it feels like I am living in rainforest area wkwk"]]],
+[23, 2272, 2277, "2026-09-26", "15:49", "13:19", "Gimmie Aspirant skin (buy one first then gift it)", 0, "Requires owning the Aspirant skin first and costs too much money", 0, "Gimmie", "to gift aspirant skin, i have to have one first", [[2271, "15:49", "13:19", 0, "Exactly you don't play angela I do"]]],
+[24, 2383, 2387, "2026-09-27", "15:58", "13:28", "Gimmie 5 diamonds in MLBB", 1, "Agreed and asked for her MLBB ID number to send it", 0, "Gimmie 5 diamonds", "need the ID number to gift it", [[2382, "15:58", "13:28", 0, "Swelling"]]],
+[25, 2615, 2621, "2026-09-29", "17:50", "15:20", "Give her a Pumpkin Spice Latte", 1, "Sent her a Pumpkin Spice Latte image playfully ('[Image] here')", 0, "If you give me pumpkin spice latte...I might believe it", "[Image] here", [[2614, "17:17", "14:47", 1, "yeah i am not forced, i choose to be your friend"]]],
+[26, 2704, 2711, "2026-09-30", "14:19", "11:49", "Do her office work for her today 😋", 0, "Haven't tried her job workflow before, so don't know how to do it", 0, "Can you do my work today? 😋", "havent tried it, dont know can or not", [[2703, "14:18", "11:48", 0, "I couldn't even sleep because of it🥲"]]],
+[27, 2764, 2780, "2026-10-01", "11:50", "09:20", "Show phone usage / sleep data from Digital Wellbeing / Google Health", 1, "Sent screenshots & an entire album of Digital Wellbeing phone usage data (#2780, #2787-#2790) plus downloaded Google Fit (#2794)", 0, "That you are willing to show the data", "[Image] can't see how much i sleep tho", [[2763, "06:56", "04:26", 1, "okayokayyy"]]],
+[28, 3020, 3025, "2026-10-03", "23:13", "20:43", "Play MLBB together tomorrow ('Let's play tomorrow? 😋')", 1, "Agreed ('oke letsgoo')", 0, "Let's play tomorrow? 😋", "oke letsgoo", [[3019, "22:52", "20:22", 0, "Idk if you really don't understand or just tired of me"]]],
+[29, 3075, 3078, "2026-10-04", "19:57", "17:27", "Play MLBB together ('Do you not want to play with me anymore?')", 1, "Replied 'no, lets play' and played together", 0, "Do you not want to play with me anymore?", "no, lets play", [[3074, "19:56", "17:26", 0, "Amen"]]],
+[30, 3209, 3214, "2026-10-07", "00:03", "21:33", "Play MLBB late at night (00:03 AM GMT+8 / 9:33 PM IST)", 0, "Was already asleep (past midnight GMT+8)", 0, "I asked to play and again excuses", "sorry, i already sleep :(((", [[3210, "00:03", "21:33", 0, "Let it be then better not ask"]]],
+[31, 3279, 3284, "2026-10-08", "10:25", "07:55", "Explain how to buy Nasi Padang and Satay", 1, "Sent image and explained the difference between Nasi Padang shops and Satay vendors", 0, "How to buy all this", "[Image] its either nasi padang or satay store. nasi padang mostly doesnt have menu tho, just choose whatever you want from their shelf", [[3280, "10:25", "07:55", 0, "I give treat"]]],
+[32, 3596, 3608, "2026-10-10", "17:22", "14:52", "Still be her friend even if she has an eye patch / can't text as much", 1, "Confirmed 'yes', I wouldn't mock or abandon her", 0, "Will you still be her friend?", "yes", [[3595, "17:22", "14:52", 0, "If kookie becomes blind in her right eye"]]],
+[33, 3606, 3617, "2026-10-10", "17:33", "15:03", "Invite her to watch in-game when I play Masha", 1, "Agreed ('ohhh okok')", 0, "I mean invite me.to watch", "ohhh okok", [[3605, "17:33", "15:03", 0, "If you play some other time and get to pick masha invite me.okay"]]],
+[34, 3619, 3631, "2026-10-10", "19:35", "17:05", "Call or text to notify her when inviting", 1, "Agreed to call", 0, "Just send me a text or call?", "call", [[3618, "18:11", "15:41", 1, "okayy"]]],
+[35, 3834, 3840, "2026-10-13", "13:17", "10:47", "Play MLBB right now at 1:17 PM GMT+8 ('Play now?')", 0, "Couldn't play at 1:17 PM because I was still working at the office", 0, "Play now?", "can't still wroking", [[3833, "13:10", "10:40", 0, "I did wake up around 6 to pray...but my eyes felt so heavy I didn't realise I fell asleep again 🥴"]]],
+[36, 3931, 3939, "2026-10-14", "12:42", "10:12", "Teach her how to play more MLBB heroes 😋", 1, "Agreed ('okayyyy')", 0, "Okay...so teach me more heroes 😋😋", "okayyyy", [[3930, "12:41", "10:11", 0, "This is actually for my mom n sister wkwkw\nI only ate plain non roasted one 😭"]]],
+[37, 3944, 3947, "2026-10-14", "16:29", "13:59", "Gimmie your MLBB account login (email & password)", 1, "Immediately shared my MLBB login email and password with her", 0, "Gimmie your MLBB login", "wahyupamungkaspml@gmail.com \n******** (password masked)", [[3943, "16:14", "13:44", 0, "If I choose current team it will be a simple work and the team lead position is not fixed and when will they g"]]],
+[38, 3964, 3968, "2026-10-14", "17:34", "15:04", "Gimmie the verification code to log into my MLBB account", 1, "Immediately sent the 6-digit verification code (162020)", 0, "Gimmie code", "162020", [[3963, "17:32", "15:02", 0, "Plus too many calls in current work which I hate"]]],
+[39, 3975, 3980, "2026-10-14", "18:25", "15:55", "Send her in-game gifts in MLBB from time to time 🫠", 1, "Agreed ('okayyy')", 0, "Send me gifts in MLBB from time to time 🫠", "okayyy", [[3976, "18:25", "15:55", 0, "What's the point of keeping it all in inventory"]]],
+[40, 4048, 4052, "2026-10-15", "23:18", "20:48", "Do a Halloween cosplay", 0, "Indonesia doesn't celebrate Halloween", 0, "Let's do halloween cosplay? 😋", "kwkwkwk indonesia doesnt celebrate haloween", [[4049, "08:05", "05:35", 1, "??? i literally say its good"]]],
+[41, 4161, 4163, "2026-10-16", "19:24", "16:54", "Tell her whether MRO game requires a VPN for different regions", 1, "Checked and confirmed it still needs a VPN", 0, "Tell me", "ohhh, yeah still need VPN", [[4160, "19:24", "16:54", 0, "If something gets broken in house what do you do?"]]],
+[42, 4167, 4172, "2026-10-16", "19:38", "17:08", "Help her win in MRO", 1, "Played together and advised fixing the VPN so ping wouldn't exceed 200ms", 0, "Help me win", "you have to fix your VPN, or i got 200++ ping playing with you wkkwkw", [[4166, "19:27", "16:57", 0, "It's mostly loss solo 😶‍🌫️"]]],
+[43, 4336, 4338, "2026-10-20", "09:30", "07:00", "Play MLBB in the morning ('Lets play?')", 1, "Replied 'letsgo' and played together", 0, "Lets play?", "letsgo", [[4335, "09:30", "07:00", 0, "Are you working right now?"]]],
+[44, 4540, 4544, "2026-10-23", "18:15", "15:45", "Buy item from Shopee link she sent", 0, "No extra money at the time ('no money :(')", 0, "https://id.shp.ee/omdmg3fx?fromSource=copy_link&smtt=0.0.9\n\nBuy this", "no money :(", [[4541, "18:15", "15:45", 0, "But I want to win"]]],
+[45, 4569, 4573, "2026-10-23", "22:23", "19:53", "Tell her if I find any good clothing brand with cute outfits", 1, "Agreed ('okay okayy')", 0, "If there is any good brand with cute outfits you can tell me", "okay okayy, i dont know either wkkwkwk", [[4568, "22:23", "19:53", 0, "I just saw it on insta adv and found it cute"]]],
+[46, 4626, 4630, "2026-10-24", "18:31", "16:01", "Check the second Shopee link she shared ('See this one 🥺')", 1, "Opened and reviewed it ('yeah its good')", 0, "https://id.shp.ee/TLWVo3xX\n\nSee this one 🥺", "yeah its good", [[4627, "19:43", "17:13", 1, "atlas is AOE, Kaela is single target, they have their own advantage"]]],
+[47, 4634, 4640, "2026-10-24", "20:44", "18:14", "Buy the item from the second Shopee link ('Buy buy 👉👈')", 0, "Polite decline ('no thanks wkwkwk')", 0, "Buy buy 👉👈", "no thanks wkwkwk", [[4633, "20:44", "18:14", 0, "Yes but is she good against atlas?"]]],
+[48, 4700, 4707, "2026-10-25", "20:10", "17:40", "Play MLBB at 8:10 PM GMT+8", 0, "Was just about to go to the mosque for prayer", 0, "Oh don't want to play?", "was about to go to mosque wkwkw", [[4699, "20:09", "17:39", 0, "To play 😶‍🌫️"]]],
+[49, 4889, 4894, "2026-10-27", "16:33", "14:03", "Play MLBB today ('Let's play today')", 1, "Agreed, just asked to wait 30 minutes due to temporary provider tower blackout", 0, "Let's play today", "wait for 30 minutes, my internet is bad. There is blackout on the provider tower i believe", [[4888, "16:33", "14:03", 0, "It's my off today 🫠🫠🫠"]]],
+[50, 5092, 5097, "2026-10-30", "14:23", "11:53", "Help her sometimes 🥺", 1, "Agreed ('ok')", 0, "Help me sometimes 🥺", "ok", [[5091, "08:32", "06:02", 1, "i spell it in original spell"]]],
+[51, 5195, 5202, "2026-10-30", "21:23", "18:53", "Play MRO together ('Want to play MRO?')", 1, "Replied 'ready' and played", 0, "Want to play MRO?", "ready", [[5194, "20:16", "17:46", 0, "Rayray and harlem  would even laugh at me because I was over curious and always talking and asking questions 🥴"]]],
+[52, 5241, 5245, "2026-10-30", "22:49", "20:19", "Answer her late-night call to play at 10:49 PM GMT+8", 0, "Was already asleep for the night", 0, "Called you to play but didn't answer...then don't say if I want to play I should just call you", "sorry, Cookie. I already asleep :(", [[5240, "22:48", "20:18", 0, "I was just thinking about all the friends and friendship but to you ..it looks like it's a boring thing"]]],
+[53, 5377, 5384, "2026-11-01", "20:58", "18:28", "Play ranked MLBB (Kalea) together 😶👉👈", 1, "Replied 'ready' and played ranked together", 0, "Play rank kaela with me? 😶👉👈", "ready", [[5376, "20:57", "18:27", 0, "I bought starlight for kaela skin but...I played so many brawls didn't get her wkwkw 😭"]]],
+[54, 5421, 5422, "2026-11-02", "01:07", "22:37", "Choose which character for her AI Halloween edit of me", 1, "Answered her question and picked the edit", 0, "ok", "Eipstein", [[5420, "01:07", "22:37", 1, "yeah"]]],
+[55, 5485, 5489, "2026-11-02", "13:08", "10:38", "Use one of her AI edits as my display picture (DP)", 1, "Chose one of the edits she made and set it as my DP", 0, "Make this one your dp?", "i choose the eipstein photo", []],
+[56, 5603, 5607, "2026-11-02", "23:30", "21:00", "Buy the Guinness World Record most expensive water bottle ($60,000) 😋", 0, "Joke request for a $60,000 luxury water bottle ('wkkwkwkwkkwkw')", 0, "https://www.dargentaenterprise.com/most-expensive-water-bottle-guiness-record\n\nBuy me this water to save yourself 😋", "wkkwkwkwkkwkw", [[5604, "05:59", "03:29", 1, "dont know yet"]]],
+[57, 5773, 5781, "2026-11-05", "18:54", "16:24", "Show her how to use the wallpaper/theme tool via video when free", 1, "Recorded and sent a tutorial video ('[Video]') showing how to use it", 0, "Will you show me today? When you are free about how to use it?", "[Video]", [[5772, "18:53", "16:23", 0, "Which is like gato's ult which gives airborne?"]]],
+[58, 6001, 6012, "2026-11-06", "21:13", "18:43", "Play MRO together ('Want to play MRO?')", 1, "Replied 'ready' and played", 0, "Want to play MRO?", "ready", [[6000, "21:01", "18:31", 0, "Exactly so it's normal for them to not know things..but it's the opposite with us"]]],
+[59, 6034, 6035, "2026-11-06", "23:38", "21:08", "Play ranked MLBB together at 11:38 PM GMT+8", 1, "Replied 'ok letsgo' and played ranked even late at night", 0, "Do you still want to play ranked maybe?", "ok letsgo", [[6033, "23:38", "21:08", 0, "Yeah but that's fake explanation but it's fine ..🫠 I really don't know so...it's fine.."]]],
+[60, 6092, 6102, "2026-11-07", "10:42", "08:12", "Show her a close-up photo of my eyelashes", 1, "Took and sent a photo of my eyelashes ('[Image]')", 0, "Show me your eyelashes?", "[Image]", [[6093, "10:42", "08:12", 0, "Hu.. I searched about it...it seems good..I will buy today"]]],
+[61, 6368, 6384, "2026-11-09", "15:42", "13:12", "Play MLBB together ('Want to play? 😋😋😋')", 1, "Replied 'ready'", 0, "Want to play? 😋😋😋", "ready", [[6367, "15:42", "13:12", 0, "I have off for 2 more days"]]],
+[62, 6396, 6406, "2026-11-09", "18:26", "15:56", "Show her once I am back", 1, "Agreed ('okok')", 0, "Show me once yoy are back n I will tell you", "okok", [[6395, "18:26", "15:56", 0, "It's blanket too"]]],
+[63, 6401, 6409, "2026-11-09", "18:40", "16:10", "Play MLBB at 6:00 PM IST (8:30 PM GMT+8)", 1, "Agreed ('ok') and logged in at 6 PM IST", 0, "Play at 6 pm ist", "ok", [[6402, "18:41", "16:11", 1, "its okay"]]],
+[64, 6746, 6750, "2026-11-13", "19:46", "17:16", "Guide her step-by-step on how to download the Crimson Desert files", 1, "Guided her through the links, right-clicking, popups, and torrent steps (#6750-#6903)", 0, "Then show me the file...?", "click the link first", [[6745, "19:39", "17:09", 1, "wkwkwkwk nice"]]],
+[65, 6991, 6996, "2026-11-16", "12:43", "10:13", "Buy a Legend skin for her 🥺", 0, "Too expensive; I don't even own a Legend skin on my own account", 0, "Buy it for me 🥺", "i dont even have legend skin :(", [[6992, "12:43", "10:13", 0, "I am talking about during draft pick wkwkwk"]]],
+[66, 7320, 7325, "2026-11-20", "19:28", "16:58", "Play Barbie dress-up game with her", 0, "Not interested in Barbie dress-up; suggested playing MLBB instead", 0, "Do you want to play  Barbie dress up with me ?", "no wkwkwkw", [[7319, "19:28", "16:58", 0, "Ooohhhh\nI played barbie dressup games today wkwkwk so funny and cute"]]],
+[67, 7408, 7412, "2026-11-21", "23:00", "20:30", "Play MLBB at 11:00 PM GMT+8 (8:30 PM IST) on Nov 21", 0, "Was already asleep last night", 0, "Let's play", "sorry, already sleep last night :(", [[7407, "22:53", "20:23", 0, "That's why it is said there are 7 rebirths of humans in Hinduism"]]],
+[68, 7413, 7417, "2026-11-22", "09:04", "06:34", "Try staying up later tonight so we can play ('Today no sleep at night we play?')", 1, "Agreed to try ('i can try')", 0, "Today no sleep at night we play?", "i can try", [[7412, "07:11", "04:41", 1, "sorry, already sleep last night :("]]]
+];
+const G_DATA = [
+[1, 21, 33, "2026-09-06", "19:05", "16:35", "Indian government bans everything except adult websites", 1, "Agreed ('yeah wkwkkw')", "Yeah I think 4 seasons are good though can get all sort of fruits and vegetables this way...", "i watch since release", []],
+[2, 171, 186, "2026-09-07", "21:09", "18:39", "Even people who pretend to be religious online often aren't truly religious", 1, "Agreed ('yeah, not really religious')", "I think so too...even those who pretend to be religious aren't religious only ones who just practice is silently and focus on thei", "yeah, not really religious", []],
+[3, 220, 230, "2026-09-08", "02:22", "23:52", "Her reaction/observation on the situation", 1, "Confirmed ('wkkwkwkwk, its true tho')", "How can...🥴idk what to say tbh 🤕", "wkkwkwkwk, its true tho", []],
+[4, 253, 261, "2026-09-08", "14:21", "11:51", "Focusing too much on protein damages the kidneys", 0, "Sent reference image & disagreed ('i dont think so. Also i need enough protein only, not too much')", "If too much focus on protein it effects kidneys", "[Image] i dont think so. Also i need enough protein only, not too much. Better save money", []],
+[5, 482, 509, "2026-09-09", "21:05", "18:35", "Wanting to stay calm and not react or get stressed easily", 1, "Explicitly agreed ('yeah i agree')", "This is what I want my reaction to become like...not to react or get scared or get defensive", "yeah i agree", []],
+[6, 670, 672, "2026-09-11", "12:05", "09:35", "Getting more muscle requires more workout", 1, "Explicitly agreed ('exactly')", "But to get more muscles need more workout", "exactly", []],
+[7, 796, 801, "2026-09-11", "20:10", "17:40", "Darker color is better than white because dirt is less visible", 1, "Agreed ('yeah its better, not really visible the dirt')", "So better than white right?", "yeah its better, not really visible the dirt", []],
+[8, 1274, 1280, "2026-09-15", "13:00", "10:30", "In India you can find cows and crows everywhere", 1, "Acknowledged ('yeah wkwkkww')", "In india you may find cows and crows everywhere", "yeah wkwkkww", []],
+[9, 1301, 1304, "2026-09-15", "16:16", "13:46", "Religious texts say not to leave anyone in isolation for too long", 1, "Agreed ('yeahhh agree, but i believe also it depends on the people')", "Like how our religious texts says not to leave anyone in isolation for long and to forgive people and have a purpose in life...it ", "yeahhh agree, but i believe also it depends on the people also", []],
+[10, 1367, 1372, "2026-09-16", "08:31", "06:01", "Visiting a friend's profile or interacting isn't a big deal", 1, "Explicitly agreed ('yeah exactly')", "Yeah so it's not like a big thing to visit some friend's profile or interact with their content", "yeah exactly", []],
+[11, 1380, 1387, "2026-09-16", "11:35", "09:05", "The streamer gives 'fatherly vibes' as Rayray claimed", 0, "Disagreed ('i dont think so wkwkwk')", "Isn't he a gamer who gives fatherly vibes wkwk that's what rayray called him", "i dont think so wkwkwk", []],
+[12, 1381, 1388, "2026-09-16", "11:36", "09:06", "His gaming livestreams look good and get many views across different games", 1, "Agreed ('yeah he play a lot of games')", "His gaming lives look good he plays so many different games and still get so many views... \nMost of the live streamers just play o", "yeah he play a lot of games", []],
+[13, 1515, 1521, "2026-09-17", "18:00", "15:30", "The dish in the photo was orangish-red spicy tofu", 0, "Clarified ('i dont think so. Its seafood')", "So it was spicy tofu which was orangish red in colour", "i dont think so. Its seafood", []],
+[14, 1526, 1538, "2026-09-17", "20:21", "17:51", "Now the explanation makes complete sense", 1, "Explicitly agreed ('exactly')", "Oh wkwkwk it makes sense now 😅😅😅", "exactly", []],
+[15, 1704, 1707, "2026-09-18", "22:11", "19:41", "It is very difficult for roam players to play decent solo games now", 1, "Agreed ('yeah its hard if we play solo roam')", "See very difficult for roam players to play decent games now", "yeah its hard if we play solo roam", []],
+[16, 2189, 2194, "2026-09-25", "17:41", "15:11", "Friendship is boring according to you", 0, "Disagreed ('i dont think so')", "Friendship is boring according to you", "i dont think so", []],
+[17, 2442, 2445, "2026-09-27", "20:19", "17:49", "Playing buffed heroes like Cici this season is good", 1, "Agreed, noting Masha is also one of the strongest this season", "You are quick to play buffed hero wkwkwk\nYou can play cici this season too I saw many playing", "yeah, but masha is one of the strongest in current season", []],
+[18, 2552, 2558, "2026-09-28", "19:46", "17:16", "Friends should treat each other nicely", 1, "Explicitly agreed ('yeah agree')", "Exactly so...you should treat me Nicely instead of ignoring me", "yeah agree", []],
+[19, 2717, 2720, "2026-09-30", "18:18", "15:48", "You are busy 80% of the time", 0, "Disagreed with the math ('i dont think so, even my sleep is atleast 30%')", "80% of the time you are", "i dont think so, even my sleep is atleast 30%", []],
+[20, 2799, 2809, "2026-10-01", "14:03", "11:33", "Nobody actually uses fitness/sleep tracking apps daily", 1, "Explicitly agreed ('exactly')", "Obviously not🤭🤭🤭", "exactly", []],
+[21, 2820, 2824, "2026-10-01", "16:06", "13:36", "After forest fires, the land will all be sold to corporations for buildings", 0, "Disagreed ('not really, there is still much forest')", "But after fire it may? Because it will be sold to corporate to build buildings", "not really, there is still much forest", []],
+[22, 2978, 2989, "2026-10-03", "19:41", "17:11", "Choosing a hair color that feels right to oneself", 1, "Explicitly agreed ('exactly, just choose whatever you think its good')", "I cannot \nIdk why but black hair looks weird to me 😭", "exactly, just choose whatever you think its good", []],
+[23, 2981, 2987, "2026-10-03", "19:42", "17:12", "Recently there are no newly released gacha or open-world games that are interesting", 1, "Agreed ('yeah wkwkkw')", "These days there is no new released gacha or open world game that is interesting 🥴", "yeah wkwkkw", []],
+[24, 3064, 3071, "2026-10-04", "17:21", "14:51", "Vitamin B-complex is a really good multivitamin", 1, "Explicitly agreed ('yeah agree')", "B complex is really a good multivitamin", "yeah agree", []],
+[25, 3096, 3101, "2026-10-05", "13:09", "10:39", "Your replies are deprived of emotion, information, or are boring", 0, "Disagreed ('i dont think so')", "Yeah replies that are deprived of any emotions, any information or are boring", "i dont think so", []],
+[26, 3170, 3178, "2026-10-06", "16:54", "14:24", "That pattern happens mostly in daily life", 1, "Explicitly agreed ('exactly, so its normal')", "But mostly", "exactly, so its normal", []],
+[27, 3274, 3276, "2026-10-07", "22:47", "20:17", "You can buy both Nasi Padang and Satay from the same restaurant", 0, "Disagreed ('i dont think so nasi padang restaurant sell satay')", "You can get all this from one place right", "i dont think so nasi padang restaurant sell satay", []],
+[28, 3480, 3488, "2026-10-09", "15:36", "13:06", "Most romance animes are good / wondering if I like romance anime", 0, "Disagreed ('not really, i prefer sci-fi or action')", "Do you like romance anime? But I guess most of the animes will have open/sad ending ?", "not really, i prefer sci-fi or action", []],
+[29, 3523, 3528, "2026-10-10", "11:20", "08:50", "Missing old school days more than the present", 0, "Disagreed ('not really, i enjoy current days')", "Or school daya", "not really, i enjoy current days", []],
+[30, 3624, 3636, "2026-10-10", "19:40", "17:10", "Living without worrying about accommodation, meals, and living expenses is great", 1, "Explicitly agreed ('exactly')", "It is.... no worries about  accomodation, meals, living expenses, buying stuff ...dressing up for classes etc etc", "exactly", []],
+[31, 3680, 3691, "2026-10-11", "19:06", "16:36", "It's fine because every family and person is different", 1, "Explicitly agreed ('yeah agree')", "Yeah it's fine as I said everyone is different", "yeah agree", []],
+[32, 3744, 3751, "2026-10-12", "15:03", "12:33", "The hero is very easy to play by hiding most of the time", 1, "Agreed ('yeah, has fast movement speed also, hard to catch')", "Yes and very easy to play too just hide most of the time", "yeah, has fast movement speed also, hard to catch", []],
+[33, 3795, 3801, "2026-10-12", "22:00", "19:30", "Why add random unrelated topics when answering a specific question", 1, "Explicitly agreed ('exactly. So no need to add something')", "Why would it be so random..it's related to only you..?", "exactly. So no need to add something", []],
+[34, 3866, 3872, "2026-10-13", "17:20", "14:50", "Having more individuality and freedom to work in one's own way is better", 1, "Explicitly agreed ('yeah agree')", "Yeah for me too plus having more individuality and freedom to work my way is better than just the title maybe", "yeah agree", []],
+[35, 3983, 3985, "2026-10-14", "20:07", "17:37", "Giving gifts in-game increases brain happiness and improves gameplay", 0, "Disagreed ('i think most people doesnt get that effect')", "It effects the gameplay giving gifts to someone increases brain happiness", "i think most people doesnt get that effect", []],
+[36, 4012, 4016, "2026-10-15", "15:35", "13:05", "'Directly proportional' is strictly a math theory term", 0, "Disagreed ('its not always math theory, its just normal word i use in daily life')", "It is a maths theory I searched it is Direct variant", "its not always math theory, its just normal word i use in daily life", []],
+[37, 4046, 4051, "2026-10-15", "23:18", "20:48", "Agreeing with her sometimes is better 🤩", 1, "Agreed ('yeah i sometimes agree also')", "Yeah it's normal but agreeing to me sometimes is better 🤩", "yeah i sometimes agree also", []],
+[38, 4068, 4074, "2026-10-16", "10:56", "08:26", "Thought Gen Z would be more open-minded towards every religion", 1, "Agreed ('yeah wkwkwkwwkkw')", "Even genz is in there...\nI thought gen z is more open minded towards every religion", "yeah wkwkwkwwkkw", []],
+[39, 4093, 4095, "2026-10-16", "11:06", "08:36", "Arresting someone just for hating on a president (if law is agreed upon)", 1, "Agreed conditionally on democratic law", "It's like arresting someone over hating on president", "yeah if everyone agree on that, then the law about this can be established", []],
+[40, 4112, 4117, "2026-10-16", "11:20", "08:50", "Even if laws may or may not change, people should follow the law of the land", 1, "Explicitly agreed ('yeah agree')", "Yeah... Maybe it will change maybe it will not ..but one should follow the country's rule they are living in atleast when they kno", "yeah agree", []],
+[41, 4116, 4119, "2026-10-16", "11:27", "08:57", "Gaming character cosplay is better received than Halloween cosplay", 1, "Agreed ('yeah in indonesia not get complained as much as halloween i believe')", "Gaming character cosplay is better? 🤔", "yeah in indonesia not get complained as much as halloween i believe", []],
+[42, 4168, 4174, "2026-10-16", "19:38", "17:08", "Using that method works well too", 1, "Explicitly agreed ('exactly')", "That works too I do that too hehe", "exactly", []],
+[43, 4169, 4175, "2026-10-16", "19:38", "17:08", "Something is wrong for sure with the game/connection", 0, "Disagreed ('i dont think so')", "Something is wrong for sure", "i dont think so", []],
+[44, 4189, 4195, "2026-10-16", "22:29", "19:59", "Miya is currently meta in MLBB because many players pick her", 0, "Disagreed ('not really, but it is easy to play')", "Is miya meta btw? I see a lot of players picking her now", "not really, but it is easy to play", []],
+[45, 4352, 4358, "2026-10-20", "11:10", "08:40", "The cat/animal eventually wins, bites, and makes you run away", 0, "Disagreed ('i doubt it')", "No... eventually wins and bites and make you run away", "i doubt it", []],
+[46, 4387, 4393, "2026-10-20", "20:56", "18:26", "Eating Chinese fried rice with a spoon feels right", 1, "Explicitly agreed ('agree')", "Yeah like eating Chinese fried rice with spoon feels correct", "agree", []],
+[47, 4481, 4484, "2026-10-22", "14:02", "11:32", "That person is not a good person", 0, "Disagreed ('i dont think so')", "Not a good person", "i dont think so", []],
+[48, 4523, 4526, "2026-10-22", "23:13", "20:43", "Many people will still deny it depending on their beliefs", 1, "Agreed ('yeah it depends on the believers')", "But many will deny it", "yeah it depends on the believers", []],
+[49, 4571, 4575, "2026-10-23", "22:26", "19:56", "Having lots of arguments obviously leads to hate", 0, "Disagreed ('argument is just different opinion, dont put your emotion on argument')", "We have had lots of arguments so obviously the outcome will be hate", "argument is just different opinion, dont put your emotion on argument", []],
+[50, 4609, 4615, "2026-10-24", "16:49", "14:19", "Cute things make you feel happy too", 0, "Disagreed ('not really')", "If I ask you...do cute things make you happy too?", "not really", []],
+[51, 4612, 4616, "2026-10-24", "16:49", "14:19", "You can put that accessory on a motorbike", 0, "Disagreed ('i dont think that one is for bike')", "You can get one for your bike", "i dont think that one is for bike", []],
+[52, 4635, 4641, "2026-10-24", "20:44", "18:14", "Everyone likes getting free/nice things", 1, "Explicitly agreed ('exactly')", "Of course who doesn't \n\nWkwkkw", "exactly", []],
+[53, 4637, 4642, "2026-10-24", "20:45", "18:15", "Elon Musk's net worth is valuation/stocks rather than pure cash", 1, "Agreed ('yeah its not all money')", "Btw when it is said let's say elon musk worth is 300 m dollars a lot it is just prediction and value based on actual money", "yeah its not all money", []],
+[54, 4741, 4749, "2026-10-26", "16:00", "13:30", "98% of people do not do that", 0, "Disagreed ('i dont think so')", "It is 98% not do", "i dont think so", []],
+[55, 4834, 4844, "2026-10-26", "21:02", "18:32", "You deny everything, even a comment or reply", 0, "Disagreed ('i dont think its everything')", "You deny everything tho a comment or reply", "i dont think its everything", []],
+[56, 4857, 4863, "2026-10-26", "22:37", "20:07", "Getting lots of likes, followers, and comments makes a profile look popular", 1, "Explicitly agreed ('agree')", "Like if you get lots of like and followers and comments on your profile it will make you look popular", "agree", []],
+[57, 4993, 5008, "2026-10-28", "22:47", "20:17", "Environmental pollution/garbage makes the earth worse", 1, "Agreed ('yeah, earth become less inhabitale each day because of human')", "Yesterday night I couldn't fall asleep...I kept crying for no reason... Then I saw how indian govt cut a huge forest within night.", "yeah, earth become less inhabitale each day because of human", []],
+[58, 5037, 5040, "2026-10-29", "17:00", "14:30", "Unsure whether it is really worth it or not", 1, "Explicitly agreed ('agree')", "More like idk if it's worth it or not", "agree", []],
+[59, 5059, 5065, "2026-10-29", "21:01", "18:31", "Guys only value people once they are out of their life", 0, "Disagreed ('i dont think so')", "You are a guy too..is it true that you guys only value people once they are out of life?", "i dont think so", []],
+[60, 5127, 5139, "2026-10-30", "16:50", "14:20", "Harlem was just pretending when texting", 0, "Disagreed ('i dont think so')", "Oh what about harlem does anyone talks to him? I tried texting him once but I guess he was just..going through a lot...and then I ", "i dont think so", []],
+[61, 5133, 5142, "2026-10-30", "16:55", "14:25", "Introverts only talk when forced to talk, often without eye contact", 1, "Explicitly agreed ('wkkwkwkwkkwkw yeah agree')", "Only talk when forced to talk 😭😭 and that too without looking at each other 😭", "wkkwkwkwkkwkw yeah agree", []],
+[62, 5149, 5156, "2026-10-30", "18:20", "15:50", "People should watch Indonesian and English YouTubers/dramas to learn the language", 1, "Explicitly agreed ('agree')", "They should watch indonesian and english youtubers and dramas a lot to learn", "agree", []],
+[63, 5150, 5157, "2026-10-30", "18:21", "15:51", "Sweet soy sauce (kecap manis) must be super tasty", 0, "Moderated ('not really tasty, but good enough')", "Oh it must be really tasty then...I want to try it but we don't get sweet soy sauce in india", "not really tasty, but good enough", []],
+[64, 5220, 5221, "2026-10-30", "22:22", "19:52", "People follow a religion because they believe it is right", 1, "Agreed ('yeah, and still we dont know it is right or wrong')", "But we believe it's right and that's why we follow it", "yeah, and still we dont know it is right or wrong", []],
+[65, 5222, 5223, "2026-10-30", "22:23", "19:53", "So there is still something you believe in within religion", 1, "Explicitly agreed ('yeah, exactly')", "Yeah so there is something you believe in it...still", "yeah, exactly", []],
+[66, 5240, 5244, "2026-10-30", "22:48", "20:18", "Thinking about friendship looks like a boring topic to you", 0, "Disagreed ('i dont think so')", "I was just thinking about all the friends and friendship but to you ..it looks like it's a boring thing", "i dont think so", []],
+[67, 5504, 5508, "2026-11-02", "14:53", "12:23", "iShowSpeed's Miles Morales cosplay post looks cool ('Its cool right?')", 1, "Explicitly agreed ('agree')", "Its cool right?", "agree", []],
+[68, 5506, 5510, "2026-11-02", "14:54", "12:24", "Your current AI edit profile picture is 'not cool / weird'", 0, "Disagreed ('yeah its subjective, for me its cool for you its not cool')", "It's not cool😒😒😒", "yeah its subjective, for me its cool for you its not cool", []],
+[69, 5520, 5526, "2026-11-02", "16:41", "14:11", "The best part of the edit/physique is the arms ('Yeah the best part is arms right?')", 1, "Explicitly agreed ('agree')", "Yeah the best part is arms right?", "agree", []],
+[70, 5525, 5528, "2026-11-02", "16:58", "14:28", "You don't get bullied easily 🤔", 1, "Explicitly agreed ('agree')", "You don't get bullied easily 🤔", "agree", []],
+[71, 5531, 5534, "2026-11-02", "17:57", "15:27", "You get annoyed if someone asks too many questions right!?", 0, "Disagreed ('i dont think so')", "You get annoyed if someone asks too many questions right!?", "i dont think so", []],
+[72, 5561, 5577, "2026-11-02", "21:55", "19:25", "As a guy, you obviously don't have to care about it anyway", 1, "Explicitly agreed ('agree')", "You are a guy wkwk obviously I think you do not have to care about it anyways", "agree", []],
+[73, 5912, 5924, "2026-11-06", "13:07", "10:37", "Moving to the new team might be the best outcome and less stressful", 1, "Explicitly agreed ('agree')", "Tbh idk what's best for me..😅😅 but it is best outcome...maybe..also just trusting the god and not forcing something I don't feel..", "agree", []],
+[74, 5927, 5944, "2026-11-06", "14:31", "12:01", "My stickers are cute and funny right? 😁", 1, "Explicitly agreed ('agree')", "My stickers are cute and funny right? 😁", "agree", []],
+[75, 5928, 5945, "2026-11-06", "14:31", "12:01", "Not initiating a new conversation topic is 'equivalent to ignoring'", 0, "Explicitly disagreed ('disagree')", "That's equivalent to ignoring", "disagree", []],
+[76, 5977, 5986, "2026-11-06", "20:04", "17:34", "Housemates don't talk often with each other either", 1, "Explicitly agreed ('yeah exactly')", "But they do not talk often either", "yeah exactly", []],
+[77, 6051, 6058, "2026-11-07", "00:14", "21:44", "Marksman did well early but gave free kills in the 2nd half which cost the game", 1, "Agreed ('yeah we lost because of that')", "Mm did well but gave few free kills in 2nd half just for kills which caused issue🥴", "yeah we lost because of that", []],
+[78, 6055, 6057, "2026-11-07", "00:19", "21:49", "With minions not cleared late game and 0 turrets, we couldn't stop them anyway", 1, "Agreed ('yeah it is wkkwkwkkw')", "If minions not cleared late game we had 0 turrets to stop them anyways wkwkw", "yeah it is wkkwkwkkw", []],
+[79, 6066, 6078, "2026-11-07", "02:40", "00:10", "Self-deprecating claim: 'I am toxic, unhelpful and useless 😔'", 0, "Disagreed to reassure her ('i dont think so')", "I am toxic, unhelpful and useless 😔 idk what I am even contributing atp 😓", "i dont think so", []],
+[80, 6128, 6133, "2026-11-07", "14:35", "12:05", "COVID made everyone kind of introverted", 1, "Explicitly agreed ('agree')", "I think Covid made everyone kinda introvert", "agree", []],
+[81, 6142, 6147, "2026-11-07", "15:31", "13:01", "Generalizing a rule based only on her own family", 0, "Disagreed ('if only count your family, then it is sampling bias, so not really')", "Not in my family...", "if only count your family, then it is sampling bias, so not really a valid conclusion", []],
+[82, 6224, 6234, "2026-11-08", "08:55", "06:25", "There must be more people who don't want their toes visible in sandals", 1, "Explicitly agreed ('agree')", "There has to be more people like me right who don't want to have their toes covered while sleeping", "agree", []],
+[83, 6364, 6380, "2026-11-09", "15:24", "12:54", "Indonesia doesn't have extreme 50°C summers like India", 1, "Agreed ('yeah all time almost the same temperature')", "Well you don't have extremely hot summer like almost 50° Indian summer..so for you winter holds less value", "yeah all time almost the same temperature", []],
+[84, 6498, 6506, "2026-11-10", "13:37", "11:07", "Drawing/making it with the left (non-dominant) hand is harder", 1, "Agreed ('yeah its hard to use non-dominant hand')", "Not that good but made it from left hand", "yeah its hard to use non-dominant hand", []],
+[85, 6753, 6763, "2026-11-13", "20:34", "18:04", "The SpongeBob event is good", 1, "Agreed ('yeah')", "That spongebob event is good", "yeah", []],
+[86, 6932, 6939, "2026-11-15", "18:06", "15:36", "Teammate picked Minsitthar and kept feeding while we had no tank", 1, "Agreed ('yeah, we have no tank')", "Idk why he picked minsi and then kept feeding \nHe kept asking me to pick angela and then in the end picked minsi so annoying 🥴", "yeah, we have no tank", []],
+[87, 6966, 6975, "2026-11-15", "23:10", "20:40", "Not recalling Kimmy / Barats not playing tank properly caused the issue", 1, "Explicitly agreed ('agree')", "Also I didn't recall kimmy maybe that's why as well she was upset...but barat was doing good and was able to handle more enemy at ", "agree", []],
+[88, 7015, 7020, "2026-11-16", "17:45", "15:15", "Hardly any skills are required for that hero lol", 1, "Explicitly agreed ('wkwkkwkw yeah agree')", "Hardly any skills are required lol", "wkwkkwkw yeah agree", []],
+[89, 7091, 7094, "2026-11-17", "16:59", "14:29", "4,000 rupees for 1 bottle of milk has terrible price/value", 1, "Explicitly agreed ('exactly')", "It is", "exactly", []],
+[90, 7092, 7095, "2026-11-17", "16:59", "14:29", "I did tell you how to get the skin back at that time", 1, "Explicitly agreed ('yeah, exactly. I did')", "At that time", "yeah, exactly. I did", []],
+[91, 7100, 7106, "2026-11-17", "18:06", "15:36", "4,000 rupees can indeed buy 3 months of solo food, 'but you deny everything I ask'", 0, "Disagreed with the second clause ('not everything you ask i deny')", "Yeah it can", "not everything you ask i deny", []],
+[92, 7109, 7115, "2026-11-17", "20:19", "17:49", "'You say this but 99% no'", 0, "Disagreed ('i doubt its 99%')", "You say this but 99% no", "i doubt its 99%", []],
+[93, 7113, 7118, "2026-11-17", "20:20", "17:50", "Need to be careful of the annoying former team lead", 1, "Explicitly agreed ('agree')", "So to be careful of him....", "agree", []],
+[94, 7133, 7136, "2026-11-18", "12:49", "10:19", "'But data speaks otherwise' (claiming data proves 99%-100% No)", 0, "Disagreed ('i doubt the data would say 99%')", "But data speaks otherwise", "i doubt the data would say 99%", []],
+[95, 7142, 7147, "2026-11-18", "13:42", "11:12", "Our Irithel MM didn't use her slow skill on time ever", 1, "Explicitly agreed ('yeah agree, her timing is not good')", "Thse irithel mm 😓😓 she didn't even used her slow skill on time ever", "yeah agree, her timing is not good", []],
+[96, 7143, 7148, "2026-11-18", "13:43", "11:13", "Our Lapu-Lapu always ran away from team fights and fought at the back 🥴", 1, "Explicitly agreed ('yeah agree wkwkwkwk')", "And lapu always ran away from team fight \nfighting at back 🥴", "yeah agree wkwkwkwk", []],
+[97, 7146, 7150, "2026-11-18", "14:03", "11:33", "Diggie is surprisingly good against Nolan wkwkkw", 1, "Explicitly agreed ('agree, nolan can't escape diggie skills')", "Diggie is surprisingly good against nolan wkwkkw", "agree, nolan can't escape diggie skills", []],
+[98, 7152, 7157, "2026-11-18", "15:45", "13:15", "Cookie's self-criticism: 'My ults were useless 😓'", 0, "Disagreed to support her ('i dont think so')", "My ults were useless 😓", "i dont think so", []],
+[99, 7153, 7158, "2026-11-18", "15:45", "13:15", "Picked Diggie for Belerick, and it worked super well shutting down Nolan's dash & ult", 1, "Explicitly agreed ('yeah, agree. he can't escape')", "Yeah I got it for belerick wkwkw but it worked so well on nolan..his dash was useless his ult was useless 🤣", "yeah, agree.  he can't escape", []],
+[100, 7154, 7159, "2026-11-18", "15:46", "13:16", "Diggie + Selena combo is better than Selena + Carmilla", 1, "Explicitly agreed ('agree')", "Diggie selena combo is better than selena carmilla", "agree", []],
+[101, 7166, 7171, "2026-11-18", "18:10", "15:40", "Getting better after years at work is 'just a coincidence'", 0, "Disagreed ('isnt the more you spent on doing something, the more you become better at doing that?')", "Just a coincidence", "isnt the more you spent on doing something, the more you become better at doing that?", []],
+[102, 7185, 7194, "2026-11-18", "20:51", "18:21", "Maybe there should be a women-only section in concerts too lol", 1, "Agreed ('yeah i think its good')", "Maybe there should be a women section in concerts too lol", "yeah i think its good", []],
+[103, 7187, 7195, "2026-11-18", "20:52", "18:22", "Even a bad veteran manager is at least better than on their very first day", 1, "Agreed ('ohhhhhh')", "Yeah atleast better than that", "ohhhhhh", []],
+[104, 7192, 7197, "2026-11-18", "20:54", "18:24", "The video she shared is cute ('[Video] It's cute rigt')", 1, "Explicitly agreed ('agree')", "[Video] It's cute rigt", "agree", []],
+[105, 7208, 7213, "2026-11-19", "10:01", "07:31", "It's still tough being a support hero in MLBB", 1, "Agreed ('yeah, you have to know enemy movement to counter it')", "It's still tough being a support hero", "yeah, you have to know enemy movement to counter it", []],
+[106, 7209, 7214, "2026-11-19", "10:01", "07:31", "Maybe she should learn Tigreal or Atlas", 1, "Agreed ('yeah they are good also')", "Maybe I should learn tigrel or atlas", "yeah they are good also", []],
+[107, 7211, 7216, "2026-11-19", "10:02", "07:32", "Ooo her skin looks cute", 1, "Explicitly agreed ('agree')", "Ooo her skin looks cute", "agree", []],
+[108, 7212, 7217, "2026-11-19", "11:41", "09:11", "Every gamer is posting about GTA 6 now 😅😅", 1, "Agreed ('yeah, its worldwide phenomenon')", "Every gamer is posting GTA 6 now 😅😅", "yeah, its worldwide phenomenon", []],
+[109, 7396, 7399, "2026-11-21", "20:15", "17:45", "In Islam the 7 heavens concept is called Samawat", 1, "Agreed ('yeah there is like that' / 'yeah there are 7 heaven in islam')", "But idk in islam I think it is called samawat", "yeah there is like that", []]
+];
+const H_DATA = [["00:00", "21:30", 8, 0.24, 1497, 3.36], ["01:00", "22:30", 6, 0.18, 1028, 2.31], ["02:00", "23:30", 0, 0.0, 329, 0.74], ["03:00", "00:30", 0, 0.0, 205, 0.46], ["04:00", "01:30", 4, 0.12, 206, 0.46], ["05:00", "02:30", 49, 1.45, 456, 1.02], ["06:00", "03:30", 91, 2.7, 511, 1.15], ["07:00", "04:30", 110, 3.27, 789, 1.77], ["08:00", "05:30", 202, 6.0, 1737, 3.9], ["09:00", "06:30", 91, 2.7, 1374, 3.08], ["10:00", "07:30", 54, 1.6, 1263, 2.84], ["11:00", "08:30", 91, 2.7, 1244, 2.79], ["12:00", "09:30", 176, 5.22, 1696, 3.81], ["13:00", "10:30", 109, 3.24, 2389, 5.36], ["14:00", "11:30", 174, 5.16, 2309, 5.18], ["15:00", "12:30", 168, 4.99, 2453, 5.51], ["16:00", "13:30", 290, 8.61, 2887, 6.48], ["17:00", "14:30", 260, 7.72, 3323, 7.46], ["18:00", "15:30", 331, 9.82, 3697, 8.3], ["19:00", "16:30", 277, 8.22, 4057, 9.11], ["20:00", "17:30", 247, 7.33, 2441, 5.48], ["21:00", "18:30", 124, 3.68, 1802, 4.05], ["22:00", "19:30", 416, 12.35, 4133, 9.28], ["23:00", "20:30", 91, 2.7, 2721, 6.11]];
+
+// Convert compact arrays into structured objects
+let state = {
+  currentTab: 'assumptions',
+  selectedIndex: 0,
+  localMediaMap: {}, // key: "tab-no" -> { type: 'video'|'image', url: blobUrl, name: filename }
+  assumptions: A_DATA.map(x => ({
+    no: x[0], mid: x[1], rid: x[2], date: x[3], gmt8: x[4], ist: x[5],
+    summary: x[6], verdict: x[7], proof: x[8], proofType: x[9],
+    placeholder: x[10], evidenceUrl: x[11], cookieQuote: x[12], yourReply: x[13], extras: x[14] || []
+  })),
+  requests: R_DATA.map(x => ({
+    no: x[0], mid: x[1], rid: x[2], date: x[3], gmt8: x[4], ist: x[5],
+    summary: x[6], verdict: x[7], proof: x[8], isOrig: x[9],
+    cookieQuote: x[10], yourReply: x[11], extras: x[12] || [], proofType: x[9] ? 'Original Excel + Chat' : 'Chat History', evidenceUrl: ''
+  })),
+  agreements: G_DATA.map(x => ({
+    no: x[0], mid: x[1], rid: x[2], date: x[3], gmt8: x[4], ist: x[5],
+    summary: x[6], verdict: x[7], proof: x[8],
+    cookieQuote: x[9], yourReply: x[10], extras: x[11] || [], proofType: 'Chat History', evidenceUrl: ''
+  }))
+};
+
+// Load baked overrides (from exported HTML) or localStorage overrides if available
+try {
+  const baked = window.__BAKED_OVERRIDES__;
+  const saved = localStorage.getItem('whatsapp_cookie_imung_overrides_v1');
+  const parsed = saved ? JSON.parse(saved) : baked;
+  if (parsed) {
+    if (parsed.assumptions) state.assumptions = parsed.assumptions;
+    if (parsed.requests) state.requests = parsed.requests;
+    if (parsed.agreements) state.agreements = parsed.agreements;
+  }
+} catch (e) {}
+
+function persistState() {
+  try {
+    localStorage.setItem('whatsapp_cookie_imung_overrides_v1', JSON.stringify({
+      assumptions: state.assumptions,
+      requests: state.requests,
+      agreements: state.agreements
+    }));
+  } catch (e) {}
+}
+
+function escapeHtml(s) {
+  return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function updateKPIs() {
+  // 1. Assumptions
+  const aTot = state.assumptions.length;
+  const aCorr = state.assumptions.filter(x => x.verdict === 1).length;
+  const aWrong = aTot - aCorr;
+  const aCorrPct = aTot ? ((aCorr / aTot) * 100).toFixed(1) : '0.0';
+  const aWrongPct = aTot ? ((aWrong / aTot) * 100).toFixed(1) : '0.0';
+  document.getElementById('kpi-a-total').textContent = `${aTot} total`;
+  document.getElementById('kpi-a-wrong-pct').textContent = `${aWrongPct}%`;
+  document.getElementById('kpi-a-wrong-cnt').textContent = `Wrong (${aWrong})`;
+  document.getElementById('kpi-a-corr-pct').textContent = `${aCorrPct}%`;
+  document.getElementById('kpi-a-corr-cnt').textContent = `Correct (${aCorr})`;
+  document.getElementById('bar-a-corr').style.width = `${aCorrPct}%`;
+  document.getElementById('bar-a-wrong').style.width = `${aWrongPct}%`;
+  document.getElementById('tab-assumptions').textContent = `1. Assumptions (${aTot})`;
+
+  // 2. Requests
+  const rTot = state.requests.length;
+  const rYes = state.requests.filter(x => x.verdict === 1).length;
+  const rNo = rTot - rYes;
+  const rYesPct = rTot ? ((rYes / rTot) * 100).toFixed(1) : '0.0';
+  const rNoPct = rTot ? ((rNo / rTot) * 100).toFixed(1) : '0.0';
+  document.getElementById('kpi-r-total').textContent = `${rTot} total`;
+  document.getElementById('kpi-r-yes-pct').textContent = `${rYesPct}%`;
+  document.getElementById('kpi-r-yes-cnt').textContent = `Yes (${rYes})`;
+  document.getElementById('kpi-r-no-pct').textContent = `${rNoPct}%`;
+  document.getElementById('kpi-r-no-cnt').textContent = `No (${rNo})`;
+  document.getElementById('bar-r-yes').style.width = `${rYesPct}%`;
+  document.getElementById('bar-r-no').style.width = `${rNoPct}%`;
+  document.getElementById('tab-requests').textContent = `2. Cookie's Requests: Yes/No (${rTot})`;
+
+  // 3. Agreements
+  const gTot = state.agreements.length;
+  const gAg = state.agreements.filter(x => x.verdict === 1).length;
+  const gDis = gTot - gAg;
+  const gAgPct = gTot ? ((gAg / gTot) * 100).toFixed(1) : '0.0';
+  const gDisPct = gTot ? ((gDis / gTot) * 100).toFixed(1) : '0.0';
+  document.getElementById('kpi-g-total').textContent = `${gTot} total`;
+  document.getElementById('kpi-g-ag-pct').textContent = `${gAgPct}%`;
+  document.getElementById('kpi-g-ag-cnt').textContent = `Agree (${gAg})`;
+  document.getElementById('kpi-g-dis-pct').textContent = `${gDisPct}%`;
+  document.getElementById('kpi-g-dis-cnt').textContent = `Disagree (${gDis})`;
+  document.getElementById('bar-g-ag').style.width = `${gAgPct}%`;
+  document.getElementById('bar-g-dis').style.width = `${gDisPct}%`;
+  document.getElementById('tab-agreements').textContent = `3. Agree vs Disagree (${gTot})`;
+}
+
+function switchTab(tab) {
+  state.currentTab = tab;
+  state.selectedIndex = 0;
+
+  ['assumptions', 'requests', 'agreements', 'sleep'].forEach(t => {
+    const btn = document.getElementById(`tab-${t}`);
+    if (t === tab) {
+      btn.className = 'px-3 py-1.5 rounded text-xs font-semibold bg-[var(--primary)] text-[var(--primary-foreground)]';
+    } else {
+      btn.className = 'px-3 py-1.5 rounded text-xs font-semibold bg-[var(--background)] text-[var(--foreground)] border border-[var(--border)]';
+    }
+  });
+
+  const mainSplit = document.getElementById('main-split-view');
+  const sleepView = document.getElementById('sleep-vault-view');
+  const filterControls = document.getElementById('filter-controls');
+  const vf = document.getElementById('verdict-filter');
+  const pf = document.getElementById('proof-filter');
+
+  if (tab === 'sleep') {
+    mainSplit.classList.add('hidden');
+    sleepView.classList.remove('hidden');
+    filterControls.classList.add('hidden');
+    renderSleepVault();
+    return;
+  }
+
+  mainSplit.classList.remove('hidden');
+  sleepView.classList.add('hidden');
+  filterControls.classList.remove('hidden');
+
+  if (tab === 'assumptions') {
+    vf.innerHTML = `<option value="ALL">All Assumptions</option><option value="0">Wrong Only</option><option value="1">Correct Only</option>`;
+    pf.classList.remove('hidden');
+  } else if (tab === 'requests') {
+    vf.innerHTML = `<option value="ALL">All Requests</option><option value="1">Answered Yes</option><option value="0">Answered No</option><option value="ORIG">Original 7 in Excel</option>`;
+    pf.classList.add('hidden');
+  } else {
+    vf.innerHTML = `<option value="ALL">All Statements</option><option value="1">Agree Only</option><option value="0">Disagree Only</option>`;
+    pf.classList.add('hidden');
+  }
+
+  renderCurrentTable();
+}
+
+function getFilteredItems() {
+  const tab = state.currentTab;
+  const list = state[tab] || [];
+  const vf = document.getElementById('verdict-filter').value;
+  const pf = document.getElementById('proof-filter').value;
+  const q = (document.getElementById('search-input').value || '').toLowerCase().trim();
+
+  return list.filter(item => {
+    if (vf === '0' && item.verdict !== 0) return false;
+    if (vf === '1' && item.verdict !== 1) return false;
+    if (vf === 'ORIG' && !item.isOrig) return false;
+    if (tab === 'assumptions' && pf !== 'ALL') {
+      if (!(item.proofType || '').toLowerCase().includes(pf.toLowerCase())) return false;
+    }
+    if (q) {
+      const hay = `${item.no} ${item.date} ${item.gmt8} ${item.ist} ${item.summary} ${item.proof} ${item.cookieQuote} ${item.yourReply} ${item.proofType}`.toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+function renderCurrentTable() {
+  const tab = state.currentTab;
+  const items = getFilteredItems();
+  const thead = document.getElementById('table-head');
+  const tbody = document.getElementById('table-body');
+  const titleEl = document.getElementById('table-title');
+  const countEl = document.getElementById('table-count');
+
+  const titles = {
+    assumptions: 'Sheet 1: Assumption Statistic (Cookie\'s Assumptions About iMung)',
+    requests: 'Sheet 2: Say Yes/No to Cookie\'s Requests',
+    agreements: 'Sheet 3: Agree vs Disagree with Cookie'
+  };
+  titleEl.textContent = titles[tab] || '';
+  countEl.textContent = `Showing ${items.length} items — Click any row to view Bubble Chat & Proof`;
+
+  const colHeader = tab === 'assumptions' ? 'Assumption' : (tab === 'requests' ? 'Cookie\'s Request' : 'Statement / Topic');
+  const proofHeader = tab === 'assumptions' ? 'Proof & Source' : (tab === 'requests' ? 'Reason / Context' : 'Response Note');
+
+  thead.innerHTML = `
+    <tr>
+      <th class="py-2.5 px-2.5 font-semibold w-10">No</th>
+      <th class="py-2.5 px-2.5 font-semibold">${colHeader}</th>
+      <th class="py-2.5 px-2.5 font-semibold w-28">Date &amp; Time</th>
+      <th class="py-2.5 px-2.5 font-semibold w-24 text-center">Verdict</th>
+      <th class="py-2.5 px-2.5 font-semibold">${proofHeader}</th>
+    </tr>
+  `;
+
+  if (items.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-[var(--muted-foreground)]">No matching rows found. Try clearing filters.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = items.map((item, idx) => {
+    const isSel = item.no === (items[state.selectedIndex]?.no ?? items[0].no);
+    let badgeHtml = '';
+    if (tab === 'assumptions') {
+      badgeHtml = item.verdict === 1
+        ? `<span class="px-2 py-0.5 rounded font-bold bg-[var(--success)] text-[var(--primary-foreground)]">Correct</span>`
+        : `<span class="px-2 py-0.5 rounded font-bold bg-[var(--error)] text-[var(--primary-foreground)]">Wrong</span>`;
+    } else if (tab === 'requests') {
+      badgeHtml = item.verdict === 1
+        ? `<span class="px-2 py-0.5 rounded font-bold bg-[var(--success)] text-[var(--primary-foreground)]">Yes</span>`
+        : `<span class="px-2 py-0.5 rounded font-bold bg-[var(--error)] text-[var(--primary-foreground)]">No</span>`;
+    } else {
+      badgeHtml = item.verdict === 1
+        ? `<span class="px-2 py-0.5 rounded font-bold bg-[var(--success)] text-[var(--primary-foreground)]">Agree</span>`
+        : `<span class="px-2 py-0.5 rounded font-bold bg-[var(--warning)] text-[var(--primary-foreground)]">Disagree</span>`;
+    }
+
+    const hasMedia = state.localMediaMap[`${tab}-${item.no}`] || item.evidenceUrl;
+    const mediaTag = hasMedia
+      ? `<span class="inline-block mt-1 px-1.5 py-0.5 rounded bg-[var(--primary)] text-[var(--primary-foreground)] font-mono" style="font-size:10px">🎥 Proof Attached</span>`
+      : (item.proofType && item.proofType.includes('Sleep')
+          ? `<span class="inline-block mt-1 px-1.5 py-0.5 rounded bg-[var(--background)] border border-[var(--border)] text-[var(--muted-foreground)] font-mono" style="font-size:10px">🕒 Sleep Log</span>`
+          : '');
+
+    const origTag = item.isOrig
+      ? `<span class="ml-1 px-1.5 py-0.5 rounded bg-[var(--background)] border border-[var(--border)] font-mono text-[var(--primary)]" style="font-size:10px">Excel #${item.no}</span>`
+      : '';
+
+    return `
+      <tr onclick="selectRowByNo(${item.no})" class="cursor-pointer transition ${isSel ? 'bg-[var(--background)] font-medium' : 'hover:bg-[var(--background)]'}">
+        <td class="py-2.5 px-2.5 font-mono text-[var(--muted-foreground)] align-top">#${item.no}</td>
+        <td class="py-2.5 px-2.5 align-top">
+          <div class="text-[var(--foreground)] font-medium leading-snug">${escapeHtml(item.summary)}${origTag}</div>
+          <div class="text-[var(--muted-foreground)] mt-1 italic truncate max-w-xs">"${escapeHtml(item.cookieQuote)}"</div>
+        </td>
+        <td class="py-2.5 px-2.5 font-mono align-top whitespace-nowrap">
+          <div class="text-[var(--foreground)]">${escapeHtml(item.date)}</div>
+          <div class="text-[var(--muted-foreground)]">${escapeHtml(item.gmt8)} GMT+8</div>
+          <div class="text-[var(--primary)]">${escapeHtml(item.ist)} IST</div>
+        </td>
+        <td class="py-2.5 px-2.5 text-center align-top">
+          ${badgeHtml}
+          <div>${mediaTag}</div>
+        </td>
+        <td class="py-2.5 px-2.5 align-top text-[var(--muted-foreground)] leading-snug">
+          <div>${escapeHtml(item.proof)}</div>
+          ${item.proofType ? `<span class="inline-block mt-1 px-1.5 py-0.5 rounded bg-[var(--background)] border border-[var(--border)] font-mono" style="font-size:10px">${escapeHtml(item.proofType)}</span>` : ''}
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  const targetItem = items[state.selectedIndex] || items[0];
+  if (targetItem) renderInspector(targetItem);
+}
+
+function selectRowByNo(no) {
+  const items = getFilteredItems();
+  const idx = items.findIndex(x => x.no === no);
+  state.selectedIndex = idx >= 0 ? idx : 0;
+  renderCurrentTable();
+}
+
+function renderInspector(item) {
+  const tab = state.currentTab;
+  document.getElementById('insp-badge').textContent = `#${item.no} (Msg #${item.mid})`;
+  document.getElementById('insp-meta').textContent = `${item.date} • ${item.gmt8} GMT+8 (${item.ist} IST)`;
+  document.getElementById('insp-summary').textContent = item.summary;
+  document.getElementById('insp-proof-text').textContent = item.proof;
+  document.getElementById('insp-proof-type').textContent = item.proofType || 'Chat History';
+  document.getElementById('insp-evidence-url-input').value = item.evidenceUrl || '';
+
+  const pill = document.getElementById('insp-verdict-pill');
+  if (tab === 'assumptions') {
+    pill.textContent = item.verdict === 1 ? 'CORRECT ASSUMPTION' : 'WRONG ASSUMPTION';
+    pill.className = `px-2.5 py-1 rounded text-xs font-bold ${item.verdict === 1 ? 'bg-[var(--success)] text-[var(--primary-foreground)]' : 'bg-[var(--error)] text-[var(--primary-foreground)]'}`;
+  } else if (tab === 'requests') {
+    pill.textContent = item.verdict === 1 ? 'ANSWERED: YES' : 'ANSWERED: NO';
+    pill.className = `px-2.5 py-1 rounded text-xs font-bold ${item.verdict === 1 ? 'bg-[var(--success)] text-[var(--primary-foreground)]' : 'bg-[var(--error)] text-[var(--primary-foreground)]'}`;
+  } else {
+    pill.textContent = item.verdict === 1 ? 'VERDICT: AGREE' : 'VERDICT: DISAGREE';
+    pill.className = `px-2.5 py-1 rounded text-xs font-bold ${item.verdict === 1 ? 'bg-[var(--success)] text-[var(--primary-foreground)]' : 'bg-[var(--warning)] text-[var(--primary-foreground)]'}`;
+  }
+
+  // Render authentic WhatsApp Chat Bubbles
+  const bubbles = [];
+  // Any preceding extra bubble
+  (item.extras || []).forEach(ex => {
+    if (ex[0] < item.mid) {
+      bubbles.push({ id: ex[0], gmt8: ex[1], ist: ex[2], isYou: ex[3] === 1, text: ex[4], isContext: true });
+    }
+  });
+  // Cookie's main message
+  bubbles.push({
+    id: item.mid, gmt8: item.gmt8, ist: item.ist, isYou: false,
+    text: item.cookieQuote, isMain: true
+  });
+  // Any intermediate extra bubble
+  (item.extras || []).forEach(ex => {
+    if (ex[0] > item.mid && ex[0] < item.rid) {
+      bubbles.push({ id: ex[0], gmt8: ex[1], ist: ex[2], isYou: ex[3] === 1, text: ex[4], isContext: true });
+    }
+  });
+  // iMung's direct quoted reply
+  bubbles.push({
+    id: item.rid, gmt8: item.gmt8, ist: item.ist, isYou: true,
+    quoteFrom: 'Cookie 🐱', quoteText: item.cookieQuote,
+    text: item.yourReply, isMain: true
+  });
+  // Any follow-up extra bubble
+  (item.extras || []).forEach(ex => {
+    if (ex[0] > item.rid) {
+      bubbles.push({ id: ex[0], gmt8: ex[1], ist: ex[2], isYou: ex[3] === 1, text: ex[4], isContext: true });
+    }
+  });
+
+  const bContainer = document.getElementById('bubble-container');
+  bContainer.innerHTML = `
+    <div class="text-center my-1">
+      <span class="px-2.5 py-0.5 rounded-full bg-[var(--card)] border border-[var(--border)] text-[var(--muted-foreground)] font-mono" style="font-size:11px">
+        📅 ${escapeHtml(item.date)}
+      </span>
+    </div>
+  ` + bubbles.map(b => {
+    const alignClass = b.isYou ? 'justify-end' : 'justify-start';
+    const boxClass = b.isYou
+      ? 'bg-[var(--primary)] text-[var(--primary-foreground)] rounded-tl-lg rounded-tr-lg rounded-bl-lg'
+      : 'bg-[var(--card)] text-[var(--foreground)] border border-[var(--border)] rounded-tl-lg rounded-tr-lg rounded-br-lg';
+    const senderName = b.isYou ? 'iMung (You)' : 'Cookie 🐱';
+    const quoteBlock = b.quoteText ? `
+      <div class="mb-1.5 p-1.5 rounded bg-black/20 border-l-2 border-[var(--card)] text-xs opacity-90">
+        <div class="font-bold" style="font-size:10px">${escapeHtml(b.quoteFrom)}</div>
+        <div class="truncate">${escapeHtml(b.quoteText)}</div>
+      </div>
+    ` : '';
+
+    return `
+      <div class="flex ${alignClass}">
+        <div class="max-w-[88%] p-2.5 shadow-sm ${boxClass} space-y-1">
+          <div class="flex items-center justify-between gap-3" style="font-size:10px">
+            <span class="font-bold opacity-90">${senderName}</span>
+            <span class="font-mono opacity-75">Msg #${b.id}</span>
+          </div>
+          ${quoteBlock}
+          <div class="text-xs leading-relaxed whitespace-pre-wrap">${escapeHtml(b.text)}</div>
+          <div class="text-right font-mono opacity-80 pt-0.5" style="font-size:10px">
+            ${escapeHtml(b.gmt8)} GMT+8 • ${escapeHtml(b.ist)} IST ${b.isYou ? '✓✓' : ''}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Render external evidence display (Video, Photo, or URL)
+  const evDisplay = document.getElementById('insp-evidence-display');
+  const localMedia = state.localMediaMap[`${tab}-${item.no}`];
+  let evHtml = '';
+
+  if (localMedia) {
+    if (localMedia.type === 'video') {
+      evHtml += `
+        <div class="space-y-1">
+          <div class="font-semibold text-[var(--success)]">📹 Loaded Video Evidence: ${escapeHtml(localMedia.name)}</div>
+          <video src="${localMedia.url}" controls class="w-full rounded max-h-52 bg-black"></video>
+        </div>
+      `;
+    } else {
+      evHtml += `
+        <div class="space-y-1">
+          <div class="font-semibold text-[var(--success)]">🖼️ Loaded Screenshot Evidence: ${escapeHtml(localMedia.name)}</div>
+          <img src="${localMedia.url}" alt="Evidence" class="w-full rounded max-h-52 object-contain bg-black/20" />
+        </div>
+      `;
+    }
+  }
+
+  if (item.evidenceUrl) {
+    evHtml += `
+      <div class="flex items-center justify-between gap-2">
+        <span class="text-[var(--success)] font-medium truncate">🔗 ${escapeHtml(item.evidenceUrl)}</span>
+        <a href="${escapeHtml(item.evidenceUrl)}" target="_blank" rel="noopener" class="px-2 py-0.5 rounded bg-[var(--primary)] text-[var(--primary-foreground)] font-semibold whitespace-nowrap">
+          Open Proof Link ↗
+        </a>
+      </div>
+    `;
+  } else if (!localMedia) {
+    const slotText = item.placeholder || 'Paste a Google Drive proof link below or load a local video/screenshot file to preview';
+    evHtml = `<div class="text-[var(--muted-foreground)]">📌 Proof Reference: <strong class="text-[var(--foreground)]">${escapeHtml(slotText)}</strong></div>`;
+  }
+
+  evDisplay.innerHTML = evHtml;
+}
+
+function saveEvidenceUrl() {
+  const items = getFilteredItems();
+  const item = items[state.selectedIndex] || items[0];
+  if (!item) return;
+  const val = document.getElementById('insp-evidence-url-input').value.trim();
+  item.evidenceUrl = val;
+  persistState();
+  renderCurrentTable();
+}
+
+function previewLocalFile(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+  const items = getFilteredItems();
+  const item = items[state.selectedIndex] || items[0];
+  if (!item) return;
+  const url = URL.createObjectURL(file);
+  const isVideo = file.type.startsWith('video/');
+  state.localMediaMap[`${state.currentTab}-${item.no}`] = {
+    type: isVideo ? 'video' : 'image',
+    url,
+    name: file.name
+  };
+  renderCurrentTable();
+}
+
+function toggleVerdictCurrent() {
+  const items = getFilteredItems();
+  const item = items[state.selectedIndex] || items[0];
+  if (!item) return;
+  item.verdict = item.verdict === 1 ? 0 : 1;
+  persistState();
+  updateKPIs();
+  renderCurrentTable();
+}
+
+function renderSleepVault() {
+  const tbody = document.getElementById('hourly-table-body');
+  const maxPct = 12.5;
+  tbody.innerHTML = H_DATA.map((h, idx) => {
+    const [gmt8, ist, recCnt, recPct, allCnt, allPct] = h;
+    const isSleep = idx <= 4;
+    const widthPct = Math.max(2, Math.min(100, Math.round((recPct / maxPct) * 100)));
+    const barColor = isSleep ? 'bg-[var(--success)]' : 'bg-[var(--primary)]';
+    const badge = isSleep
+      ? `<span class="px-1.5 py-0.5 rounded bg-[var(--success)] text-[var(--primary-foreground)] font-semibold" style="font-size:10px">Asleep (${recPct}%)</span>`
+      : (idx === 23
+          ? `<span class="px-1.5 py-0.5 rounded bg-[var(--background)] border border-[var(--border)] text-[var(--muted-foreground)]" style="font-size:10px">Bedtime Wind-down</span>`
+          : `<span class="text-[var(--muted-foreground)]" style="font-size:10px">Active</span>`);
+
+    return `
+      <tr class="${isSleep ? 'bg-[var(--background)] font-semibold' : ''}">
+        <td class="py-1.5 px-2.5 font-mono">${gmt8} GMT+8</td>
+        <td class="py-1.5 px-2.5 font-mono text-[var(--primary)]">${ist} IST</td>
+        <td class="py-1.5 px-2.5 font-mono">${recCnt} msgs (${recPct}%)</td>
+        <td class="py-1.5 px-2.5">
+          <div class="w-full h-2.5 rounded bg-[var(--background)] border border-[var(--border)] overflow-hidden">
+            <div class="h-full ${barColor}" style="width:${widthPct}%"></div>
+          </div>
+        </td>
+        <td class="py-1.5 px-2.5 font-mono text-[var(--muted-foreground)]">${allCnt} (${allPct}%)</td>
+        <td class="py-1.5 px-2.5">${badge}</td>
+      </tr>
+    `;
+  }).join('');
+
+  // Populate Additional Evidence Vault list from assumptions with external proof slots
+  const vaultEl = document.getElementById('proof-vault-list');
+  const proofItems = state.assumptions.filter(x =>
+    (x.proofType && (x.proofType.includes('Sleep') || x.proofType.includes('MLBB') || x.proofType.includes('PLN') || x.proofType.includes('Photo'))) || x.evidenceUrl
+  );
+
+  vaultEl.innerHTML = proofItems.map(item => {
+    const hasLink = !!item.evidenceUrl;
+    return `
+      <div class="p-3 rounded bg-[var(--background)] border border-[var(--border)] space-y-1.5 text-xs">
+        <div class="flex items-center justify-between gap-2">
+          <span class="font-mono font-bold text-[var(--primary)]">#${item.no} • ${escapeHtml(item.date)} (${escapeHtml(item.gmt8)} GMT+8 / ${escapeHtml(item.ist)} IST)</span>
+          <span class="px-1.5 py-0.5 rounded bg-[var(--card)] border border-[var(--border)] font-mono" style="font-size:10px">${escapeHtml(item.proofType)}</span>
+        </div>
+        <div class="font-semibold text-[var(--foreground)]">${escapeHtml(item.summary)}</div>
+        <div class="text-[var(--muted-foreground)]">${escapeHtml(item.proof)}</div>
+        <div class="flex items-center justify-between gap-2 pt-1">
+          ${hasLink
+            ? `<a href="${escapeHtml(item.evidenceUrl)}" target="_blank" rel="noopener" class="text-[var(--success)] font-semibold hover:underline">🔗 Open Attached Proof Link ↗</a>`
+            : `<span class="text-[var(--muted-foreground)] italic">Reference: ${escapeHtml(item.placeholder || 'Ready for additional proof link')}</span>`
+          }
+          <button onclick="jumpToAssumption(${item.no})" class="px-2 py-0.5 rounded bg-[var(--card)] border border-[var(--border)] text-[var(--foreground)] hover:border-[var(--primary)]">
+            Inspect &amp; Attach ↗
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function jumpToAssumption(no) {
+  switchTab('assumptions');
+  selectRowByNo(no);
+}
+
+function openAddModal(defaultCat) {
+  if (defaultCat) document.getElementById('new-cat').value = defaultCat;
+  document.getElementById('add-modal').classList.remove('hidden');
+}
+
+function closeAddModal() {
+  document.getElementById('add-modal').classList.add('hidden');
+}
+
+function calcIST(gmt8Str) {
+  const parts = (gmt8Str || '12:00').split(':').map(Number);
+  let totalMin = parts[0] * 60 + (parts[1] || 0) - 150;
+  if (totalMin < 0) totalMin += 1440;
+  const hh = String(Math.floor(totalMin / 60) % 24).padStart(2, '0');
+  const mm = String(totalMin % 60).padStart(2, '0');
+  return `${hh}:${mm}`;
+}
+
+function submitNewEntry() {
+  const cat = document.getElementById('new-cat').value;
+  const verdict = Number(document.getElementById('new-verdict').value);
+  const date = document.getElementById('new-date').value || '2026-11-22';
+  const gmt8 = document.getElementById('new-time').value || '23:30';
+  const ist = calcIST(gmt8);
+  const summary = document.getElementById('new-summary').value.trim();
+  const cquote = document.getElementById('new-cquote').value.trim() || summary;
+  const yreply = document.getElementById('new-yreply').value.trim() || '(Added via Evidence Manager)';
+  const proof = document.getElementById('new-proof').value.trim() || 'Verified external evidence';
+  const ptype = document.getElementById('new-ptype').value;
+  const evurl = document.getElementById('new-evurl').value.trim();
+
+  if (!summary) {
+    alert('Please enter a summary for the entry.');
+    return;
+  }
+
+  const list = state[cat];
+  const nextNo = list.length ? Math.max(...list.map(x => x.no)) + 1 : 1;
+  list.unshift({
+    no: nextNo,
+    mid: 7442 + nextNo,
+    rid: 7443 + nextNo,
+    date,
+    gmt8,
+    ist,
+    summary,
+    verdict,
+    proof,
+    proofType: ptype,
+    placeholder: ptype,
+    evidenceUrl: evurl,
+    cookieQuote: cquote,
+    yourReply: yreply,
+    extras: []
+  });
+
+  persistState();
+  updateKPIs();
+  closeAddModal();
+  switchTab(cat);
+}
+
+function exportUpdatedHTML() {
+  const payload = JSON.stringify({
+    assumptions: state.assumptions,
+    requests: state.requests,
+    agreements: state.agreements
+  });
+  const standaloneTheme = `<style id="standalone-theme">:root{--background:#0f172a;--card:#1e293b;--border:#334155;--card-border:#334155;--foreground:#f8fafc;--muted-foreground:#94a3b8;--primary:#3b82f6;--primary-foreground:#ffffff;--success:#16a34a;--error:#dc2626;--warning:#d97706;}</style>`;
+  const bakeScript = `<script id="baked-state">window.__BAKED_OVERRIDES__ = ${payload};<\/script>`;
+  let html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+  html = html.replace(/<script id="baked-state">[\s\S]*?<\/script>/, '');
+  html = html.replace(/<style id="standalone-theme">[\s\S]*?<\/style>/, '');
+  html = html.replace('<head>', '<head>\n' + standaloneTheme + '\n' + bakeScript);
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'WhatsApp_Statistics_Evidence_Cookie_iMung.html';
+  a.click();
+}
+
+// Live Google Sheets Auto-Sync Engine (JSONP — works across any domain without CORS issues)
+const SHEET_ID = '17j_3cuxKzyKjETkfD6luzvgYRhQDgzsMu3hcFUlhKJc';
+
+function cellVal(row, idx) {
+  if (!row || !row.c || !row.c[idx]) return '';
+  const cell = row.c[idx];
+  if (cell.f !== undefined && cell.f !== null) return String(cell.f).trim();
+  if (cell.v !== undefined && cell.v !== null) return String(cell.v).trim();
+  return '';
+}
+
+function normalizeDateStr(raw) {
+  if (!raw) return '2026-11-22';
+  // If m/d/yyyy
+  const m = raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+  if (m) {
+    const yy = m[3].length === 2 ? '20' + m[3] : m[3];
+    return `${yy}-${m[1].padStart(2, '0')}-${m[2].padStart(2, '0')}`;
+  }
+  return raw;
+}
+
+function mergeSheetRows(cat, rows) {
+  const existingMap = {};
+  state[cat].forEach(item => { existingMap[item.no] = item; });
+  const updatedList = [];
+
+  rows.forEach(r => {
+    if (!r || !r.c) return;
+    // Find column offset: in our sheet, col B is 'No' (either index 0 or index 1 depending on gviz empty-col stripping)
+    let offset = 0;
+    const c0 = cellVal(r, 0);
+    const c1 = cellVal(r, 1);
+    if (!/^\d+(\.0)?$/.test(c0) && /^\d+(\.0)?$/.test(c1)) {
+      offset = 1;
+    } else if (!/^\d+(\.0)?$/.test(c0)) {
+      return; // header or empty row
+    }
+
+    const no = parseInt(cellVal(r, offset), 10);
+    const summary = cellVal(r, offset + 1);
+    if (!no || !summary) return;
+
+    const date = normalizeDateStr(cellVal(r, offset + 2));
+    const gmt8 = cellVal(r, offset + 3) || '12:00';
+    const ist = cellVal(r, offset + 4) || calcIST(gmt8);
+    const posFlag = cellVal(r, offset + 5); // Correct / Yes / Agree
+    const negFlag = cellVal(r, offset + 6); // Wrong / No / Disagree
+    const verdict = (posFlag && posFlag !== '0') ? 1 : 0;
+    const proof = cellVal(r, offset + 7);
+    const prev = existingMap[no];
+
+    if (cat === 'assumptions') {
+      const proofType = cellVal(r, offset + 8) || (prev ? prev.proofType : 'Chat History');
+      const rawLink = cellVal(r, offset + 9);
+      const evidenceUrl = (rawLink && !rawLink.startsWith('[Add link:')) ? rawLink : (prev ? prev.evidenceUrl : '');
+      const cookieQuote = cellVal(r, offset + 10) || (prev ? prev.cookieQuote : summary);
+      const yourReply = cellVal(r, offset + 11) || (prev ? prev.yourReply : proof);
+      updatedList.push({
+        no,
+        mid: prev ? prev.mid : (8000 + no),
+        rid: prev ? prev.rid : (8500 + no),
+        date, gmt8, ist, summary, verdict, proof, proofType,
+        placeholder: prev ? prev.placeholder : proofType,
+        evidenceUrl, cookieQuote, yourReply,
+        extras: prev ? prev.extras : []
+      });
+    } else if (cat === 'requests') {
+      const cookieQuote = cellVal(r, offset + 8) || (prev ? prev.cookieQuote : summary);
+      const yourReply = cellVal(r, offset + 9) || (prev ? prev.yourReply : proof);
+      const evidenceUrl = cellVal(r, offset + 10) || (prev ? prev.evidenceUrl : '');
+      updatedList.push({
+        no,
+        mid: prev ? prev.mid : (9000 + no),
+        rid: prev ? prev.rid : (9500 + no),
+        date, gmt8, ist, summary, verdict, proof,
+        isOrig: no <= 7 ? 1 : 0,
+        proofType: no <= 7 ? 'Original Excel + Chat' : 'Google Sheets Live',
+        evidenceUrl, cookieQuote, yourReply,
+        extras: prev ? prev.extras : []
+      });
+    } else if (cat === 'agreements') {
+      const cookieQuote = cellVal(r, offset + 8) || (prev ? prev.cookieQuote : summary);
+      const yourReply = cellVal(r, offset + 9) || (prev ? prev.yourReply : proof);
+      updatedList.push({
+        no,
+        mid: prev ? prev.mid : (10000 + no),
+        rid: prev ? prev.rid : (10500 + no),
+        date, gmt8, ist, summary, verdict, proof,
+        proofType: 'Google Sheets Live',
+        evidenceUrl: prev ? prev.evidenceUrl : '',
+        cookieQuote, yourReply,
+        extras: prev ? prev.extras : []
+      });
+    }
+  });
+
+  if (updatedList.length > 0) {
+    state[cat] = updatedList;
+  }
+}
+
+// Manual Sleep Schedule Tracker Logic + Live Google Sheets Sync
+state.sleepSchedule = state.sleepSchedule || [
+  { no: 1, date: '2026-11-21', startGmt8: '23:30', wakeGmt8: '07:00', note: 'Sample row (edit or overwrite anytime)' }
+];
+try {
+  const saved = localStorage.getItem('whatsapp_cookie_imung_overrides_v1');
+  if (saved) {
+    const parsed = JSON.parse(saved);
+    if (parsed.sleepSchedule) state.sleepSchedule = parsed.sleepSchedule;
+  } else if (window.__BAKED_OVERRIDES__ && window.__BAKED_OVERRIDES__.sleepSchedule) {
+    state.sleepSchedule = window.__BAKED_OVERRIDES__.sleepSchedule;
+  }
+} catch (e) {}
+
+function timeToMinutes(tStr) {
+  const s = String(tStr || '00:00').trim();
+  const m = s.match(/(\d{1,2}):(\d{2})(?::\d{2})?\s*([AaPp][Mm])?/);
+  if (!m) return 0;
+  let hh = parseInt(m[1], 10);
+  const mm = parseInt(m[2], 10);
+  const ampm = (m[3] || '').toUpperCase();
+  if (ampm === 'PM' && hh < 12) hh += 12;
+  if (ampm === 'AM' && hh === 12) hh = 0;
+  return (hh % 24) * 60 + mm;
+}
+
+function minutesToTime(min) {
+  let m = Math.round(min) % 1440;
+  if (m < 0) m += 1440;
+  const hh = String(Math.floor(m / 60) % 24).padStart(2, '0');
+  const mm = String(m % 60).padStart(2, '0');
+  return `${hh}:${mm}`;
+}
+
+function renderSleepScheduleTable() {
+  const tbody = document.getElementById('sleep-schedule-tbody');
+  if (!tbody) return;
+  const list = state.sleepSchedule || [];
+  let sumDurMin = 0;
+  let sumStartShifted = 0;
+  let sumWakeMin = 0;
+  let count = 0;
+
+  tbody.innerHTML = list.map(row => {
+    const startMin = timeToMinutes(row.startGmt8);
+    const wakeMin = timeToMinutes(row.wakeGmt8);
+    let durMin = wakeMin - startMin;
+    if (durMin <= 0) durMin += 1440;
+    const durH = Math.floor(durMin / 60);
+    const durM = durMin % 60;
+    const durHrs = (durMin / 60).toFixed(2);
+    const pct24 = ((durMin / 1440) * 100).toFixed(1);
+    const startIst = minutesToTime(startMin - 150);
+    const wakeIst = minutesToTime(wakeMin - 150);
+
+    // Circular bedtime shifting around noon (720 min) so 23:30 and 00:30 average to 00:00
+    const shiftedStart = startMin < 720 ? startMin + 1440 : startMin;
+    sumDurMin += durMin;
+    sumStartShifted += shiftedStart;
+    sumWakeMin += wakeMin;
+    count++;
+
+    return `
+      <tr>
+        <td class="py-1.5 px-2.5 font-mono text-[var(--muted-foreground)]">#${row.no}</td>
+        <td class="py-1.5 px-2.5 font-mono">${escapeHtml(row.date)}</td>
+        <td class="py-1.5 px-2.5 font-mono font-semibold">${escapeHtml(row.startGmt8)}</td>
+        <td class="py-1.5 px-2.5 font-mono text-[var(--primary)]">${startIst}</td>
+        <td class="py-1.5 px-2.5 font-mono font-semibold">${escapeHtml(row.wakeGmt8)}</td>
+        <td class="py-1.5 px-2.5 font-mono text-[var(--primary)]">${wakeIst}</td>
+        <td class="py-1.5 px-2.5 font-mono text-[var(--success)] font-bold">${durH}h ${String(durM).padStart(2,'0')}m (${durHrs}h)</td>
+        <td class="py-1.5 px-2.5 font-mono">${pct24}%</td>
+        <td class="py-1.5 px-2.5 text-[var(--muted-foreground)]">${escapeHtml(row.note || '')}</td>
+      </tr>
+    `;
+  }).join('');
+
+  if (count > 0) {
+    const avgDur = sumDurMin / count;
+    const avgDurH = Math.floor(avgDur / 60);
+    const avgDurM = Math.round(avgDur % 60);
+    const avgHrs = (avgDur / 60).toFixed(2);
+    const avgPct = ((avgDur / 1440) * 100).toFixed(1);
+    const avgStartGmt8Min = (sumStartShifted / count) % 1440;
+    const avgStartGmt8 = minutesToTime(avgStartGmt8Min);
+    const avgStartIst = minutesToTime(avgStartGmt8Min - 150);
+    const avgWakeGmt8Min = sumWakeMin / count;
+    const avgWakeGmt8 = minutesToTime(avgWakeGmt8Min);
+    const avgWakeIst = minutesToTime(avgWakeGmt8Min - 150);
+
+    document.getElementById('avg-sleep-dur').textContent = `${avgDurH}h ${String(avgDurM).padStart(2,'0')}m`;
+    document.getElementById('avg-sleep-hrs').textContent = `${avgHrs} hrs (${avgPct}% of 24h)`;
+    document.getElementById('avg-sleep-start-gmt8').textContent = `${avgStartGmt8} GMT+8`;
+    document.getElementById('avg-sleep-start-ist').textContent = `${avgStartIst} IST`;
+    document.getElementById('avg-sleep-wake-gmt8').textContent = `${avgWakeGmt8} GMT+8`;
+    document.getElementById('avg-sleep-wake-ist').textContent = `${avgWakeIst} IST`;
+  }
+}
+
+function addSleepRow() {
+  const date = document.getElementById('sl-date').value || '2026-11-22';
+  const startGmt8 = document.getElementById('sl-start').value || '23:30';
+  const wakeGmt8 = document.getElementById('sl-wake').value || '07:00';
+  const note = document.getElementById('sl-note').value.trim();
+  const nextNo = state.sleepSchedule.length ? Math.max(...state.sleepSchedule.map(x => x.no)) + 1 : 1;
+  state.sleepSchedule.push({ no: nextNo, date, startGmt8, wakeGmt8, note });
+  try {
+    localStorage.setItem('whatsapp_cookie_imung_overrides_v1', JSON.stringify({
+      assumptions: state.assumptions,
+      requests: state.requests,
+      agreements: state.agreements,
+      sleepSchedule: state.sleepSchedule
+    }));
+  } catch (e) {}
+  renderSleepScheduleTable();
+}
+
+window.__onSheetSleepSchedule = function(res) {
+  if (res && res.table && res.table.rows) {
+    const parsedRows = [];
+    res.table.rows.forEach(r => {
+      if (!r || !r.c) return;
+      let offset = 0;
+      const c0 = cellVal(r, 0);
+      const c1 = cellVal(r, 1);
+      if (!/^\d+(\.0)?$/.test(c0) && /^\d+(\.0)?$/.test(c1)) offset = 1;
+      else if (!/^\d+(\.0)?$/.test(c0)) return;
+      const no = parseInt(cellVal(r, offset), 10);
+      const rawDate = cellVal(r, offset + 1);
+      const startGmt8 = cellVal(r, offset + 2);
+      const wakeGmt8 = cellVal(r, offset + 4);
+      const note = cellVal(r, offset + 9);
+      if (no && startGmt8 && wakeGmt8) {
+        parsedRows.push({ no, date: normalizeDateStr(rawDate), startGmt8, wakeGmt8, note });
+      }
+    });
+    if (parsedRows.length > 0) {
+      state.sleepSchedule = parsedRows;
+      renderSleepScheduleTable();
+    }
+  }
+  onSheetSyncStep();
+};
+
+let syncDoneCount = 0;
+window.__onSheetAssumptions = function(res) {
+  if (res && res.table && res.table.rows) mergeSheetRows('assumptions', res.table.rows);
+  onSheetSyncStep();
+};
+window.__onSheetRequests = function(res) {
+  if (res && res.table && res.table.rows) mergeSheetRows('requests', res.table.rows);
+  onSheetSyncStep();
+};
+window.__onSheetAgreements = function(res) {
+  if (res && res.table && res.table.rows) mergeSheetRows('agreements', res.table.rows);
+  onSheetSyncStep();
+};
+
+function onSheetSyncStep() {
+  syncDoneCount++;
+  if (syncDoneCount >= 4) {
+    updateKPIs();
+    renderCurrentTable();
+    renderSleepScheduleTable();
+    const st = document.getElementById('sync-status');
+    if (st) st.textContent = 'Synced Live ✓';
+  }
+}
+
+function syncFromGoogleSheets(manual) {
+  syncDoneCount = 0;
+  const st = document.getElementById('sync-status');
+  if (st && manual) st.textContent = 'Syncing...';
+
+  const sheets = [
+    { name: 'Assumption statistic', cb: '__onSheetAssumptions' },
+    { name: 'Say yesno to cookie request', cb: '__onSheetRequests' },
+    { name: 'AgreeDisagree', cb: '__onSheetAgreements' },
+    { name: 'Sleep schedule', cb: '__onSheetSleepSchedule' }
+  ];
+
+  sheets.forEach(s => {
+    const script = document.createElement('script');
+    script.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=responseHandler:${s.cb}&sheet=${encodeURIComponent(s.name)}&_ts=${Date.now()}`;
+    script.onerror = function() {
+      if (st && manual) {
+        st.textContent = 'Offline / Share Sheet to Enable Live Sync';
+      }
+    };
+    document.body.appendChild(script);
+  });
+}
+
+// Initialize dashboard & attempt automatic background live-sync with Google Spreadsheet
+updateKPIs();
+renderSleepScheduleTable();
+switchTab('assumptions');
+setTimeout(() => syncFromGoogleSheets(false), 400);
+  </script>
+</body>
+</html>
