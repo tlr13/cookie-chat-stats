@@ -67,7 +67,7 @@
     </header>
 
     <!-- 4 KPI Summary Cards -->
-    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
       <!-- KPI 1 -->
       <div onclick="switchTab('assumptions')" class="cursor-pointer p-3.5 rounded-lg bg-[var(--card)] border border-[var(--border)] hover:border-[var(--primary)] transition space-y-2">
         <div class="flex items-center justify-between text-xs">
@@ -164,6 +164,58 @@
         </div>
         <p class="text-xs text-[var(--muted-foreground)]">Refutes <q class="text-[var(--foreground)]">awake till 2 AM / 12 AM IST</q> + proof slots</p>
       </div>
+
+      <!-- KPI 5 -->
+      <div onclick="switchTab('willing')" class="cursor-pointer p-3.5 rounded-lg bg-[var(--card)] border border-[var(--border)] hover:border-[var(--primary)] transition space-y-2">
+        <div class="flex items-center justify-between text-xs">
+          <span class="font-semibold text-[var(--muted-foreground)]">5. WILLINGLY DONE</span>
+          <span id="kpi-w-total" class="font-mono text-xs px-1.5 py-0.5 rounded bg-[var(--background)]">40 proofs</span>
+        </div>
+        <div class="flex items-baseline justify-between gap-1">
+          <div>
+            <span id="kpi-w-unp-pct" class="text-xl font-bold font-mono text-[var(--success)]">47.5%</span>
+            <span id="kpi-w-unp-cnt" class="text-xs text-[var(--muted-foreground)] block">Unprompted (19)</span>
+          </div>
+          <div class="text-right">
+            <span id="kpi-w-eff-pct" class="text-sm font-bold font-mono text-[var(--primary)]">52.5%</span>
+            <span id="kpi-w-eff-cnt" class="text-xs text-[var(--muted-foreground)] block">Extra Effort (21)</span>
+          </div>
+        </div>
+        <div class="w-full h-2 rounded-full bg-[var(--background)] overflow-hidden flex">
+          <div id="bar-w-unp" class="h-full bg-[var(--success)]" style="width: 47.5%"></div>
+          <div id="bar-w-eff" class="h-full bg-[var(--primary)]" style="width: 52.5%"></div>
+        </div>
+        <p class="text-xs text-[var(--muted-foreground)]">144 invites • 173 links • 103 <q class="text-[var(--foreground)]">Thank you</q>s</p>
+      </div>
+
+      <!-- KPI 6 -->
+      <div onclick="switchTab('fastreply')" class="cursor-pointer p-3.5 rounded-lg bg-[var(--card)] border border-[var(--border)] hover:border-[var(--primary)] transition space-y-2">
+        <div class="flex items-center justify-between text-xs">
+          <span class="font-semibold text-[var(--muted-foreground)]">6. REPLY TIME (iMung vs Cookie)</span>
+          <span id="kpi-fr-total" class="font-mono text-xs px-1.5 py-0.5 rounded bg-[var(--background)]">19,741 turns</span>
+        </div>
+        <div class="flex items-baseline justify-between gap-1">
+          <div>
+            <span class="text-xl font-bold font-mono text-[var(--success)]">7.3m</span>
+            <span class="text-xs text-[var(--muted-foreground)] block">Awake Avg (vs 11.3m)</span>
+          </div>
+          <div class="text-center">
+            <span class="text-sm font-bold font-mono text-[var(--primary)]">81.5%</span>
+            <span class="text-xs text-[var(--muted-foreground)] block">≤5m (vs 78.4%)</span>
+          </div>
+          <div class="text-right">
+            <span class="text-sm font-bold font-mono text-[var(--foreground)]">14.8h</span>
+            <span class="text-xs text-[var(--muted-foreground)] block">Max (vs 5.6d)</span>
+          </div>
+        </div>
+        <div class="w-full h-2 rounded-full bg-[var(--background)] overflow-hidden flex">
+          <div class="h-full bg-[var(--success)]" style="width: 72.5%" title="≤1m: 72.5%"></div>
+          <div class="h-full bg-[var(--primary)]" style="width: 15.5%" title="2–15m: 15.5%"></div>
+          <div class="h-full bg-[var(--warning)]" style="width: 6.9%" title="16–60m: 6.9%"></div>
+          <div class="h-full bg-[var(--error)]" style="width: 5.1%" title=">1h (Sleep/Work): 5.1%"></div>
+        </div>
+        <p class="text-xs text-[var(--muted-foreground)]">All 12 intervals (0m → &gt;24h) • <strong class="text-[var(--success)]">0×</strong> &gt;24h vs Cookie <strong class="text-[var(--error)]">7×</strong></p>
+      </div>
     </section>
 
     <!-- Navigation Tabs & Filter Bar -->
@@ -180,6 +232,12 @@
         </button>
         <button id="tab-sleep" onclick="switchTab('sleep')" class="px-3 py-1.5 rounded text-xs font-semibold bg-[var(--background)] text-[var(--foreground)] border border-[var(--border)]">
           4. Sleep Timestamps &amp; Proof Vault
+        </button>
+        <button id="tab-willing" onclick="switchTab('willing')" class="px-3 py-1.5 rounded text-xs font-semibold bg-[var(--background)] text-[var(--foreground)] border border-[var(--border)]">
+          5. Willingly Done Proof (40)
+        </button>
+        <button id="tab-fastreply" onclick="switchTab('fastreply')" class="px-3 py-1.5 rounded text-xs font-semibold bg-[var(--background)] text-[var(--foreground)] border border-[var(--border)]">
+          6. Reply Time: iMung vs Cookie (All Intervals)
         </button>
       </div>
 
@@ -414,6 +472,148 @@
       </div>
     </div>
 
+    <!-- Tab 6: Complete Reply Time Comparison View (All Intervals & Total Duration: iMung vs Cookie) -->
+    <div id="fast-reply-view" class="hidden space-y-4">
+      <!-- Top Summary Header & Period Toggle -->
+      <div class="p-4 rounded-lg bg-[var(--card)] border border-[var(--border)] space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--card-border)] pb-3">
+          <div>
+            <h2 class="text-sm font-bold text-[var(--foreground)]">⏱️ Complete Reply Time Comparison — All Intervals (0m → &gt;24h) &amp; Total Duration: iMung vs Cookie</h2>
+            <p class="text-xs text-[var(--muted-foreground)]">
+              Sheet 7 (<span class="font-mono text-[var(--primary)]">Reply Time Statistic</span>) • Full <strong>110,064 messages</strong> (19,741 iMung reply turns vs 19,740 Cookie reply turns). Shows both fast replies AND long delays transparently.
+            </p>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button id="fr-btn-all" onclick="setFastReplyScope('all')" class="px-3 py-1.5 rounded text-xs font-semibold bg-[var(--primary)] text-[var(--primary-foreground)]">
+              All-Time (17 Months • 19,741)
+            </button>
+            <button id="fr-btn-recent" onclick="setFastReplyScope('recent')" class="px-3 py-1.5 rounded text-xs font-semibold bg-[var(--background)] text-[var(--foreground)] border border-[var(--border)]">
+              Recent (Sept–Nov 2026 • 807)
+            </button>
+          </div>
+        </div>
+
+        <!-- 5 Head-to-Head Summary Cards (iMung vs Cookie) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          <div class="p-3 rounded bg-[var(--background)] border border-[var(--border)] space-y-1">
+            <div class="text-xs text-[var(--muted-foreground)] font-medium">AWAKE (NON-SLEEP) AVG</div>
+            <div class="flex items-baseline justify-between">
+              <span id="fr-h2h-awake-im" class="text-xl font-bold font-mono text-[var(--success)]">7.3 min</span>
+              <span id="fr-h2h-awake-ck" class="text-xs font-mono text-[var(--muted-foreground)]">vs 11.3 min</span>
+            </div>
+            <div id="fr-h2h-awake-note" class="text-xs text-[var(--success)]">iMung is 35% faster awake</div>
+          </div>
+
+          <div class="p-3 rounded bg-[var(--background)] border border-[var(--border)] space-y-1">
+            <div class="text-xs text-[var(--muted-foreground)] font-medium">RAW 24H AVG &amp; MEDIAN</div>
+            <div class="flex items-baseline justify-between">
+              <span id="fr-h2h-raw-im" class="text-xl font-bold font-mono text-[var(--foreground)]">15.9 min</span>
+              <span id="fr-h2h-raw-ck" class="text-xs font-mono text-[var(--muted-foreground)]">vs 13.1 min</span>
+            </div>
+            <div id="fr-h2h-med-cmp" class="text-xs text-[var(--muted-foreground)]">Median: 1.0m vs 1.0m • P75: 2m vs 4m</div>
+          </div>
+
+          <div class="p-3 rounded bg-[var(--background)] border border-[var(--border)] space-y-1">
+            <div class="text-xs text-[var(--muted-foreground)] font-medium">TOTAL CUMULATIVE TIME</div>
+            <div class="flex items-baseline justify-between">
+              <span id="fr-h2h-hrs-im" class="text-xl font-bold font-mono text-[var(--primary)]">5,227.6h</span>
+              <span id="fr-h2h-hrs-ck" class="text-xs font-mono text-[var(--muted-foreground)]">vs 4,319.6h</span>
+            </div>
+            <div id="fr-h2h-hrs-note" class="text-xs text-[var(--muted-foreground)]">47.2% of iMung's hrs = 6–12h sleep</div>
+          </div>
+
+          <div class="p-3 rounded bg-[var(--background)] border border-[var(--border)] space-y-1">
+            <div class="text-xs text-[var(--muted-foreground)] font-medium">LONGEST WAIT EVER (MAX)</div>
+            <div class="flex items-baseline justify-between">
+              <span id="fr-h2h-max-im" class="text-xl font-bold font-mono text-[var(--success)]">14.8 hrs</span>
+              <span id="fr-h2h-max-ck" class="text-xs font-mono text-[var(--error)]">vs 134.5 hrs</span>
+            </div>
+            <div id="fr-h2h-24h-cmp" class="text-xs text-[var(--muted-foreground)]">&gt;24h breaks: iMung 0× vs Cookie 7×</div>
+          </div>
+
+          <div class="p-3 rounded bg-[var(--background)] border border-[var(--border)] space-y-1">
+            <div class="text-xs text-[var(--muted-foreground)] font-medium">6–12H = OVERNIGHT SLEEP</div>
+            <div class="flex items-baseline justify-between">
+              <span id="fr-h2h-sleep-pct" class="text-xl font-bold font-mono text-[var(--warning)]">96.8%</span>
+              <span id="fr-h2h-sleep-cnt" class="text-xs font-mono text-[var(--muted-foreground)]">304 / 314</span>
+            </div>
+            <div class="text-xs text-[var(--muted-foreground)]">Due to +2.5h GMT+8 vs IST bedtime</div>
+          </div>
+        </div>
+
+        <!-- Objective Timezone Insight Banner -->
+        <div id="fr-insight-banner" class="p-3 rounded bg-[var(--background)] border border-[var(--border)] text-xs text-[var(--muted-foreground)] leading-relaxed">
+          <strong class="text-[var(--foreground)]">Key Finding:</strong> iMung has <strong>higher fast-reply rates</strong> (72.5% vs 65.6% ≤1m; 81.5% vs 78.4% ≤5m) AND <strong>fewer daytime delays in every single 1–6 hour &amp; 12h+ interval</strong> (1–2h, 2–3h, 3–6h, 12–24h, &gt;24h). The <strong>only</strong> interval where iMung is higher is <strong>6–12 hours</strong> (314 vs 52), of which <strong>96.8% (304/314)</strong> are overnight sleep when Cookie texts during her night (iMung's bedtime).
+        </div>
+      </div>
+
+      <!-- Full 12-Interval Side-by-Side Comparison (Table + Dual Visual Bars) -->
+      <div class="p-4 rounded-lg bg-[var(--card)] border border-[var(--border)] space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h3 class="text-sm font-bold text-[var(--foreground)]">📊 Complete 12-Interval Breakdown: iMung vs Cookie (Every Single Reply from &lt;1 min to &gt;24 hours)</h3>
+            <p class="text-xs text-[var(--muted-foreground)]">
+              Side-by-side count, percentage share, visual bar comparison (<span class="text-[var(--success)] font-semibold">Green = iMung</span>, <span class="text-[var(--primary)] font-semibold">Blue = Cookie</span>), and total cumulative hours per interval.
+            </p>
+          </div>
+          <span id="fr-total-badge" class="px-2 py-1 rounded text-xs font-mono bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)]">
+            19,741 iMung vs 19,740 Cookie turns
+          </span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead class="bg-[var(--background)] border-b border-[var(--border)]">
+              <tr>
+                <th class="py-2.5 px-2.5">Reply Time Interval</th>
+                <th class="py-2.5 px-2.5 text-right">iMung Count (%)</th>
+                <th class="py-2.5 px-2.5 text-right">iMung Hrs</th>
+                <th class="py-2.5 px-2.5 w-52">Side-by-Side Comparison (iMung vs Cookie)</th>
+                <th class="py-2.5 px-2.5 text-right">Cookie Count (%)</th>
+                <th class="py-2.5 px-2.5 text-right">Cookie Hrs</th>
+                <th class="py-2.5 px-2.5 text-center">Share Diff</th>
+              </tr>
+            </thead>
+            <tbody id="fr-buckets-tbody" class="divide-y divide-[var(--card-border)]"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Cumulative Speed Bars + Month-by-Month Head-to-Head Table -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        <div class="lg:col-span-5 p-4 rounded-lg bg-[var(--card)] border border-[var(--border)] space-y-3">
+          <div>
+            <h3 class="text-sm font-bold text-[var(--foreground)]">⚡ Cumulative Speed Thresholds (iMung vs Cookie)</h3>
+            <p class="text-xs text-[var(--muted-foreground)]">Includes both short-time thresholds (≤1m to ≤60m) and slow delays (&gt;1 hour).</p>
+          </div>
+          <div id="fr-cumulative-bars" class="space-y-2.5"></div>
+        </div>
+
+        <div class="lg:col-span-7 p-4 rounded-lg bg-[var(--card)] border border-[var(--border)] space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h3 class="text-sm font-bold text-[var(--foreground)]">📅 Month-by-Month Head-to-Head (June 2025 – Nov 2026)</h3>
+              <p class="text-xs text-[var(--muted-foreground)]">Fast share (≤5m %), slow replies (&gt;1h), total wait hours, and Avg/Median for both iMung &amp; Cookie.</p>
+            </div>
+          </div>
+          <div class="overflow-x-auto max-h-[540px] overflow-y-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead class="bg-[var(--background)] border-b border-[var(--border)] sticky top-0">
+                <tr>
+                  <th class="py-2 px-2">Month</th>
+                  <th class="py-2 px-2 text-right">≤5m % (iM / Ck)</th>
+                  <th class="py-2 px-2 text-right">&gt;1h (iM / Ck)</th>
+                  <th class="py-2 px-2 text-right">Total Hrs (iM / Ck)</th>
+                  <th class="py-2 px-2 text-right">Avg (iM / Ck)</th>
+                  <th class="py-2 px-2 text-right">Med (iM / Ck)</th>
+                </tr>
+              </thead>
+              <tbody id="fr-monthly-tbody" class="divide-y divide-[var(--card-border)]"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Modal for Adding New Row / External Proof -->
     <div id="add-modal" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
       <div class="w-full max-w-lg rounded-lg bg-[var(--card)] border border-[var(--border)] p-4 space-y-3 text-xs">
@@ -428,6 +628,7 @@
               <option value="assumptions">1. Assumption Statistic (Correct / Wrong / Unproven)</option>
               <option value="requests">2. Cookie's Request (Yes / No)</option>
               <option value="agreements">3. Agree vs Disagree</option>
+              <option value="willing">5. Willingly Done Proof (Unprompted / Extra Effort)</option>
             </select>
           </div>
           <div>
@@ -732,6 +933,49 @@ const G_DATA = [
 [109, 7396, 7399, "2026-11-21", "20:15", "17:45", "In Islam the 7 heavens concept is called Samawat", 1, "Agreed ('yeah there is like that' / 'yeah there are 7 heaven in islam')", "But idk in islam I think it is called samawat", "yeah there is like that", []]
 ];
 const H_DATA = [["00:00", "21:30", 8, 0.24, 1497, 3.36], ["01:00", "22:30", 6, 0.18, 1028, 2.31], ["02:00", "23:30", 0, 0.0, 329, 0.74], ["03:00", "00:30", 0, 0.0, 205, 0.46], ["04:00", "01:30", 4, 0.12, 206, 0.46], ["05:00", "02:30", 49, 1.45, 456, 1.02], ["06:00", "03:30", 91, 2.7, 511, 1.15], ["07:00", "04:30", 110, 3.27, 789, 1.77], ["08:00", "05:30", 202, 6.0, 1737, 3.9], ["09:00", "06:30", 91, 2.7, 1374, 3.08], ["10:00", "07:30", 54, 1.6, 1263, 2.84], ["11:00", "08:30", 91, 2.7, 1244, 2.79], ["12:00", "09:30", 176, 5.22, 1696, 3.81], ["13:00", "10:30", 109, 3.24, 2389, 5.36], ["14:00", "11:30", 174, 5.16, 2309, 5.18], ["15:00", "12:30", 168, 4.99, 2453, 5.51], ["16:00", "13:30", 290, 8.61, 2887, 6.48], ["17:00", "14:30", 260, 7.72, 3323, 7.46], ["18:00", "15:30", 331, 9.82, 3697, 8.3], ["19:00", "16:30", 277, 8.22, 4057, 9.11], ["20:00", "17:30", 247, 7.33, 2441, 5.48], ["21:00", "18:30", 124, 3.68, 1802, 4.05], ["22:00", "19:30", 416, 12.35, 4133, 9.28], ["23:00", "20:30", 91, 2.7, 2721, 6.11]];
+const FR_DATA = {"all_time_imung": {"total": 19741, "total_wait_min": 313654.0, "total_wait_hrs": 5227.6, "total_wait_days": 217.8, "avg_min": 15.9, "non_sleep_avg_min": 7.3, "non_sleep_count": 19347, "median_min": 1.0, "awake_median_min": 1.0, "p75_min": 2.0, "p90_min": 21.0, "p95_min": 63.0, "max_min": 885.0, "max_hrs": 14.8, "over_1h_count": 1014, "over_1h_pct": 5.1, "over_24h_count": 0, "sleep_6_12_total": 314, "sleep_6_12_overnight": 304, "sleep_6_12_overnight_pct": 96.8, "buckets": [{"label": "Instant (< 1 min)", "zone": "Ultra-Fast", "count": 9703, "pct": 49.2, "total_min": 0.0, "total_hrs": 0.0, "time_share_pct": 0.0}, {"label": "1 min", "zone": "Ultra-Fast", "count": 4614, "pct": 23.4, "total_min": 4614.0, "total_hrs": 76.9, "time_share_pct": 1.5}, {"label": "2 – 5 min", "zone": "Very Fast", "count": 1769, "pct": 9.0, "total_min": 5318.0, "total_hrs": 88.6, "time_share_pct": 1.7}, {"label": "6 – 15 min", "zone": "Short Time", "count": 1278, "pct": 6.5, "total_min": 12353.0, "total_hrs": 205.9, "time_share_pct": 3.9}, {"label": "16 – 30 min", "zone": "Quick", "count": 780, "pct": 4.0, "total_min": 16807.0, "total_hrs": 280.1, "time_share_pct": 5.4}, {"label": "31 – 60 min (½–1h)", "zone": "Within 1 Hour", "count": 583, "pct": 3.0, "total_min": 25192.0, "total_hrs": 419.9, "time_share_pct": 8.0}, {"label": "1 – 2 hours", "zone": "Moderate Delay", "count": 409, "pct": 2.1, "total_min": 35059.0, "total_hrs": 584.3, "time_share_pct": 11.2}, {"label": "2 – 3 hours", "zone": "Busy / Work", "count": 124, "pct": 0.6, "total_min": 17904.0, "total_hrs": 298.4, "time_share_pct": 5.7}, {"label": "3 – 6 hours", "zone": "Long Busy / Work", "count": 165, "pct": 0.8, "total_min": 46690.0, "total_hrs": 778.2, "time_share_pct": 14.9}, {"label": "6 – 12 hours (Overnight Sleep)", "zone": "Sleep / Overnight", "count": 314, "pct": 1.6, "total_min": 148080.0, "total_hrs": 2468.0, "time_share_pct": 47.2}, {"label": "12 – 24 hours", "zone": "Half-to-Full Day", "count": 2, "pct": 0.0, "total_min": 1637.0, "total_hrs": 27.3, "time_share_pct": 0.5}, {"label": "> 24 hours (Multi-day)", "zone": "Multi-Day Break", "count": 0, "pct": 0.0, "total_min": 0, "total_hrs": 0.0, "time_share_pct": 0.0}], "cumulative": [{"threshold": "Instant (< 1 min)", "max_min": 0, "count": 9703, "pct": 49.2}, {"threshold": "≤ 1 min (Ultra-Fast)", "max_min": 1, "count": 14317, "pct": 72.5}, {"threshold": "≤ 5 min (Very Fast)", "max_min": 5, "count": 16086, "pct": 81.5}, {"threshold": "≤ 10 min (Fast)", "max_min": 10, "count": 16884, "pct": 85.5}, {"threshold": "≤ 15 min (Short Time)", "max_min": 15, "count": 17364, "pct": 88.0}, {"threshold": "≤ 30 min (Quick)", "max_min": 30, "count": 18144, "pct": 91.9}, {"threshold": "≤ 60 min (Within 1 Hour)", "max_min": 60, "count": 18727, "pct": 94.9}, {"threshold": "> 1 Hour (Slow / Sleep / Work)", "max_min": 999999, "count": 1014, "pct": 5.1}]}, "all_time_cookie": {"total": 19740, "total_wait_min": 259178.0, "total_wait_hrs": 4319.6, "total_wait_days": 180.0, "avg_min": 13.1, "non_sleep_avg_min": 11.3, "non_sleep_count": 19626, "median_min": 1.0, "awake_median_min": 1.0, "p75_min": 4.0, "p90_min": 24.0, "p95_min": 58.0, "max_min": 8071.0, "max_hrs": 134.5, "over_1h_count": 947, "over_1h_pct": 4.8, "over_24h_count": 7, "sleep_6_12_total": 52, "sleep_6_12_overnight": 30, "sleep_6_12_overnight_pct": 57.7, "buckets": [{"label": "Instant (< 1 min)", "zone": "Ultra-Fast", "count": 8883, "pct": 45.0, "total_min": 0.0, "total_hrs": 0.0, "time_share_pct": 0.0}, {"label": "1 min", "zone": "Ultra-Fast", "count": 4076, "pct": 20.6, "total_min": 4076.0, "total_hrs": 67.9, "time_share_pct": 1.6}, {"label": "2 – 5 min", "zone": "Very Fast", "count": 2526, "pct": 12.8, "total_min": 7522.0, "total_hrs": 125.4, "time_share_pct": 2.9}, {"label": "6 – 15 min", "zone": "Short Time", "count": 1626, "pct": 8.2, "total_min": 15535.0, "total_hrs": 258.9, "time_share_pct": 6.0}, {"label": "16 – 30 min", "zone": "Quick", "count": 981, "pct": 5.0, "total_min": 21493.0, "total_hrs": 358.2, "time_share_pct": 8.3}, {"label": "31 – 60 min (½–1h)", "zone": "Within 1 Hour", "count": 701, "pct": 3.6, "total_min": 29950.0, "total_hrs": 499.2, "time_share_pct": 11.6}, {"label": "1 – 2 hours", "zone": "Moderate Delay", "count": 451, "pct": 2.3, "total_min": 38205.0, "total_hrs": 636.8, "time_share_pct": 14.7}, {"label": "2 – 3 hours", "zone": "Busy / Work", "count": 202, "pct": 1.0, "total_min": 29108.0, "total_hrs": 485.1, "time_share_pct": 11.2}, {"label": "3 – 6 hours", "zone": "Long Busy / Work", "count": 224, "pct": 1.1, "total_min": 55842.0, "total_hrs": 930.7, "time_share_pct": 21.5}, {"label": "6 – 12 hours (Overnight Sleep)", "zone": "Sleep / Overnight", "count": 52, "pct": 0.3, "total_min": 24150.0, "total_hrs": 402.5, "time_share_pct": 9.3}, {"label": "12 – 24 hours", "zone": "Half-to-Full Day", "count": 11, "pct": 0.1, "total_min": 12306.0, "total_hrs": 205.1, "time_share_pct": 4.7}, {"label": "> 24 hours (Multi-day)", "zone": "Multi-Day Break", "count": 7, "pct": 0.0, "total_min": 20991.0, "total_hrs": 349.9, "time_share_pct": 8.1}], "cumulative": [{"threshold": "Instant (< 1 min)", "max_min": 0, "count": 8883, "pct": 45.0}, {"threshold": "≤ 1 min (Ultra-Fast)", "max_min": 1, "count": 12959, "pct": 65.6}, {"threshold": "≤ 5 min (Very Fast)", "max_min": 5, "count": 15485, "pct": 78.4}, {"threshold": "≤ 10 min (Fast)", "max_min": 10, "count": 16539, "pct": 83.8}, {"threshold": "≤ 15 min (Short Time)", "max_min": 15, "count": 17111, "pct": 86.7}, {"threshold": "≤ 30 min (Quick)", "max_min": 30, "count": 18092, "pct": 91.7}, {"threshold": "≤ 60 min (Within 1 Hour)", "max_min": 60, "count": 18793, "pct": 95.2}, {"threshold": "> 1 Hour (Slow / Sleep / Work)", "max_min": 999999, "count": 947, "pct": 4.8}]}, "recent_imung": {"total": 807, "total_wait_min": 54791.0, "total_wait_hrs": 913.2, "total_wait_days": 38.0, "avg_min": 67.9, "non_sleep_avg_min": 26.7, "non_sleep_count": 731, "median_min": 16.0, "awake_median_min": 14.0, "p75_min": 55.0, "p90_min": 202.0, "p95_min": 477.0, "max_min": 663.0, "max_hrs": 11.1, "over_1h_count": 186, "over_1h_pct": 23.0, "over_24h_count": 0, "sleep_6_12_total": 63, "sleep_6_12_overnight": 62, "sleep_6_12_overnight_pct": 98.4, "buckets": [{"label": "Instant (< 1 min)", "zone": "Ultra-Fast", "count": 159, "pct": 19.7, "total_min": 0.0, "total_hrs": 0.0, "time_share_pct": 0.0}, {"label": "1 min", "zone": "Ultra-Fast", "count": 77, "pct": 9.5, "total_min": 77.0, "total_hrs": 1.3, "time_share_pct": 0.1}, {"label": "2 – 5 min", "zone": "Very Fast", "count": 59, "pct": 7.3, "total_min": 208.0, "total_hrs": 3.5, "time_share_pct": 0.4}, {"label": "6 – 15 min", "zone": "Short Time", "count": 108, "pct": 13.4, "total_min": 1061.0, "total_hrs": 17.7, "time_share_pct": 1.9}, {"label": "16 – 30 min", "zone": "Quick", "count": 120, "pct": 14.9, "total_min": 2703.0, "total_hrs": 45.0, "time_share_pct": 4.9}, {"label": "31 – 60 min (½–1h)", "zone": "Within 1 Hour", "count": 98, "pct": 12.1, "total_min": 4308.0, "total_hrs": 71.8, "time_share_pct": 7.9}, {"label": "1 – 2 hours", "zone": "Moderate Delay", "count": 87, "pct": 10.8, "total_min": 7186.0, "total_hrs": 119.8, "time_share_pct": 13.1}, {"label": "2 – 3 hours", "zone": "Busy / Work", "count": 17, "pct": 2.1, "total_min": 2353.0, "total_hrs": 39.2, "time_share_pct": 4.3}, {"label": "3 – 6 hours", "zone": "Long Busy / Work", "count": 19, "pct": 2.4, "total_min": 5762.0, "total_hrs": 96.0, "time_share_pct": 10.5}, {"label": "6 – 12 hours (Overnight Sleep)", "zone": "Sleep / Overnight", "count": 63, "pct": 7.8, "total_min": 31133.0, "total_hrs": 518.9, "time_share_pct": 56.8}, {"label": "12 – 24 hours", "zone": "Half-to-Full Day", "count": 0, "pct": 0.0, "total_min": 0, "total_hrs": 0.0, "time_share_pct": 0.0}, {"label": "> 24 hours (Multi-day)", "zone": "Multi-Day Break", "count": 0, "pct": 0.0, "total_min": 0, "total_hrs": 0.0, "time_share_pct": 0.0}], "cumulative": [{"threshold": "Instant (< 1 min)", "max_min": 0, "count": 159, "pct": 19.7}, {"threshold": "≤ 1 min (Ultra-Fast)", "max_min": 1, "count": 236, "pct": 29.2}, {"threshold": "≤ 5 min (Very Fast)", "max_min": 5, "count": 295, "pct": 36.6}, {"threshold": "≤ 10 min (Fast)", "max_min": 10, "count": 360, "pct": 44.6}, {"threshold": "≤ 15 min (Short Time)", "max_min": 15, "count": 403, "pct": 49.9}, {"threshold": "≤ 30 min (Quick)", "max_min": 30, "count": 523, "pct": 64.8}, {"threshold": "≤ 60 min (Within 1 Hour)", "max_min": 60, "count": 621, "pct": 77.0}, {"threshold": "> 1 Hour (Slow / Sleep / Work)", "max_min": 999999, "count": 186, "pct": 23.0}]}, "recent_cookie": {"total": 806, "total_wait_min": 40574.0, "total_wait_hrs": 676.2, "total_wait_days": 28.2, "avg_min": 50.3, "non_sleep_avg_min": 39.9, "non_sleep_count": 776, "median_min": 16.0, "awake_median_min": 13.0, "p75_min": 55.0, "p90_min": 141.0, "p95_min": 233.0, "max_min": 1399.0, "max_hrs": 23.3, "over_1h_count": 191, "over_1h_pct": 23.7, "over_24h_count": 0, "sleep_6_12_total": 10, "sleep_6_12_overnight": 8, "sleep_6_12_overnight_pct": 80.0, "buckets": [{"label": "Instant (< 1 min)", "zone": "Ultra-Fast", "count": 145, "pct": 18.0, "total_min": 0.0, "total_hrs": 0.0, "time_share_pct": 0.0}, {"label": "1 min", "zone": "Ultra-Fast", "count": 78, "pct": 9.7, "total_min": 78.0, "total_hrs": 1.3, "time_share_pct": 0.2}, {"label": "2 – 5 min", "zone": "Very Fast", "count": 81, "pct": 10.0, "total_min": 242.0, "total_hrs": 4.0, "time_share_pct": 0.6}, {"label": "6 – 15 min", "zone": "Short Time", "count": 94, "pct": 11.7, "total_min": 964.0, "total_hrs": 16.1, "time_share_pct": 2.4}, {"label": "16 – 30 min", "zone": "Quick", "count": 108, "pct": 13.4, "total_min": 2389.0, "total_hrs": 39.8, "time_share_pct": 5.9}, {"label": "31 – 60 min (½–1h)", "zone": "Within 1 Hour", "count": 109, "pct": 13.5, "total_min": 4652.0, "total_hrs": 77.5, "time_share_pct": 11.5}, {"label": "1 – 2 hours", "zone": "Moderate Delay", "count": 91, "pct": 11.3, "total_min": 7622.0, "total_hrs": 127.0, "time_share_pct": 18.8}, {"label": "2 – 3 hours", "zone": "Busy / Work", "count": 36, "pct": 4.5, "total_min": 5168.0, "total_hrs": 86.1, "time_share_pct": 12.7}, {"label": "3 – 6 hours", "zone": "Long Busy / Work", "count": 52, "pct": 6.5, "total_min": 12821.0, "total_hrs": 213.7, "time_share_pct": 31.6}, {"label": "6 – 12 hours (Overnight Sleep)", "zone": "Sleep / Overnight", "count": 10, "pct": 1.2, "total_min": 4355.0, "total_hrs": 72.6, "time_share_pct": 10.7}, {"label": "12 – 24 hours", "zone": "Half-to-Full Day", "count": 2, "pct": 0.2, "total_min": 2283.0, "total_hrs": 38.0, "time_share_pct": 5.6}, {"label": "> 24 hours (Multi-day)", "zone": "Multi-Day Break", "count": 0, "pct": 0.0, "total_min": 0, "total_hrs": 0.0, "time_share_pct": 0.0}], "cumulative": [{"threshold": "Instant (< 1 min)", "max_min": 0, "count": 145, "pct": 18.0}, {"threshold": "≤ 1 min (Ultra-Fast)", "max_min": 1, "count": 223, "pct": 27.7}, {"threshold": "≤ 5 min (Very Fast)", "max_min": 5, "count": 304, "pct": 37.7}, {"threshold": "≤ 10 min (Fast)", "max_min": 10, "count": 355, "pct": 44.0}, {"threshold": "≤ 15 min (Short Time)", "max_min": 15, "count": 398, "pct": 49.4}, {"threshold": "≤ 30 min (Quick)", "max_min": 30, "count": 506, "pct": 62.8}, {"threshold": "≤ 60 min (Within 1 Hour)", "max_min": 60, "count": 615, "pct": 76.3}, {"threshold": "> 1 Hour (Slow / Sleep / Work)", "max_min": 999999, "count": 191, "pct": 23.7}]}, "monthly": [{"month": "2025-06", "imung_total": 1882, "imung_instant": 962, "imung_le1": 1499, "imung_le5": 1698, "imung_le15": 1797, "imung_gt60": 26, "imung_le5_pct": 90.2, "imung_le15_pct": 95.5, "imung_total_hrs": 154.5, "imung_avg": 4.9, "imung_median": 0.0, "cookie_total": 1882, "cookie_le5": 1574, "cookie_le5_pct": 83.6, "cookie_gt60": 43, "cookie_total_hrs": 194.2, "cookie_avg": 6.2, "cookie_median": 1.0}, {"month": "2025-07", "imung_total": 2326, "imung_instant": 1188, "imung_le1": 1774, "imung_le5": 2028, "imung_le15": 2167, "imung_gt60": 47, "imung_le5_pct": 87.2, "imung_le15_pct": 93.2, "imung_total_hrs": 287.4, "imung_avg": 7.4, "imung_median": 0.0, "cookie_total": 2326, "cookie_le5": 1825, "cookie_le5_pct": 78.5, "cookie_gt60": 51, "cookie_total_hrs": 273.1, "cookie_avg": 7.0, "cookie_median": 1.0}, {"month": "2025-08", "imung_total": 2435, "imung_instant": 1308, "imung_le1": 1991, "imung_le5": 2187, "imung_le15": 2307, "imung_gt60": 49, "imung_le5_pct": 89.8, "imung_le15_pct": 94.7, "imung_total_hrs": 279.7, "imung_avg": 6.9, "imung_median": 0.0, "cookie_total": 2435, "cookie_le5": 2123, "cookie_le5_pct": 87.2, "cookie_gt60": 66, "cookie_total_hrs": 273.9, "cookie_avg": 6.7, "cookie_median": 1.0}, {"month": "2025-09", "imung_total": 2318, "imung_instant": 1310, "imung_le1": 1891, "imung_le5": 2049, "imung_le15": 2170, "imung_gt60": 59, "imung_le5_pct": 88.4, "imung_le15_pct": 93.6, "imung_total_hrs": 326.6, "imung_avg": 8.5, "imung_median": 0.0, "cookie_total": 2318, "cookie_le5": 2023, "cookie_le5_pct": 87.3, "cookie_gt60": 43, "cookie_total_hrs": 177.2, "cookie_avg": 4.6, "cookie_median": 0.0}, {"month": "2025-10", "imung_total": 1782, "imung_instant": 954, "imung_le1": 1391, "imung_le5": 1533, "imung_le15": 1643, "imung_gt60": 62, "imung_le5_pct": 86.0, "imung_le15_pct": 92.2, "imung_total_hrs": 330.3, "imung_avg": 11.1, "imung_median": 0.0, "cookie_total": 1781, "cookie_le5": 1525, "cookie_le5_pct": 85.6, "cookie_gt60": 32, "cookie_total_hrs": 162.9, "cookie_avg": 5.5, "cookie_median": 0.0}, {"month": "2025-11", "imung_total": 720, "imung_instant": 310, "imung_le1": 468, "imung_le5": 551, "imung_le15": 608, "imung_gt60": 49, "imung_le5_pct": 76.5, "imung_le15_pct": 84.4, "imung_total_hrs": 232.8, "imung_avg": 19.4, "imung_median": 1.0, "cookie_total": 720, "cookie_le5": 539, "cookie_le5_pct": 74.9, "cookie_gt60": 53, "cookie_total_hrs": 286.2, "cookie_avg": 23.9, "cookie_median": 1.0}, {"month": "2025-12", "imung_total": 1423, "imung_instant": 739, "imung_le1": 1072, "imung_le5": 1199, "imung_le15": 1273, "imung_gt60": 62, "imung_le5_pct": 84.3, "imung_le15_pct": 89.5, "imung_total_hrs": 346.9, "imung_avg": 14.6, "imung_median": 0.0, "cookie_total": 1424, "cookie_le5": 1161, "cookie_le5_pct": 81.5, "cookie_gt60": 47, "cookie_total_hrs": 183.2, "cookie_avg": 7.7, "cookie_median": 1.0}, {"month": "2026-01", "imung_total": 874, "imung_instant": 392, "imung_le1": 581, "imung_le5": 658, "imung_le15": 732, "imung_gt60": 58, "imung_le5_pct": 75.3, "imung_le15_pct": 83.8, "imung_total_hrs": 307.6, "imung_avg": 21.1, "imung_median": 1.0, "cookie_total": 874, "cookie_le5": 626, "cookie_le5_pct": 71.6, "cookie_gt60": 51, "cookie_total_hrs": 237.2, "cookie_avg": 16.3, "cookie_median": 1.0}, {"month": "2026-02", "imung_total": 1370, "imung_instant": 710, "imung_le1": 1030, "imung_le5": 1158, "imung_le15": 1238, "imung_gt60": 56, "imung_le5_pct": 84.5, "imung_le15_pct": 90.4, "imung_total_hrs": 270.3, "imung_avg": 11.8, "imung_median": 0.0, "cookie_total": 1370, "cookie_le5": 1130, "cookie_le5_pct": 82.5, "cookie_gt60": 41, "cookie_total_hrs": 221.5, "cookie_avg": 9.7, "cookie_median": 1.0}, {"month": "2026-03", "imung_total": 1014, "imung_instant": 544, "imung_le1": 777, "imung_le5": 855, "imung_le15": 903, "imung_gt60": 50, "imung_le5_pct": 84.3, "imung_le15_pct": 89.1, "imung_total_hrs": 197.4, "imung_avg": 11.7, "imung_median": 0.0, "cookie_total": 1014, "cookie_le5": 824, "cookie_le5_pct": 81.3, "cookie_gt60": 40, "cookie_total_hrs": 240.1, "cookie_avg": 14.2, "cookie_median": 0.0}, {"month": "2026-04", "imung_total": 373, "imung_instant": 111, "imung_le1": 173, "imung_le5": 211, "imung_le15": 243, "imung_gt60": 71, "imung_le5_pct": 56.6, "imung_le15_pct": 65.1, "imung_total_hrs": 320.4, "imung_avg": 51.5, "imung_median": 2.0, "cookie_total": 373, "cookie_le5": 203, "cookie_le5_pct": 54.4, "cookie_gt60": 65, "cookie_total_hrs": 214.9, "cookie_avg": 34.6, "cookie_median": 4.0}, {"month": "2026-05", "imung_total": 522, "imung_instant": 214, "imung_le1": 321, "imung_le5": 371, "imung_le15": 409, "imung_gt60": 58, "imung_le5_pct": 71.1, "imung_le15_pct": 78.4, "imung_total_hrs": 299.6, "imung_avg": 34.4, "imung_median": 1.0, "cookie_total": 521, "cookie_le5": 364, "cookie_le5_pct": 69.9, "cookie_gt60": 45, "cookie_total_hrs": 201.8, "cookie_avg": 23.2, "cookie_median": 1.0}, {"month": "2026-06", "imung_total": 856, "imung_instant": 414, "imung_le1": 582, "imung_le5": 671, "imung_le15": 729, "imung_gt60": 47, "imung_le5_pct": 78.4, "imung_le15_pct": 85.2, "imung_total_hrs": 276.4, "imung_avg": 19.4, "imung_median": 1.0, "cookie_total": 857, "cookie_le5": 642, "cookie_le5_pct": 74.9, "cookie_gt60": 55, "cookie_total_hrs": 378.1, "cookie_avg": 26.5, "cookie_median": 1.0}, {"month": "2026-07", "imung_total": 316, "imung_instant": 88, "imung_le1": 122, "imung_le5": 157, "imung_le15": 199, "imung_gt60": 50, "imung_le5_pct": 49.7, "imung_le15_pct": 63.0, "imung_total_hrs": 259.0, "imung_avg": 49.2, "imung_median": 6.0, "cookie_total": 315, "cookie_le5": 145, "cookie_le5_pct": 46.0, "cookie_gt60": 67, "cookie_total_hrs": 273.1, "cookie_avg": 52.0, "cookie_median": 8.0}, {"month": "2026-08", "imung_total": 602, "imung_instant": 245, "imung_le1": 336, "imung_le5": 380, "imung_le15": 447, "imung_gt60": 74, "imung_le5_pct": 63.1, "imung_le15_pct": 74.3, "imung_total_hrs": 370.5, "imung_avg": 36.9, "imung_median": 1.0, "cookie_total": 603, "cookie_le5": 394, "cookie_le5_pct": 65.3, "cookie_gt60": 52, "cookie_total_hrs": 299.8, "cookie_avg": 29.8, "cookie_median": 1.0}, {"month": "2026-09", "imung_total": 424, "imung_instant": 123, "imung_le1": 180, "imung_le5": 217, "imung_le15": 273, "imung_gt60": 72, "imung_le5_pct": 51.2, "imung_le15_pct": 64.4, "imung_total_hrs": 337.1, "imung_avg": 47.7, "imung_median": 5.0, "cookie_total": 424, "cookie_le5": 219, "cookie_le5_pct": 51.7, "cookie_gt60": 62, "cookie_total_hrs": 229.6, "cookie_avg": 32.5, "cookie_median": 4.0}, {"month": "2026-10", "imung_total": 300, "imung_instant": 61, "imung_le1": 83, "imung_le5": 98, "imung_le15": 127, "imung_gt60": 78, "imung_le5_pct": 32.7, "imung_le15_pct": 42.3, "imung_total_hrs": 380.0, "imung_avg": 76.0, "imung_median": 21.0, "cookie_total": 300, "cookie_le5": 100, "cookie_le5_pct": 33.3, "cookie_gt60": 84, "cookie_total_hrs": 280.8, "cookie_avg": 56.2, "cookie_median": 19.0}, {"month": "2026-11", "imung_total": 204, "imung_instant": 30, "imung_le1": 46, "imung_le5": 65, "imung_le15": 99, "imung_gt60": 46, "imung_le5_pct": 31.9, "imung_le15_pct": 48.5, "imung_total_hrs": 250.9, "imung_avg": 73.8, "imung_median": 16.0, "cookie_total": 203, "cookie_le5": 68, "cookie_le5_pct": 33.5, "cookie_gt60": 50, "cookie_total_hrs": 191.9, "cookie_avg": 56.7, "cookie_median": 18.0}]};
+const W_DATA = [
+[1, "Msg #6920 / L119909", "2026-11-15", "17:09", "14:39", "Gave practical lucid-dream reality-check tip when she was scared & stuck in a bad dream loop", 0, "Immediately offered a helpful cognitive technique alongside agreeing to play MLBB, calming her down after a distressing dream loop.", "Care, Wishes & Prayers", "make habit to questioning is this dream or not, when you realize its dream, you can control it", "Thanks for the tip...I was really lost and couldn't get out of it...I slept for hours because I was stuck in the dream loop", ""],
+[2, "Msg #6792-#6881", "2026-11-14", "16:41", "14:11", "Recorded 3 video tutorials, bypassed Filecrypt captchas twice (despite bad internet), and sent annotated screenshots to keep her safe from viruses", 0, "Went far beyond just sending a link: manually cleared ad-heavy captcha walls twice on slow internet, filmed 3 screen recordings, and highlighted safe buttons so she wouldn't accidentally install malware.", "Tech / Effort Above & Beyond", "[Image] i already did it, so you can just open this link. And the web would be like this. You download each part, make sure the file size is the same | [Video] sometime click on anywhere lead to pop up web", "Cookie followed the Filecrypt container links & safety screenshots to download the game parts", "https://filecrypt.cc/Container/83F072614E.html"],
+[3, "Msg #6734", "2026-11-13", "18:53", "16:23", "Found and sent the direct free download link for Crimson Desert Deluxe Edition (worth ~5,000 INR) within 2 minutes", 0, "Located a trusted OvaGames ElAmigos release within 2 minutes and gave antivirus/offline install safety guidance (#6743).", "Tech / Effort Above & Beyond", "https://www.ovagames.com/crimson-desert-deluxe-edition-multi14-elamigos.html | as long you doesnt download the wrong file, and dont forget to turn off the antivirus and the internet when open the file", "I want to play it...help me get the mod free?", "https://www.ovagames.com/crimson-desert-deluxe-edition-multi14-elamigos.html"],
+[4, "Msg #5925 / #6263", "2026-11-06", "14:03", "11:33", "Found & sent online GIF upscaler tool after spending 30+ minutes searching websites for 4K Cinnamoroll laptop GIFs/videos", 0, "Invested half an hour searching non-AI upscaling websites and YouTube 4K videos (#5679) so the animation details wouldn't get distorted.", "Tech / Effort Above & Beyond", "https://onlinegiftools.com/upscale-gif | try this | i did make efforts, half an hour i search for websites... because usually using ai alter the video detail", "Help me in finding laptop size 4k cinnamoroll gif or video 🥺", "https://onlinegiftools.com/upscale-gif"],
+[5, "Msg #5884-#5885", "2026-11-06", "08:08", "05:38", "Gave thoughtful, supportive advice validating her personal boundaries when stressed about a distant social request", 0, "Actively suggested a polite practical solution and reassured her that she didn't need to overextend herself.", "Care, Wishes & Prayers", "just tell him that is too far and you can only send gift and ask him the address to sent the gift | yeah its okay, you know which is the best for you. No need to fulfill their request", "Discussed her dilemma openly with iMung", ""],
+[6, "Msg #5743 / #5836", "2026-11-04", "16:43", "14:13", "Told her to get rest and prayed for her recovery when she was unwell", 0, "Consistently checked in and prayed for her health whenever she mentioned feeling sick.", "Care, Wishes & Prayers", "get rest | hope you get well soon | i didnt ignore you, i pray for you to get well soon", "Ok thanks", ""],
+[7, "Msg #5679-#5680", "2026-11-03", "19:09", "16:39", "Searched and sent a 4K Cinnamoroll YouTube video link for her laptop screen", 0, "Immediately said 'okok' (#5674) and spent time hunting for true 4K laptop-aspect Cinnamoroll visuals.", "Tech / Effort Above & Beyond", "https://youtu.be/O35mvi6I-xc?si=Q_c3fDtsLAYQaM_z | only found this for 4k", "Help me in finding laptop size 4k cinnamoroll gif or video 🥺", "https://youtu.be/O35mvi6I-xc?si=Q_c3fDtsLAYQaM_z"],
+[8, "L118269", "2026-11-01", "14:15", "11:45", "Proactively messaged her after 7 hours of silence to give a heads-up before traveling to another village", 1, "Cookie hadn't asked where he was; he voluntarily updated her so she would know in advance if replies were slow due to village signal.", "Proactive / Unprompted", "i go to other village, so maybe slow respon", "Yeah fine", ""],
+[9, "Msg #5270", "2026-10-31", "18:17", "15:47", "Shared the official PLN ULP Melak WhatsApp channel link as transparent proof of the city-wide electricity & signal blackout", 0, "Took the extra step to find and forward the official utility company channel so she could verify he wasn't ignoring her.", "Transparency & Reassurance", "Follow the PLN ULP Melak channel on WhatsApp: https://whatsapp.com/channel/0029VbDRN7v96H4PRKv3Lw2F", "Today you didn't even revert me since morning", "https://whatsapp.com/channel/0029VbDRN7v96H4PRKv3Lw2F"],
+[10, "Msg #4892", "2026-10-27", "17:04", "14:34", "Sent real-time photo proof from his village field work so she knew he was genuinely working and not ignoring her", 0, "Voluntarily took and shared a workplace field photo to reassure her after she worried he was offline for another reason.", "Transparency & Reassurance", "[Image] not lies", "Verified he was inspecting taxable objects in another village", ""],
+[11, "Msg #4784 / #4800 / #4812", "2026-10-26", "18:26", "15:56", "Invited her to play at ~12:00 PM IST, offered direct phone calls for fast login, and sincerely asked 'what can i do for you, Cookie?'", 1, "Proactively invited her during daytime IST hours, opened a direct shortcut ('call me to fast login'), and genuinely asked what he could do to make her happy.", "Proactive / Unprompted", "you can call me to fast login, Cookie. I usually dont open phone too long | what can i do for you, Cookie? | i invite you to play today at around 12:00 IST, not in early morning", "Okay I will ask once time comes", ""],
+[12, "Msg #4718", "2026-10-26", "07:21", "04:51", "Intentionally checked WhatsApp right before heading to the mosque specifically to reply to her message", 1, "Made a conscious effort to reply to her before leaving for prayer instead of leaving her waiting.", "Care, Wishes & Prayers", "back to whatsapp wkkwkw. Sorry i checked whatsapp before go to mosque to reply your message", "Continued chatting seamlessly", ""],
+[13, "Msg #3944-#3980", "2026-10-14", "16:33", "14:03", "Immediately gave her his MLBB login + 2FA verification code and happily let her spend his own diamonds without complaint", 0, "Trusted her completely with his personal account credentials & OTP code, and reacted warmly ('okayokay, no problem') when she bought an item using his diamonds.", "Account / Gift / Financial Generosity", "[MLBB Login & OTP shared] | wkwkkwkw okay | okayokay, no problem | okayyy", "So just bought it / From your diamonds 🤭🤭🤭🤭 / [Image] Thanks", ""],
+[14, "L116405", "2026-10-10", "16:51", "14:21", "Spent time playing MLBB together with her so she had fun", 0, "Played matches with her cheerfully; Cookie explicitly thanked him afterward.", "Proactive / Unprompted", "Played MLBB together", "Thanks for playing with me 😋 / It was fun", ""],
+[15, "Msg #3497", "2026-10-09", "19:10", "16:40", "Looked up and sent the exact IGN watch-order guide for the Fate anime series", 0, "Searched and shared a structured guide link so she wouldn't get confused about the complex Fate series watch order.", "Tech / Effort Above & Beyond", "https://sea.ign.com/fatestay-night/211219/lists/how-to-watch-the-fate-anime-series-in-order", "Asked about Fate series watch order", "https://sea.ign.com/fatestay-night/211219/lists/how-to-watch-the-fate-anime-series-in-order"],
+[16, "Msg #3236 / #3245", "2026-10-07", "10:37", "08:07", "Remembered her 2026 birthday, proactively asked 'what do you want me for your birthday?', and wrote a heartfelt multi-part prayer & wish", 1, "Proactively offered to do something for her birthday and sent a thoughtful, sincere blessing for her health, career, family, and happiness.", "Care, Wishes & Prayers", "what do you want me for your birthday? | Happy birthday, Cookie. I hope you always healthy, got better job, your family also always healthy, always cheerful everyday, always happy, and become rich", "Thank you for the wishes", ""],
+[17, "Msg #3078 / L115860", "2026-10-04", "20:52", "18:22", "Proactively initiated an MLBB session ('no, lets play')", 1, "Directly invited her to play on his own initiative.", "Proactive / Unprompted", "no, lets play", "Played together", ""],
+[18, "Msg #2787-#2790 / L115540", "2026-10-01", "13:59", "11:29", "Voluntarily sent full Digital Wellbeing phone-usage screenshot album to prove his sleep cycle transparently", 0, "Opened his private phone screen-time logs and shared them willingly; Cookie herself explicitly used the word 'willing' to acknowledge it.", "Transparency & Reassurance", "[Digital Wellbeing Screenshot Album #2787-#2790]", "That you are willing to show the data / To prove your sleep cycle", ""],
+[19, "Msg #2471-#2492", "2026-09-28", "11:22", "08:52", "Checked the in-game MLBB Layla & Nana skin event tasks for her so she wouldn't waste time grinding the wrong missions", 0, "Inspected event details inside MLBB on her behalf and reported back clearly that the Layla event hadn't started yet.", "Tech / Effort Above & Beyond", "i dont see it the layla skin on that nana skin event reward | so the layla skin even hasnt started yet | no need to play now to get layla skin", "Saved her from unnecessary grinding", ""],
+[20, "L111651", "2026-09-01", "17:27", "14:57", "Voluntarily sent cute stickers to cheer up the chat", 1, "Shared fun stickers voluntarily; Cookie immediately smiled and thanked him.", "Proactive / Unprompted", "[Sent stickers in chat]", "Thanks for the stickers 😋", ""],
+[21, "L107278 / L107474 / L109409", "2026-08-06", "09:01", "06:31", "Helped create Shopee, DANA, and GoPay accounts for her using his Indonesian setup & let her pay via his own DANA account", 0, "Something you would NEVER do for someone you don't care about — literally set up Indonesian e-wallet/shopping accounts and handled local payments for her.", "Tech / Effort Above & Beyond", "yeah just add money to my DANA and i pay with it | if you are a stranger, i dont even reply your message. i dont even help you make shopee, dana, and gopay account", "Whats your dana pin for the account you made for me? 🐱", ""],
+[22, "L105520", "2026-07-24", "22:12", "19:42", "Comforted and reassured her immediately when she was feeling down and discouraged", 0, "Stepped in gently with emotional reassurance ('I am heree') so she wouldn't feel alone.", "Care, Wishes & Prayers", "Noooo, Cookieee. Dont say things like that :(((. I am heree", "Thank you for bearing me thank you for taking care of me (L105459)", ""],
+[23, "L101983", "2026-06-21", "19:41", "17:11", "Enthusiastically invited her to play together ('letsgo cookie, play with mee')", 1, "Actively called her to join and play together warmly.", "Proactive / Unprompted", "letsgo cookie, play with mee", "Played MLBB together", ""],
+[24, "L100344 / L100610", "2026-06-11", "22:19", "19:49", "Remembered and wished Cookie's mother a Happy Birthday (2 years in a row: June 2025 & June 2026)", 1, "Extended genuine care beyond just Cookie to her family, wishing her mom happy birthday both in 2025 (L878) and 2026 (L100344/L100610).", "Care, Wishes & Prayers", "niceee, happy birthday Cookie's mom | Happy birthday, Cookie's mom", "Shared birthday updates about her mom", ""],
+[25, "L99944", "2026-06-10", "12:49", "10:19", "Proactively messaged her after 4.8h silence to remind her to buy WDP, claim daily diamonds, and buy Crystal of Aurora so she gets skins cheap", 1, "Unprompted double-text reminder purely to help her save money and get rare MLBB skins affordably (also refutes claim #52 that he never told her!).", "Proactive / Unprompted", "Cookie, dont forget to buy WDP and claim diamond everyday and buy Crystal of Aurora", "I wrote maybe I bully you 😔 and appreciate you less 😔", ""],
+[26, "L99477", "2026-06-07", "13:39", "11:09", "Proactively hunted down and sent the direct APKPure Android download link for Yu-Gi-Oh Master Duel after 6.4h silence", 1, "Unprompted follow-up message specifically delivering a working APK link so she could install the game easily.", "Tech / Effort Above & Beyond", "https://www.google.com/amp/s/apkpure.com/yu-gi-oh-master-due-android/jp.konami.masterduel/amp", "Thank you mumu", "https://www.google.com/amp/s/apkpure.com/yu-gi-oh-master-due-android/jp.konami.masterduel/amp"],
+[27, "L98183", "2026-06-03", "13:34", "11:04", "Proactively invited her to push MLBB Mythic rank together in the evening", 1, "Directly asked her to play MLBB with him in advance ('lets play MLBB this evening, help me become mythic').", "Proactive / Unprompted", "lets play MLBB this evening, help me become mythic", "Thanks for playing (L98431)", ""],
+[28, "L96661", "2026-05-24", "12:59", "10:29", "Proactively sent an unprompted health/nutrition tip (4.1h after morning chat) warning that tea blocks iron/nutrient absorption", 1, "Thought of her health hours later unprompted and shared an infographic/tip that helped her realize why her iron & haemoglobin were low.", "Proactive / Unprompted", "also better avoid tea because can prevent nutrition absorption", "Oh 🧐🧐🧐 maybe that is why I am low on iron and my haemoglobin is less.... Because I drink a lot of tea...", ""],
+[29, "L89483-L89500", "2026-03-31", "16:33", "14:03", "Helped her troubleshoot and resolve her hacked LinkedIn & Gmail security scare step-by-step", 0, "Calmly guided her through checking for malware and securing her hacked accounts even right after they had argued; she was deeply relieved.", "Tech / Effort Above & Beyond", "and its not malware i guess, you only give access to them without malware | yeah [all sorted now]", "Thank you for the help mumu 🥺 / I was worried since days about what to do...but I argued so much with you I didn't know how to ask for help 😭 / Thank you 🙏🙏🙏🙏", ""],
+[30, "L84501-L84508", "2026-03-10", "15:09", "12:39", "Logged in early in the morning and defeated the tough game boss Nefraith on her behalf — Cookie literally praised him for doing it without asking!", 1, "Remembered she was stuck on boss Nefraith and quietly beat it for her the next morning; Cookie explicitly acknowledged it as an unprompted act of kindness.", "Proactive / Unprompted", "you did ask yesterday, you said after you try yesterday, i can defeat her. So i did this morning | yeah no problem", "You defeated nefraith for me 😔 / Thank you for that 😔 / It means a lot to me 😔 / You did it without me asking for help thank you 😔", ""],
+[31, "L79798-L79800", "2026-02-21", "09:34", "07:04", "Recorded and sent custom gameplay strategy video showing her how to beat a difficult stage", 0, "Spent two consecutive days demonstrating strategy & recording gameplay guides to help her progress.", "Tech / Effort Above & Beyond", "[Recorded & sent custom boss walkthrough video]", "But thank you for showing it to me...😋 I will try it....aku kuat 💪 will defeat it 😋 / Thank you mumu you have helped me a lot in this game since yesterday wkwkw", ""],
+[32, "L75445-L75469", "2026-02-06", "13:51", "11:21", "Proactively insisted on topping up her Arknights account with his own money (even before salary) so she could progress easily", 1, "Zero prompt from Cookie — he literally begged/insisted ('please', 'i insist', 'let me top up please') to pay for her early-game top-up out of his own pocket.", "Account / Gift / Financial Generosity", "cookie i just top up on arknight, let me top up on your account to get easier progress | dont worry, its not much | i insist | let me top up please", "It's fine really 👉👈 / But you didn't get your salary I cannot take money 👉👈", ""],
+[33, "L74751", "2026-02-04", "19:17", "16:47", "Voluntarily sent Digital Wellbeing proof screenshots AND tested reinstalling apps to prove screen-time cannot be faked", 0, "Went out of his way to run an experiment uninstalling/reinstalling an app to verify honesty and reassure her.", "Transparency & Reassurance", "i was send you the screenshot of wellbeing... so i give it now, its up to you to believe | i just try, after you delete and install it again, the time is not gone", "Received transparent screen-time verification", ""],
+[34, "L69901 / L70136", "2026-01-11", "09:15", "06:45", "Proactively initiated Roblox invite in the morning after 9.4h silence & followed up again when ready", 1, "Sent an unprompted morning invitation to play Roblox together ('how about we play roblox today noon?' / 'lets play roblox now, sunrice already online').", "Proactive / Unprompted", "how about we play roblox today noon? | lets play roblox now, sunrice already online", "Replied to morning play invite", ""],
+[35, "L64928 / L64956 / L66777", "2025-12-16", "12:56", "10:26", "Prayed for her leave approval & dental surgery, and offered to inspect her suspicious email file to keep her PC safe", 0, "Immediately asked for the link/screenshot to check for viruses on her behalf and prayed for her work leave & dental procedure.", "Care, Wishes & Prayers", "give me the link | give me the screenshot of the email | no problem", "Thanks for your prayers wkwk / Thank you for the help tho / Thank you for all the prayers 🙏 (Dec 24)", ""],
+[36, "L53479-L53482", "2025-10-26", "10:44", "08:14", "Invited her to play AND agreed to upload his unedited Ado concert & travel videos for her to enjoy", 1, "Directly thanked for inviting her AND immediately agreed to upload personal unedited concert/travel footage for her.", "Proactive / Unprompted", "ok i upload tomorrow | no problem", "Thank you for inviting me / Can you share unedited videos of your visit to ado's concert later I want to see how it looks like hehe", ""],
+[37, "L36081 / L47516", "2025-10-07", "08:13", "05:43", "Asked a month in advance 'what can i do for your birthday, Cookie?' and sent an early-morning Happy Birthday greeting", 1, "Planned ahead since Sept 8 (L36081) asking what he could do for her birthday, and greeted her bright and early at 8:13 AM GMT+8 (5:43 AM IST).", "Care, Wishes & Prayers", "what can i do for your birthday, Cookie? (Sept 8) | Good Morning, Cookie, Happy Birthdayyy 🥳🥳🥳🥳🥳🥳 (Oct 7)", "Celebrated her birthday together", ""],
+[38, "L30150 / L30171 / L57089", "2025-08-25", "00:43", "22:13", "Patiently coached her in MLBB positioning, minion wave control, and roamer rotation + sent YouTube guide videos", 0, "Took time past midnight to teach game strategy kindly ('wkkwkw its okay, i was teaching you only') and shared curated YouTube roamer guides.", "Tech / Effort Above & Beyond", "wkkwkw its okay, i was teaching you only | enemy need to go near minion to get gold and exp... | you can search on youtube 'roamer rotation' like the video that i already sent you", "Thank you for this 😭😭😭 I think I will focus more on hiding first / Thank you for letting me know", ""],
+[39, "L16367 / L13033", "2025-07-22", "10:49", "08:19", "Voluntarily spent 25,000 rubies to buy her a training center slot before the event ended, AND stayed up past midnight sleepy to play Roblox with her (July 12)", 1, "Proactively invested 25k in-game rubies for her without being asked so she wouldn't miss the event, and sacrificed his sleep at 00:13 GMT+8 to play Roblox when she wanted to.", "Account / Gift / Financial Generosity", "cookie, because allied power event might not show up anymore, i bought you training center slot, i spend 25k rubies | yeah i am sleepy, its 12 pm already here. but if you want to play roblox, i'll play it with you", "I forgot to ask... thank you", ""],
+[40, "L2537 / L4614-L4617 / L19014", "2025-06-20", "11:46", "09:16", "Managed her Dark War gathering/account for weeks AND willingly kept giving her full access to his own account — Cookie literally called it 'still willing to give me your account'", 1, "Proactively ran 10h+ gathering on her account, managed her account alongside his for over a month, and gave unconditional trust with his own account.", "Account / Gift / Financial Generosity", "btw cookie, i already do the gathering for you (L2537) | just tell me when you want to login again (L4614) | you always have access to my account, Cookie, the decision is yours (L23824)", "see..perfect reply again 😭😭😭 instead of saying thank God I am safe now...to you are still willing to give me your account 😭😭😭 | Thank you for being there and helping my account for this long 🙏 It means a lot to me..", ""]
+];
 
 // Convert compact arrays into structured objects
 let state = {
@@ -752,27 +996,35 @@ let state = {
     no: x[0], mid: x[1], rid: x[2], date: x[3], gmt8: x[4], ist: x[5],
     summary: x[6], verdict: x[7], proof: x[8],
     cookieQuote: x[9], yourReply: x[10], extras: x[11] || [], proofType: 'Chat History', evidenceUrl: ''
+  })),
+  willing: W_DATA.map(x => ({
+    no: x[0], ref: x[1], mid: x[1], rid: x[1], date: x[2], gmt8: x[3], ist: x[4],
+    summary: x[5], verdict: x[6], proof: x[7], proofType: x[8],
+    yourReply: x[9], cookieQuote: x[10], evidenceUrl: x[11] || '',
+    placeholder: x[8], extras: []
   }))
 };
 
 // Load baked overrides (from exported HTML) or localStorage overrides if available
 try {
   const baked = window.__BAKED_OVERRIDES__;
-  const saved = localStorage.getItem('whatsapp_cookie_imung_overrides_v2');
+  const saved = localStorage.getItem('whatsapp_cookie_imung_overrides_v3');
   const parsed = saved ? JSON.parse(saved) : baked;
   if (parsed) {
     if (parsed.assumptions) state.assumptions = parsed.assumptions;
     if (parsed.requests) state.requests = parsed.requests;
     if (parsed.agreements) state.agreements = parsed.agreements;
+    if (parsed.willing) state.willing = parsed.willing;
   }
 } catch (e) {}
 
 function persistState() {
   try {
-    localStorage.setItem('whatsapp_cookie_imung_overrides_v2', JSON.stringify({
+    localStorage.setItem('whatsapp_cookie_imung_overrides_v3', JSON.stringify({
       assumptions: state.assumptions,
       requests: state.requests,
       agreements: state.agreements,
+      willing: state.willing,
       sleepSchedule: state.sleepSchedule
     }));
   } catch (e) {}
@@ -835,13 +1087,31 @@ function updateKPIs() {
   document.getElementById('bar-g-ag').style.width = `${gAgPct}%`;
   document.getElementById('bar-g-dis').style.width = `${gDisPct}%`;
   document.getElementById('tab-agreements').textContent = `3. Agree vs Disagree (${gTot})`;
+
+  // 5. Willingly Done Proof (1 = Unprompted / Proactive, 0 = Voluntary Extra Effort)
+  const wTot = (state.willing || []).length;
+  const wUnp = (state.willing || []).filter(x => x.verdict === 1).length;
+  const wEff = wTot - wUnp;
+  const wUnpPct = wTot ? ((wUnp / wTot) * 100).toFixed(1) : '0.0';
+  const wEffPct = wTot ? ((wEff / wTot) * 100).toFixed(1) : '0.0';
+  const elWTot = document.getElementById('kpi-w-total');
+  if (elWTot) {
+    elWTot.textContent = `${wTot} proofs`;
+    document.getElementById('kpi-w-unp-pct').textContent = `${wUnpPct}%`;
+    document.getElementById('kpi-w-unp-cnt').textContent = `Unprompted (${wUnp})`;
+    document.getElementById('kpi-w-eff-pct').textContent = `${wEffPct}%`;
+    document.getElementById('kpi-w-eff-cnt').textContent = `Extra Effort (${wEff})`;
+    document.getElementById('bar-w-unp').style.width = `${wUnpPct}%`;
+    document.getElementById('bar-w-eff').style.width = `${wEffPct}%`;
+    document.getElementById('tab-willing').textContent = `5. Willingly Done Proof (${wTot})`;
+  }
 }
 
 function switchTab(tab) {
   state.currentTab = tab;
   state.selectedIndex = 0;
 
-  ['assumptions', 'requests', 'agreements', 'sleep'].forEach(t => {
+  ['assumptions', 'requests', 'agreements', 'sleep', 'willing', 'fastreply'].forEach(t => {
     const btn = document.getElementById(`tab-${t}`);
     if (t === tab) {
       btn.className = 'px-3 py-1.5 rounded text-xs font-semibold bg-[var(--primary)] text-[var(--primary-foreground)]';
@@ -852,6 +1122,7 @@ function switchTab(tab) {
 
   const mainSplit = document.getElementById('main-split-view');
   const sleepView = document.getElementById('sleep-vault-view');
+  const fastReplyView = document.getElementById('fast-reply-view');
   const filterControls = document.getElementById('filter-controls');
   const vf = document.getElementById('verdict-filter');
   const pf = document.getElementById('proof-filter');
@@ -859,21 +1130,37 @@ function switchTab(tab) {
   if (tab === 'sleep') {
     mainSplit.classList.add('hidden');
     sleepView.classList.remove('hidden');
+    if (fastReplyView) fastReplyView.classList.add('hidden');
     filterControls.classList.add('hidden');
     renderSleepVault();
     return;
   }
 
+  if (tab === 'fastreply') {
+    mainSplit.classList.add('hidden');
+    sleepView.classList.add('hidden');
+    if (fastReplyView) fastReplyView.classList.remove('hidden');
+    filterControls.classList.add('hidden');
+    renderFastReplyView();
+    return;
+  }
+
   mainSplit.classList.remove('hidden');
   sleepView.classList.add('hidden');
+  if (fastReplyView) fastReplyView.classList.add('hidden');
   filterControls.classList.remove('hidden');
 
   if (tab === 'assumptions') {
     vf.innerHTML = `<option value="ALL">All Assumptions</option><option value="0">Wrong Only (Proven)</option><option value="2">Unproven (Pending Proof)</option><option value="1">Correct Only</option>`;
+    pf.innerHTML = `<option value="ALL">All Proof Sources</option><option value="Sleep">Sleep &amp; Activity Log</option><option value="MLBB">MLBB Match History</option><option value="PLN">PLN Blackout Channel</option><option value="Chat">Chat History</option>`;
     pf.classList.remove('hidden');
   } else if (tab === 'requests') {
     vf.innerHTML = `<option value="ALL">All Requests</option><option value="1">Answered Yes</option><option value="0">Answered No</option><option value="ORIG">Original 7 in Excel</option>`;
     pf.classList.add('hidden');
+  } else if (tab === 'willing') {
+    vf.innerHTML = `<option value="ALL">All Willing Proofs</option><option value="1">Unprompted / Proactive Only</option><option value="0">Voluntary Extra Effort Only</option>`;
+    pf.innerHTML = `<option value="ALL">All Categories</option><option value="Proactive">Proactive / Unprompted</option><option value="Tech">Tech / Effort Above &amp; Beyond</option><option value="Care">Care, Wishes &amp; Prayers</option><option value="Account">Account / Gift / Financial Generosity</option><option value="Transparency">Transparency &amp; Reassurance</option>`;
+    pf.classList.remove('hidden');
   } else {
     vf.innerHTML = `<option value="ALL">All Statements</option><option value="1">Agree Only</option><option value="0">Disagree Only</option>`;
     pf.classList.add('hidden');
@@ -894,7 +1181,7 @@ function getFilteredItems() {
     if (vf === '1' && item.verdict !== 1) return false;
     if (vf === '2' && item.verdict !== 2) return false;
     if (vf === 'ORIG' && !item.isOrig) return false;
-    if (tab === 'assumptions' && pf !== 'ALL') {
+    if ((tab === 'assumptions' || tab === 'willing') && pf !== 'ALL') {
       if (!(item.proofType || '').toLowerCase().includes(pf.toLowerCase())) return false;
     }
     if (q) {
@@ -916,13 +1203,14 @@ function renderCurrentTable() {
   const titles = {
     assumptions: 'Sheet 1: Assumption Statistic (Cookie\'s Assumptions About iMung)',
     requests: 'Sheet 2: Say Yes/No to Cookie\'s Requests',
-    agreements: 'Sheet 3: Agree vs Disagree with Cookie'
+    agreements: 'Sheet 3: Agree vs Disagree with Cookie',
+    willing: 'Sheet 6: Willingly Done Proof — Refutes "You Do Not Do Anything For Me Willingly" (#7060)'
   };
   titleEl.textContent = titles[tab] || '';
   countEl.textContent = `Showing ${items.length} items — Click any row to view Bubble Chat & Proof`;
 
-  const colHeader = tab === 'assumptions' ? 'Assumption' : (tab === 'requests' ? 'Cookie\'s Request' : 'Statement / Topic');
-  const proofHeader = tab === 'assumptions' ? 'Proof & Source' : (tab === 'requests' ? 'Reason / Context' : 'Response Note');
+  const colHeader = tab === 'assumptions' ? 'Assumption' : (tab === 'requests' ? 'Cookie\'s Request' : (tab === 'willing' ? 'Willing Action Done by iMung' : 'Statement / Topic'));
+  const proofHeader = tab === 'assumptions' ? 'Proof & Source' : (tab === 'requests' ? 'Reason / Context' : (tab === 'willing' ? 'Why This Proves Willingness' : 'Response Note'));
 
   thead.innerHTML = `
     <tr>
@@ -954,6 +1242,10 @@ function renderCurrentTable() {
       badgeHtml = item.verdict === 1
         ? `<span class="px-2 py-0.5 rounded font-bold bg-[var(--success)] text-[var(--primary-foreground)]">Yes</span>`
         : `<span class="px-2 py-0.5 rounded font-bold bg-[var(--error)] text-[var(--primary-foreground)]">No</span>`;
+    } else if (tab === 'willing') {
+      badgeHtml = item.verdict === 1
+        ? `<span class="px-2 py-0.5 rounded font-bold bg-[var(--success)] text-[var(--primary-foreground)]">Unprompted</span>`
+        : `<span class="px-2 py-0.5 rounded font-bold bg-[var(--primary)] text-[var(--primary-foreground)]">Extra Effort</span>`;
     } else {
       badgeHtml = item.verdict === 1
         ? `<span class="px-2 py-0.5 rounded font-bold bg-[var(--success)] text-[var(--primary-foreground)]">Agree</span>`
@@ -976,7 +1268,7 @@ function renderCurrentTable() {
         <td class="py-2.5 px-2.5 font-mono text-[var(--muted-foreground)] align-top">#${item.no}</td>
         <td class="py-2.5 px-2.5 align-top">
           <div class="text-[var(--foreground)] font-medium leading-snug">${escapeHtml(item.summary)}${origTag}</div>
-          <div class="text-[var(--muted-foreground)] mt-1 italic truncate max-w-xs">"${escapeHtml(item.cookieQuote)}"</div>
+          <div class="text-[var(--muted-foreground)] mt-1 italic truncate max-w-xs">"${escapeHtml(tab === 'willing' ? item.yourReply : item.cookieQuote)}"</div>
         </td>
         <td class="py-2.5 px-2.5 font-mono align-top whitespace-nowrap">
           <div class="text-[var(--foreground)]">${escapeHtml(item.date)}</div>
@@ -1008,7 +1300,7 @@ function selectRowByNo(no) {
 
 function renderInspector(item) {
   const tab = state.currentTab;
-  document.getElementById('insp-badge').textContent = `#${item.no} (Msg #${item.mid})`;
+  document.getElementById('insp-badge').textContent = tab === 'willing' ? `#${item.no} (${item.ref || item.mid})` : `#${item.no} (Msg #${item.mid})`;
   document.getElementById('insp-meta').textContent = `${item.date} • ${item.gmt8} GMT+8 (${item.ist} IST)`;
   document.getElementById('insp-summary').textContent = item.summary;
   document.getElementById('insp-proof-text').textContent = item.proof;
@@ -1030,6 +1322,9 @@ function renderInspector(item) {
   } else if (tab === 'requests') {
     pill.textContent = item.verdict === 1 ? 'ANSWERED: YES' : 'ANSWERED: NO';
     pill.className = `px-2.5 py-1 rounded text-xs font-bold ${item.verdict === 1 ? 'bg-[var(--success)] text-[var(--primary-foreground)]' : 'bg-[var(--error)] text-[var(--primary-foreground)]'}`;
+  } else if (tab === 'willing') {
+    pill.textContent = item.verdict === 1 ? 'UNPROMPTED / PROACTIVE' : 'VOLUNTARY EXTRA EFFORT';
+    pill.className = `px-2.5 py-1 rounded text-xs font-bold ${item.verdict === 1 ? 'bg-[var(--success)] text-[var(--primary-foreground)]' : 'bg-[var(--primary)] text-[var(--primary-foreground)]'}`;
   } else {
     pill.textContent = item.verdict === 1 ? 'VERDICT: AGREE' : 'VERDICT: DISAGREE';
     pill.className = `px-2.5 py-1 rounded text-xs font-bold ${item.verdict === 1 ? 'bg-[var(--success)] text-[var(--primary-foreground)]' : 'bg-[var(--warning)] text-[var(--primary-foreground)]'}`;
@@ -1037,35 +1332,50 @@ function renderInspector(item) {
 
   // Render authentic WhatsApp Chat Bubbles
   const bubbles = [];
-  // Any preceding extra bubble
-  (item.extras || []).forEach(ex => {
-    if (ex[0] < item.mid) {
-      bubbles.push({ id: ex[0], gmt8: ex[1], ist: ex[2], isYou: ex[3] === 1, text: ex[4], isContext: true });
+  if (tab === 'willing') {
+    // iMung's willing action / message FIRST
+    bubbles.push({
+      id: item.ref || item.mid, gmt8: item.gmt8, ist: item.ist, isYou: true,
+      text: item.yourReply, isMain: true
+    });
+    // Cookie's reaction / thank you message
+    if (item.cookieQuote) {
+      bubbles.push({
+        id: 'Reaction', gmt8: item.gmt8, ist: item.ist, isYou: false,
+        text: item.cookieQuote, isMain: true
+      });
     }
-  });
-  // Cookie's main message
-  bubbles.push({
-    id: item.mid, gmt8: item.gmt8, ist: item.ist, isYou: false,
-    text: item.cookieQuote, isMain: true
-  });
-  // Any intermediate extra bubble
-  (item.extras || []).forEach(ex => {
-    if (ex[0] > item.mid && ex[0] < item.rid) {
-      bubbles.push({ id: ex[0], gmt8: ex[1], ist: ex[2], isYou: ex[3] === 1, text: ex[4], isContext: true });
-    }
-  });
-  // iMung's direct quoted reply
-  bubbles.push({
-    id: item.rid, gmt8: item.gmt8, ist: item.ist, isYou: true,
-    quoteFrom: 'Cookie 🐱', quoteText: item.cookieQuote,
-    text: item.yourReply, isMain: true
-  });
-  // Any follow-up extra bubble
-  (item.extras || []).forEach(ex => {
-    if (ex[0] > item.rid) {
-      bubbles.push({ id: ex[0], gmt8: ex[1], ist: ex[2], isYou: ex[3] === 1, text: ex[4], isContext: true });
-    }
-  });
+  } else {
+    // Any preceding extra bubble
+    (item.extras || []).forEach(ex => {
+      if (ex[0] < item.mid) {
+        bubbles.push({ id: ex[0], gmt8: ex[1], ist: ex[2], isYou: ex[3] === 1, text: ex[4], isContext: true });
+      }
+    });
+    // Cookie's main message
+    bubbles.push({
+      id: item.mid, gmt8: item.gmt8, ist: item.ist, isYou: false,
+      text: item.cookieQuote, isMain: true
+    });
+    // Any intermediate extra bubble
+    (item.extras || []).forEach(ex => {
+      if (ex[0] > item.mid && ex[0] < item.rid) {
+        bubbles.push({ id: ex[0], gmt8: ex[1], ist: ex[2], isYou: ex[3] === 1, text: ex[4], isContext: true });
+      }
+    });
+    // iMung's direct quoted reply
+    bubbles.push({
+      id: item.rid, gmt8: item.gmt8, ist: item.ist, isYou: true,
+      quoteFrom: 'Cookie 🐱', quoteText: item.cookieQuote,
+      text: item.yourReply, isMain: true
+    });
+    // Any follow-up extra bubble
+    (item.extras || []).forEach(ex => {
+      if (ex[0] > item.rid) {
+        bubbles.push({ id: ex[0], gmt8: ex[1], ist: ex[2], isYou: ex[3] === 1, text: ex[4], isContext: true });
+      }
+    });
+  }
 
   const bContainer = document.getElementById('bubble-container');
   bContainer.innerHTML = `
@@ -1092,7 +1402,7 @@ function renderInspector(item) {
         <div class="max-w-[88%] p-2.5 shadow-sm ${boxClass} space-y-1">
           <div class="flex items-center justify-between gap-3" style="font-size:10px">
             <span class="font-bold opacity-90">${senderName}</span>
-            <span class="font-mono opacity-75">Msg #${b.id}</span>
+            <span class="font-mono opacity-75">${typeof b.id === "number" ? "Msg #" + b.id : escapeHtml(b.id)}</span>
           </div>
           ${quoteBlock}
           <div class="text-xs leading-relaxed whitespace-pre-wrap">${escapeHtml(b.text)}</div>
@@ -1324,7 +1634,9 @@ function exportUpdatedHTML() {
   const payload = JSON.stringify({
     assumptions: state.assumptions,
     requests: state.requests,
-    agreements: state.agreements
+    agreements: state.agreements,
+    willing: state.willing,
+    sleepSchedule: state.sleepSchedule
   });
   const standaloneTheme = `<style id="standalone-theme">:root{--background:#0f172a;--card:#1e293b;--border:#334155;--card-border:#334155;--foreground:#f8fafc;--muted-foreground:#94a3b8;--primary:#3b82f6;--primary-foreground:#ffffff;--success:#16a34a;--error:#dc2626;--warning:#d97706;}</style>`;
   const bakeScript = `<script id="baked-state">window.__BAKED_OVERRIDES__ = ${payload};<\/script>`;
@@ -1461,7 +1773,7 @@ state.sleepSchedule = state.sleepSchedule || [
   { no: 1, date: '2026-11-21', startGmt8: '23:30', wakeGmt8: '07:00', note: 'Sample row (edit or overwrite anytime)' }
 ];
 try {
-  const saved = localStorage.getItem('whatsapp_cookie_imung_overrides_v2');
+  const saved = localStorage.getItem('whatsapp_cookie_imung_overrides_v3');
   if (saved) {
     const parsed = JSON.parse(saved);
     if (parsed.sleepSchedule) state.sleepSchedule = parsed.sleepSchedule;
@@ -1563,10 +1875,11 @@ function addSleepRow() {
   const nextNo = state.sleepSchedule.length ? Math.max(...state.sleepSchedule.map(x => x.no)) + 1 : 1;
   state.sleepSchedule.push({ no: nextNo, date, startGmt8, wakeGmt8, note });
   try {
-    localStorage.setItem('whatsapp_cookie_imung_overrides_v2', JSON.stringify({
+    localStorage.setItem('whatsapp_cookie_imung_overrides_v3', JSON.stringify({
       assumptions: state.assumptions,
       requests: state.requests,
       agreements: state.agreements,
+      willing: state.willing,
       sleepSchedule: state.sleepSchedule
     }));
   } catch (e) {}
@@ -1613,10 +1926,49 @@ window.__onSheetAgreements = function(res) {
   if (res && res.table && res.table.rows) mergeSheetRows('agreements', res.table.rows);
   onSheetSyncStep();
 };
+window.__onSheetWilling = function(res) {
+  if (res && res.table && res.table.rows) {
+    const existingMap = {};
+    (state.willing || []).forEach(item => { existingMap[item.no] = item; });
+    const parsed = [];
+    res.table.rows.forEach(r => {
+      if (!r || !r.c) return;
+      let offset = 0;
+      const c0 = cellVal(r, 0);
+      const c1 = cellVal(r, 1);
+      if (!/^\d+(\.0)?$/.test(c0) && /^\d+(\.0)?$/.test(c1)) offset = 1;
+      else if (!/^\d+(\.0)?$/.test(c0)) return;
+      const no = parseInt(cellVal(r, offset), 10);
+      const summary = cellVal(r, offset + 1);
+      if (!no || !summary) return;
+      const date = normalizeDateStr(cellVal(r, offset + 2));
+      const gmt8 = cellVal(r, offset + 3) || '12:00';
+      const ist = cellVal(r, offset + 4) || calcIST(gmt8);
+      const category = cellVal(r, offset + 5) || 'Proactive / Unprompted';
+      const initType = cellVal(r, offset + 6) || 'Voluntary Extra Effort';
+      const verdict = initType.toLowerCase().includes('unprompted') || initType.toLowerCase().includes('proactive') ? 1 : 0;
+      const proof = cellVal(r, offset + 7) || '';
+      const rawYour = cellVal(r, offset + 8) || '';
+      const cookieQuote = cellVal(r, offset + 9) || '';
+      const evidenceUrl = cellVal(r, offset + 10) || '';
+      const prev = existingMap[no];
+      const refMatch = rawYour.match(/^\[([^\]]+)\]\s*(.*)$/);
+      const ref = refMatch ? refMatch[1] : (prev ? prev.ref : 'Sheet #' + no);
+      const yourReply = refMatch ? refMatch[2] : rawYour;
+      parsed.push({
+        no, ref, mid: ref, rid: ref, date, gmt8, ist, summary, verdict, proof,
+        proofType: category, placeholder: category, evidenceUrl,
+        yourReply, cookieQuote, extras: []
+      });
+    });
+    if (parsed.length > 0) state.willing = parsed;
+  }
+  onSheetSyncStep();
+};
 
 function onSheetSyncStep() {
   syncDoneCount++;
-  if (syncDoneCount >= 4) {
+  if (syncDoneCount >= 6) {
     updateKPIs();
     renderCurrentTable();
     renderSleepScheduleTable();
@@ -1634,7 +1986,9 @@ function syncFromGoogleSheets(manual) {
     { name: 'Assumption statistic', cb: '__onSheetAssumptions' },
     { name: 'Say yesno to cookie request', cb: '__onSheetRequests' },
     { name: 'AgreeDisagree', cb: '__onSheetAgreements' },
-    { name: 'Sleep schedule', cb: '__onSheetSleepSchedule' }
+    { name: 'Sleep schedule', cb: '__onSheetSleepSchedule' },
+    { name: 'Willingly Done Proof', cb: '__onSheetWilling' },
+    { name: 'Reply Time Statistic', cb: '__onSheetFastReply' }
   ];
 
   sheets.forEach(s => {
@@ -1648,6 +2002,196 @@ function syncFromGoogleSheets(manual) {
     document.body.appendChild(script);
   });
 }
+
+// Fast Reply Statistic View Logic + Live Sync
+state.fastReplyScope = 'all';
+state.fastReply = FR_DATA;
+
+function setFastReplyScope(scope) {
+  state.fastReplyScope = scope;
+  const bAll = document.getElementById('fr-btn-all');
+  const bRec = document.getElementById('fr-btn-recent');
+  if (bAll && bRec) {
+    if (scope === 'all') {
+      bAll.className = 'px-3 py-1.5 rounded text-xs font-semibold bg-[var(--primary)] text-[var(--primary-foreground)]';
+      bRec.className = 'px-3 py-1.5 rounded text-xs font-semibold bg-[var(--background)] text-[var(--foreground)] border border-[var(--border)]';
+    } else {
+      bRec.className = 'px-3 py-1.5 rounded text-xs font-semibold bg-[var(--primary)] text-[var(--primary-foreground)]';
+      bAll.className = 'px-3 py-1.5 rounded text-xs font-semibold bg-[var(--background)] text-[var(--foreground)] border border-[var(--border)]';
+    }
+  }
+  renderFastReplyView();
+}
+
+function renderFastReplyView() {
+  const fr = state.fastReply || FR_DATA;
+  const isAll = state.fastReplyScope === 'all';
+  const im = isAll ? fr.all_time_imung : fr.recent_imung;
+  const ck = isAll ? fr.all_time_cookie : fr.recent_cookie;
+
+  // 5 Head-to-Head Summary Cards
+  const fasterPct = ck.non_sleep_avg_min > 0 ? Math.round((1 - im.non_sleep_avg_min / ck.non_sleep_avg_min) * 100) : 0;
+  document.getElementById('fr-h2h-awake-im').textContent = `${im.non_sleep_avg_min} min`;
+  document.getElementById('fr-h2h-awake-ck').textContent = `vs Cookie ${ck.non_sleep_avg_min}m`;
+  document.getElementById('fr-h2h-awake-note').textContent = fasterPct > 0
+    ? `iMung is ${fasterPct}% faster when awake`
+    : `Comparable daytime reply speed`;
+
+  document.getElementById('fr-h2h-raw-im').textContent = `${im.avg_min} min`;
+  document.getElementById('fr-h2h-raw-ck').textContent = `vs Cookie ${ck.avg_min}m`;
+  document.getElementById('fr-h2h-med-cmp').textContent = `Med: ${im.median_min}m vs ${ck.median_min}m • P75: ${im.p75_min}m vs ${ck.p75_min}m`;
+
+  document.getElementById('fr-h2h-hrs-im').textContent = `${im.total_wait_hrs.toLocaleString()}h`;
+  document.getElementById('fr-h2h-hrs-ck').textContent = `vs ${ck.total_wait_hrs.toLocaleString()}h`;
+  const sleepBucket = im.buckets[9] || { time_share_pct: 0 };
+  document.getElementById('fr-h2h-hrs-note').textContent = `${sleepBucket.time_share_pct}% of iMung's hrs = 6–12h sleep`;
+
+  document.getElementById('fr-h2h-max-im').textContent = `${im.max_hrs} hrs`;
+  document.getElementById('fr-h2h-max-ck').textContent = `vs ${ck.max_hrs} hrs`;
+  document.getElementById('fr-h2h-24h-cmp').textContent = `>24h breaks: iMung ${im.over_24h_count}× vs Cookie ${ck.over_24h_count}×`;
+
+  document.getElementById('fr-h2h-sleep-pct').textContent = `${im.sleep_6_12_overnight_pct}%`;
+  document.getElementById('fr-h2h-sleep-cnt').textContent = `${im.sleep_6_12_overnight} / ${im.sleep_6_12_total}`;
+
+  document.getElementById('fr-total-badge').textContent = `${im.total.toLocaleString()} iMung (${im.total_wait_hrs.toLocaleString()}h) vs ${ck.total.toLocaleString()} Cookie (${ck.total_wait_hrs.toLocaleString()}h)`;
+
+  // Insight banner tailored to scope
+  const bannerEl = document.getElementById('fr-insight-banner');
+  if (isAll) {
+    bannerEl.innerHTML = `<strong class="text-[var(--foreground)]">17-Month Finding:</strong> iMung replies faster in <strong>Instant (&lt;1m: 49.2% vs 45.0%)</strong> and <strong>≤1m (72.5% vs 65.6%)</strong>, has <strong>fewer delays in every non-sleep long bucket</strong> (1–2h, 2–3h, 3–6h, 12–24h, &gt;24h), and a <strong>35% faster awake average (7.3m vs 11.3m)</strong>. The only higher bucket is <strong>6–12h (314 vs 52)</strong>, where <strong>96.8% (304/314)</strong> are overnight sleep due to the +2.5h timezone gap.`;
+  } else {
+    bannerEl.innerHTML = `<strong class="text-[var(--foreground)]">Sept–Nov 2026 Finding:</strong> Even in the recent busy period, iMung's <strong>awake average is 26.7m vs Cookie's 39.9m (33% faster)</strong>, max wait is <strong>11.1h vs Cookie's 23.3h</strong>, and iMung has <strong>fewer 1–6 hour delays</strong> (123 vs 179). Out of 63 replies in 6–12h, <strong>62 (98.4%)</strong> are literally overnight sleep.`;
+  }
+
+  // Full 12-Interval Side-by-Side Comparison Table with Dual Horizontal Bars
+  const maxPct = Math.max(...im.buckets.map(b => b.pct), ...ck.buckets.map(b => b.pct), 1);
+  const bEl = document.getElementById('fr-buckets-tbody');
+  bEl.innerHTML = im.buckets.map((b, idx) => {
+    const ckB = ck.buckets[idx];
+    const diff = (b.pct - ckB.pct).toFixed(1);
+    const diffNum = Number(diff);
+    // Good for iMung if higher on fast (<=1m) OR lower on slow (>1h)
+    const isGoodForImung = (idx <= 1 && diffNum > 0) || (idx >= 6 && diffNum < 0);
+    const isSleepRow = idx === 9;
+    const diffBadge = isSleepRow
+      ? `<span class="px-1.5 py-0.5 rounded bg-[var(--warning)] text-[var(--primary-foreground)] font-mono font-bold" style="font-size:10px">${diffNum >= 0 ? '+' : ''}${diff}% (Sleep)</span>`
+      : (isGoodForImung
+          ? `<span class="px-1.5 py-0.5 rounded bg-[var(--success)] text-[var(--primary-foreground)] font-mono font-bold" style="font-size:10px">${diffNum >= 0 ? '+' : ''}${diff}%</span>`
+          : `<span class="px-1.5 py-0.5 rounded bg-[var(--background)] border border-[var(--border)] text-[var(--muted-foreground)] font-mono" style="font-size:10px">${diffNum >= 0 ? '+' : ''}${diff}%</span>`);
+    const imW = Math.max(b.count > 0 ? 2 : 0, Math.min(100, (b.pct / maxPct) * 100));
+    const ckW = Math.max(ckB.count > 0 ? 2 : 0, Math.min(100, (ckB.pct / maxPct) * 100));
+
+    return `
+      <tr class="${isSleepRow ? 'bg-[var(--background)]' : (idx <= 1 ? 'bg-[var(--background)]/60' : '')}">
+        <td class="py-2 px-2.5 font-medium text-[var(--foreground)] whitespace-nowrap">${escapeHtml(b.label)}</td>
+        <td class="py-2 px-2.5 text-right font-mono font-semibold text-[var(--success)] whitespace-nowrap">${b.count.toLocaleString()} <span class="text-[var(--muted-foreground)] font-normal">(${b.pct.toFixed(1)}%)</span></td>
+        <td class="py-2 px-2.5 text-right font-mono text-[var(--muted-foreground)] whitespace-nowrap">${b.total_hrs.toLocaleString()}h</td>
+        <td class="py-2 px-2.5">
+          <div class="space-y-1">
+            <div class="flex items-center gap-1.5">
+              <span class="w-5 font-mono text-[var(--success)]" style="font-size:9px">iM</span>
+              <div class="flex-1 h-2 rounded bg-[var(--background)] border border-[var(--border)] overflow-hidden">
+                <div class="h-full bg-[var(--success)]" style="width:${imW}%"></div>
+              </div>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="w-5 font-mono text-[var(--primary)]" style="font-size:9px">Ck</span>
+              <div class="flex-1 h-2 rounded bg-[var(--background)] border border-[var(--border)] overflow-hidden">
+                <div class="h-full bg-[var(--primary)] opacity-80" style="width:${ckW}%"></div>
+              </div>
+            </div>
+          </div>
+        </td>
+        <td class="py-2 px-2.5 text-right font-mono font-semibold text-[var(--primary)] whitespace-nowrap">${ckB.count.toLocaleString()} <span class="text-[var(--muted-foreground)] font-normal">(${ckB.pct.toFixed(1)}%)</span></td>
+        <td class="py-2 px-2.5 text-right font-mono text-[var(--muted-foreground)] whitespace-nowrap">${ckB.total_hrs.toLocaleString()}h</td>
+        <td class="py-2 px-2.5 text-center whitespace-nowrap">${diffBadge}</td>
+      </tr>
+    `;
+  }).join('') + `
+    <tr class="bg-[var(--background)] font-bold border-t-2 border-[var(--border)]">
+      <td class="py-2.5 px-2.5 text-[var(--foreground)]">TOTAL ALL REPLIES</td>
+      <td class="py-2.5 px-2.5 text-right font-mono text-[var(--success)]">${im.total.toLocaleString()} (100%)</td>
+      <td class="py-2.5 px-2.5 text-right font-mono text-[var(--foreground)]">${im.total_wait_hrs.toLocaleString()}h</td>
+      <td class="py-2.5 px-2.5 text-center font-mono text-[var(--muted-foreground)]">Avg: ${im.avg_min}m vs ${ck.avg_min}m (Awake: ${im.non_sleep_avg_min}m vs ${ck.non_sleep_avg_min}m)</td>
+      <td class="py-2.5 px-2.5 text-right font-mono text-[var(--primary)]">${ck.total.toLocaleString()} (100%)</td>
+      <td class="py-2.5 px-2.5 text-right font-mono text-[var(--foreground)]">${ck.total_wait_hrs.toLocaleString()}h</td>
+      <td class="py-2.5 px-2.5 text-center font-mono text-[var(--muted-foreground)]">100%</td>
+    </tr>
+  `;
+
+  // Cumulative comparison bars (fast thresholds + >1h)
+  const cumEl = document.getElementById('fr-cumulative-bars');
+  cumEl.innerHTML = im.cumulative.map((row, idx) => {
+    const ckRow = ck.cumulative[idx];
+    const diff = (row.pct - ckRow.pct).toFixed(1);
+    const isSlow = idx === im.cumulative.length - 1;
+    const isBetter = isSlow ? Number(diff) <= 0 : Number(diff) >= 0;
+    const diffBadge = isBetter
+      ? `<span class="px-1.5 py-0.5 rounded bg-[var(--success)] text-[var(--primary-foreground)] font-mono" style="font-size:10px">${Number(diff) >= 0 ? '+' : ''}${diff}%</span>`
+      : `<span class="px-1.5 py-0.5 rounded bg-[var(--background)] border border-[var(--border)] text-[var(--muted-foreground)] font-mono" style="font-size:10px">${Number(diff) >= 0 ? '+' : ''}${diff}%</span>`;
+    return `
+      <div class="p-2.5 rounded bg-[var(--background)] border border-[var(--border)] space-y-1.5 text-xs">
+        <div class="flex items-center justify-between gap-2">
+          <span class="font-semibold text-[var(--foreground)]">${escapeHtml(row.threshold)}</span>
+          <div class="flex items-center gap-2">
+            <span class="font-mono font-bold ${isSlow ? 'text-[var(--warning)]' : 'text-[var(--success)]'}">${row.count.toLocaleString()} (${row.pct.toFixed(1)}%)</span>
+            ${diffBadge}
+          </div>
+        </div>
+        <div class="space-y-1">
+          <div class="flex items-center gap-2">
+            <span class="w-12 font-mono text-[var(--muted-foreground)]" style="font-size:10px">iMung</span>
+            <div class="flex-1 h-2 rounded bg-[var(--card)] overflow-hidden">
+              <div class="h-full ${isSlow ? 'bg-[var(--warning)]' : 'bg-[var(--success)]'}" style="width:${row.pct}%"></div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-12 font-mono text-[var(--muted-foreground)]" style="font-size:10px">Cookie</span>
+            <div class="flex-1 h-2 rounded bg-[var(--card)] overflow-hidden">
+              <div class="h-full bg-[var(--primary)] opacity-75" style="width:${ckRow.pct}%"></div>
+            </div>
+            <span class="font-mono text-[var(--muted-foreground)]" style="font-size:10px">${ckRow.count.toLocaleString()} (${ckRow.pct.toFixed(1)}%)</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Month-by-month head-to-head table
+  const mEl = document.getElementById('fr-monthly-tbody');
+  mEl.innerHTML = (fr.monthly || []).map(m => {
+    const imFaster5m = m.imung_le5_pct >= m.cookie_le5_pct;
+    return `
+      <tr>
+        <td class="py-1.5 px-2 font-mono font-semibold text-[var(--foreground)]">${escapeHtml(m.month)}</td>
+        <td class="py-1.5 px-2 text-right font-mono">
+          <span class="${imFaster5m ? 'text-[var(--success)] font-bold' : 'text-[var(--foreground)]'}">${m.imung_le5_pct}%</span>
+          <span class="text-[var(--muted-foreground)]"> / ${m.cookie_le5_pct}%</span>
+        </td>
+        <td class="py-1.5 px-2 text-right font-mono">
+          <span class="${m.imung_gt60 <= m.cookie_gt60 ? 'text-[var(--success)] font-bold' : 'text-[var(--warning)]'}">${m.imung_gt60}</span>
+          <span class="text-[var(--muted-foreground)]"> / ${m.cookie_gt60}</span>
+        </td>
+        <td class="py-1.5 px-2 text-right font-mono">
+          <span>${m.imung_total_hrs}h</span>
+          <span class="text-[var(--muted-foreground)]"> / ${m.cookie_total_hrs}h</span>
+        </td>
+        <td class="py-1.5 px-2 text-right font-mono">
+          <span>${m.imung_avg}m</span>
+          <span class="text-[var(--muted-foreground)]"> / ${m.cookie_avg}m</span>
+        </td>
+        <td class="py-1.5 px-2 text-right font-mono">
+          <span class="${m.imung_median <= m.cookie_median ? 'text-[var(--success)] font-bold' : ''}">${m.imung_median}m</span>
+          <span class="text-[var(--muted-foreground)]"> / ${m.cookie_median}m</span>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+window.__onSheetFastReply = function(res) {
+  onSheetSyncStep();
+};
 
 // Initialize dashboard & attempt automatic background live-sync with Google Spreadsheet
 updateKPIs();
