@@ -239,6 +239,9 @@
         <button id="tab-fastreply" onclick="switchTab('fastreply')" class="px-3 py-1.5 rounded text-xs font-semibold bg-[var(--background)] text-[var(--foreground)] border border-[var(--border)]">
           6. Reply Time: iMung vs Cookie (All Intervals)
         </button>
+        <button id="tab-internet" onclick="switchTab('internet')" class="px-3 py-1.5 rounded text-xs font-semibold bg-[var(--background)] text-[var(--foreground)] border border-[var(--border)]">
+          7. Internet Issue Log (10)
+        </button>
       </div>
 
       <div id="filter-controls" class="flex flex-wrap items-center gap-2">
@@ -614,6 +617,168 @@
       </div>
     </div>
 
+    <!-- Tab 7: Internet Issue & Video Proof Log (Synced with Sheet 8: 'Internet Issue Log') -->
+    <div id="internet-log-view" class="hidden space-y-4">
+      <!-- Top Header, Upload Folder Button & Quick Add Form -->
+      <div class="p-4 rounded-lg bg-[var(--card)] border border-[var(--border)] space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--card-border)] pb-3">
+          <div>
+            <h2 class="text-sm font-bold text-[var(--foreground)]">📶 Internet Issue &amp; Video Proof Log (Sheet 8: <span class="font-mono text-[var(--primary)]">Internet Issue Log</span>)</h2>
+            <p class="text-xs text-[var(--muted-foreground)]">
+              Timestamped record of every blackout, FUP speed cap, ping spike, or signal outage (GMT+8 &amp; IST auto-converted) with direct Google Drive / local video proof playback.
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <a href="https://drive.google.com/drive/folders/1NFl_nECrg3q-GClq2VdSrptL2Rz4DJ1P" target="_blank" rel="noopener"
+               class="px-3 py-1.5 rounded text-xs font-semibold bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90 transition">
+              🎥 Upload Video to Drive Folder ↗
+            </a>
+          </div>
+        </div>
+
+        <!-- 4 Summary KPI Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div class="p-3 rounded bg-[var(--background)] border border-[var(--border)] space-y-1">
+            <div class="text-xs text-[var(--muted-foreground)] font-medium">TOTAL INCIDENTS LOGGED</div>
+            <div class="flex items-baseline justify-between">
+              <span id="net-kpi-total" class="text-2xl font-bold font-mono text-[var(--foreground)]">10</span>
+              <span id="net-kpi-proofs" class="text-xs font-mono text-[var(--success)]">10 with proof</span>
+            </div>
+          </div>
+          <div class="p-3 rounded bg-[var(--background)] border border-[var(--border)] space-y-1">
+            <div class="text-xs text-[var(--muted-foreground)] font-medium">TOTAL RECORDED DOWNTIME</div>
+            <div class="flex items-baseline justify-between">
+              <span id="net-kpi-downtime" class="text-2xl font-bold font-mono text-[var(--warning)]">28h 53m</span>
+              <span id="net-kpi-avgdur" class="text-xs font-mono text-[var(--muted-foreground)]">Avg 4h 48m</span>
+            </div>
+          </div>
+          <div class="p-3 rounded bg-[var(--background)] border border-[var(--border)] space-y-1">
+            <div class="text-xs text-[var(--muted-foreground)] font-medium">VIDEO / URL LINKS ATTACHED</div>
+            <div class="flex items-baseline justify-between">
+              <span id="net-kpi-links" class="text-2xl font-bold font-mono text-[var(--primary)]">1</span>
+              <span class="text-xs text-[var(--muted-foreground)]">Playable in viewer</span>
+            </div>
+          </div>
+          <div class="p-3 rounded bg-[var(--background)] border border-[var(--border)] space-y-1">
+            <div class="text-xs text-[var(--muted-foreground)] font-medium">TOP ISSUE CATEGORY</div>
+            <div class="flex items-baseline justify-between">
+              <span id="net-kpi-topcat" class="text-sm font-bold text-[var(--foreground)] truncate">City / Tower Blackout</span>
+              <span id="net-kpi-topcnt" class="text-xs font-mono text-[var(--warning)]">4×</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Classification Breakdown Strip (Click any pill to filter) -->
+        <div class="space-y-1.5">
+          <div class="text-xs font-semibold text-[var(--muted-foreground)]">CLASSIFICATION BREAKDOWN (Click to Filter):</div>
+          <div id="net-cat-breakdown" class="flex flex-wrap items-center gap-1.5 text-xs"></div>
+        </div>
+
+        <!-- Quick Log Form -->
+        <div class="p-3 rounded bg-[var(--background)] border border-[var(--border)] space-y-2.5 text-xs">
+          <div class="font-semibold text-[var(--foreground)]">+ Quick Log New Internet Issue (also auto-syncs when you edit Sheet 8 in Google Sheets)</div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2">
+            <input id="net-date" type="date" value="2026-11-23" class="px-2 py-1.5 rounded bg-[var(--card)] border border-[var(--border)] text-[var(--foreground)]" />
+            <label class="flex items-center gap-1 text-[var(--muted-foreground)]">
+              Start:
+              <input id="net-start" type="time" value="19:00" class="flex-1 px-2 py-1.5 rounded bg-[var(--card)] border border-[var(--border)] text-[var(--foreground)]" />
+            </label>
+            <label class="flex items-center gap-1 text-[var(--muted-foreground)]">
+              End:
+              <input id="net-end" type="time" value="" class="flex-1 px-2 py-1.5 rounded bg-[var(--card)] border border-[var(--border)] text-[var(--foreground)]" />
+            </label>
+            <select id="net-type" class="px-2 py-1.5 rounded bg-[var(--card)] border border-[var(--border)] text-[var(--foreground)]">
+              <option value="Slow Internet">Slow Internet (Internet Lambat)</option>
+              <option value="Provider Signal Lost">Provider Signal Lost (Sinyal Hilang)</option>
+              <option value="City / Tower Blackout">City / Tower Blackout</option>
+              <option value="FUP / Speed Limited">FUP / Speed Limited</option>
+              <option value="High Ping / Lag Spike">High Ping / Lag Spike</option>
+              <option value="No Signal / Travel">No Signal / Travel</option>
+              <option value="ISP Outage / Disconnected">ISP Outage / Disconnected</option>
+            </select>
+            <input id="net-details" type="text" placeholder="Details (e.g. ping 300ms, speed 0.2 Mbps)" class="px-2 py-1.5 rounded bg-[var(--card)] border border-[var(--border)] text-[var(--foreground)]" />
+            <input id="net-link" type="text" placeholder="Google Drive Video URL (optional)" class="px-2 py-1.5 rounded bg-[var(--card)] border border-[var(--border)] text-[var(--foreground)]" />
+          </div>
+          <div class="flex justify-end">
+            <button onclick="addInternetIssueRow()" class="px-3 py-1.5 rounded font-semibold bg-[var(--primary)] text-[var(--primary-foreground)]">
+              + Save Internet Issue
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Split Table (Left 7 cols) + Built-in Video Proof Player & Inspector (Right 5 cols) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+        <div class="lg:col-span-7 rounded-lg bg-[var(--card)] border border-[var(--border)] overflow-hidden">
+          <div class="px-3.5 py-2.5 border-b border-[var(--card-border)] flex flex-wrap items-center justify-between gap-2 text-xs">
+            <span class="font-semibold text-[var(--foreground)]">Timestamped Internet Issue History (Click any row to view/play Video Proof)</span>
+            <select id="net-filter-type" onchange="renderInternetIssueView()" class="px-2 py-1 rounded bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)]">
+              <option value="ALL">All Issue Classifications</option>
+              <option value="Slow Internet">Slow Internet (Internet Lambat)</option>
+              <option value="Provider Signal Lost">Provider Signal Lost (Sinyal Hilang)</option>
+              <option value="City / Tower Blackout">City / Tower Blackout</option>
+              <option value="FUP / Speed Limited">FUP / Speed Limited</option>
+              <option value="High Ping / Lag Spike">High Ping / Lag Spike</option>
+              <option value="No Signal / Travel">No Signal / Travel</option>
+              <option value="ISP Outage / Disconnected">ISP Outage / Disconnected</option>
+            </select>
+          </div>
+          <div class="overflow-x-auto max-h-[560px] overflow-y-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead class="bg-[var(--background)] border-b border-[var(--border)] sticky top-0">
+                <tr>
+                  <th class="py-2 px-2">No</th>
+                  <th class="py-2 px-2">Date &amp; Time (GMT+8 / IST)</th>
+                  <th class="py-2 px-2">Duration</th>
+                  <th class="py-2 px-2">Issue Type &amp; Details</th>
+                  <th class="py-2 px-2 text-center">Video Proof</th>
+                </tr>
+              </thead>
+              <tbody id="net-log-tbody" class="divide-y divide-[var(--card-border)]"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Right: Video Proof Player Panel -->
+        <div class="lg:col-span-5 rounded-lg bg-[var(--card)] border border-[var(--border)] p-4 space-y-3 sticky top-4 text-xs">
+          <div class="flex items-center justify-between border-b border-[var(--card-border)] pb-2">
+            <div>
+              <h3 id="net-insp-title" class="text-sm font-bold text-[var(--foreground)]">🎥 Video Proof Viewer</h3>
+              <div id="net-insp-meta" class="font-mono text-[var(--muted-foreground)] mt-0.5">Select an incident row on the left</div>
+            </div>
+            <span id="net-insp-badge" class="px-2 py-0.5 rounded font-semibold bg-[var(--background)] border border-[var(--border)]"></span>
+          </div>
+
+          <p id="net-insp-details" class="text-[var(--foreground)] leading-relaxed"></p>
+
+          <!-- Video / Media Preview Container -->
+          <div id="net-video-stage" class="rounded-lg bg-[var(--background)] border border-[var(--border)] p-3 min-h-[200px] flex flex-col items-center justify-center text-center space-y-2">
+            <span class="text-[var(--muted-foreground)]">Select a row with a Google Drive video link or load a local video file (.mp4) to play proof right here.</span>
+          </div>
+
+          <!-- Attach/Update Video Proof URL or Preview Local File -->
+          <div class="space-y-2 pt-2 border-t border-[var(--card-border)]">
+            <div class="font-semibold text-[var(--muted-foreground)]">Attach or Update Video Proof Link (Google Drive / URL):</div>
+            <div class="flex gap-1.5">
+              <input id="net-insp-url-input" type="text" placeholder="https://drive.google.com/file/d/.../view" class="flex-1 px-2.5 py-1.5 rounded bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)]" />
+              <button onclick="saveInternetVideoLink()" class="px-3 py-1.5 rounded font-semibold bg-[var(--primary)] text-[var(--primary-foreground)]">
+                Save Video URL
+              </button>
+            </div>
+            <div class="flex items-center justify-between gap-2 pt-1">
+              <label class="cursor-pointer px-2.5 py-1 rounded bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)] hover:border-[var(--primary)] transition inline-flex items-center gap-1.5">
+                <span>📂 Preview Local Video (.mp4 / Screenshot)</span>
+                <input type="file" accept="video/*,image/*" class="hidden" onchange="previewLocalInternetMedia(event)" />
+              </label>
+              <a href="https://drive.google.com/drive/folders/1NFl_nECrg3q-GClq2VdSrptL2Rz4DJ1P" target="_blank" rel="noopener" class="text-[var(--primary)] hover:underline">
+                Open Drive Video Folder ↗
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Modal for Adding New Row / External Proof -->
     <div id="add-modal" class="hidden fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
       <div class="w-full max-w-lg rounded-lg bg-[var(--card)] border border-[var(--border)] p-4 space-y-3 text-xs">
@@ -934,6 +1099,7 @@ const G_DATA = [
 ];
 const H_DATA = [["00:00", "21:30", 8, 0.24, 1497, 3.36], ["01:00", "22:30", 6, 0.18, 1028, 2.31], ["02:00", "23:30", 0, 0.0, 329, 0.74], ["03:00", "00:30", 0, 0.0, 205, 0.46], ["04:00", "01:30", 4, 0.12, 206, 0.46], ["05:00", "02:30", 49, 1.45, 456, 1.02], ["06:00", "03:30", 91, 2.7, 511, 1.15], ["07:00", "04:30", 110, 3.27, 789, 1.77], ["08:00", "05:30", 202, 6.0, 1737, 3.9], ["09:00", "06:30", 91, 2.7, 1374, 3.08], ["10:00", "07:30", 54, 1.6, 1263, 2.84], ["11:00", "08:30", 91, 2.7, 1244, 2.79], ["12:00", "09:30", 176, 5.22, 1696, 3.81], ["13:00", "10:30", 109, 3.24, 2389, 5.36], ["14:00", "11:30", 174, 5.16, 2309, 5.18], ["15:00", "12:30", 168, 4.99, 2453, 5.51], ["16:00", "13:30", 290, 8.61, 2887, 6.48], ["17:00", "14:30", 260, 7.72, 3323, 7.46], ["18:00", "15:30", 331, 9.82, 3697, 8.3], ["19:00", "16:30", 277, 8.22, 4057, 9.11], ["20:00", "17:30", 247, 7.33, 2441, 5.48], ["21:00", "18:30", 124, 3.68, 1802, 4.05], ["22:00", "19:30", 416, 12.35, 4133, 9.28], ["23:00", "20:30", 91, 2.7, 2721, 6.11]];
 const FR_DATA = {"all_time_imung": {"total": 19741, "total_wait_min": 313654.0, "total_wait_hrs": 5227.6, "total_wait_days": 217.8, "avg_min": 15.9, "non_sleep_avg_min": 7.3, "non_sleep_count": 19347, "median_min": 1.0, "awake_median_min": 1.0, "p75_min": 2.0, "p90_min": 21.0, "p95_min": 63.0, "max_min": 885.0, "max_hrs": 14.8, "over_1h_count": 1014, "over_1h_pct": 5.1, "over_24h_count": 0, "sleep_6_12_total": 314, "sleep_6_12_overnight": 304, "sleep_6_12_overnight_pct": 96.8, "buckets": [{"label": "Instant (< 1 min)", "zone": "Ultra-Fast", "count": 9703, "pct": 49.2, "total_min": 0.0, "total_hrs": 0.0, "time_share_pct": 0.0}, {"label": "1 min", "zone": "Ultra-Fast", "count": 4614, "pct": 23.4, "total_min": 4614.0, "total_hrs": 76.9, "time_share_pct": 1.5}, {"label": "2 – 5 min", "zone": "Very Fast", "count": 1769, "pct": 9.0, "total_min": 5318.0, "total_hrs": 88.6, "time_share_pct": 1.7}, {"label": "6 – 15 min", "zone": "Short Time", "count": 1278, "pct": 6.5, "total_min": 12353.0, "total_hrs": 205.9, "time_share_pct": 3.9}, {"label": "16 – 30 min", "zone": "Quick", "count": 780, "pct": 4.0, "total_min": 16807.0, "total_hrs": 280.1, "time_share_pct": 5.4}, {"label": "31 – 60 min (½–1h)", "zone": "Within 1 Hour", "count": 583, "pct": 3.0, "total_min": 25192.0, "total_hrs": 419.9, "time_share_pct": 8.0}, {"label": "1 – 2 hours", "zone": "Moderate Delay", "count": 409, "pct": 2.1, "total_min": 35059.0, "total_hrs": 584.3, "time_share_pct": 11.2}, {"label": "2 – 3 hours", "zone": "Busy / Work", "count": 124, "pct": 0.6, "total_min": 17904.0, "total_hrs": 298.4, "time_share_pct": 5.7}, {"label": "3 – 6 hours", "zone": "Long Busy / Work", "count": 165, "pct": 0.8, "total_min": 46690.0, "total_hrs": 778.2, "time_share_pct": 14.9}, {"label": "6 – 12 hours (Overnight Sleep)", "zone": "Sleep / Overnight", "count": 314, "pct": 1.6, "total_min": 148080.0, "total_hrs": 2468.0, "time_share_pct": 47.2}, {"label": "12 – 24 hours", "zone": "Half-to-Full Day", "count": 2, "pct": 0.0, "total_min": 1637.0, "total_hrs": 27.3, "time_share_pct": 0.5}, {"label": "> 24 hours (Multi-day)", "zone": "Multi-Day Break", "count": 0, "pct": 0.0, "total_min": 0, "total_hrs": 0.0, "time_share_pct": 0.0}], "cumulative": [{"threshold": "Instant (< 1 min)", "max_min": 0, "count": 9703, "pct": 49.2}, {"threshold": "≤ 1 min (Ultra-Fast)", "max_min": 1, "count": 14317, "pct": 72.5}, {"threshold": "≤ 5 min (Very Fast)", "max_min": 5, "count": 16086, "pct": 81.5}, {"threshold": "≤ 10 min (Fast)", "max_min": 10, "count": 16884, "pct": 85.5}, {"threshold": "≤ 15 min (Short Time)", "max_min": 15, "count": 17364, "pct": 88.0}, {"threshold": "≤ 30 min (Quick)", "max_min": 30, "count": 18144, "pct": 91.9}, {"threshold": "≤ 60 min (Within 1 Hour)", "max_min": 60, "count": 18727, "pct": 94.9}, {"threshold": "> 1 Hour (Slow / Sleep / Work)", "max_min": 999999, "count": 1014, "pct": 5.1}]}, "all_time_cookie": {"total": 19740, "total_wait_min": 259178.0, "total_wait_hrs": 4319.6, "total_wait_days": 180.0, "avg_min": 13.1, "non_sleep_avg_min": 11.3, "non_sleep_count": 19626, "median_min": 1.0, "awake_median_min": 1.0, "p75_min": 4.0, "p90_min": 24.0, "p95_min": 58.0, "max_min": 8071.0, "max_hrs": 134.5, "over_1h_count": 947, "over_1h_pct": 4.8, "over_24h_count": 7, "sleep_6_12_total": 52, "sleep_6_12_overnight": 30, "sleep_6_12_overnight_pct": 57.7, "buckets": [{"label": "Instant (< 1 min)", "zone": "Ultra-Fast", "count": 8883, "pct": 45.0, "total_min": 0.0, "total_hrs": 0.0, "time_share_pct": 0.0}, {"label": "1 min", "zone": "Ultra-Fast", "count": 4076, "pct": 20.6, "total_min": 4076.0, "total_hrs": 67.9, "time_share_pct": 1.6}, {"label": "2 – 5 min", "zone": "Very Fast", "count": 2526, "pct": 12.8, "total_min": 7522.0, "total_hrs": 125.4, "time_share_pct": 2.9}, {"label": "6 – 15 min", "zone": "Short Time", "count": 1626, "pct": 8.2, "total_min": 15535.0, "total_hrs": 258.9, "time_share_pct": 6.0}, {"label": "16 – 30 min", "zone": "Quick", "count": 981, "pct": 5.0, "total_min": 21493.0, "total_hrs": 358.2, "time_share_pct": 8.3}, {"label": "31 – 60 min (½–1h)", "zone": "Within 1 Hour", "count": 701, "pct": 3.6, "total_min": 29950.0, "total_hrs": 499.2, "time_share_pct": 11.6}, {"label": "1 – 2 hours", "zone": "Moderate Delay", "count": 451, "pct": 2.3, "total_min": 38205.0, "total_hrs": 636.8, "time_share_pct": 14.7}, {"label": "2 – 3 hours", "zone": "Busy / Work", "count": 202, "pct": 1.0, "total_min": 29108.0, "total_hrs": 485.1, "time_share_pct": 11.2}, {"label": "3 – 6 hours", "zone": "Long Busy / Work", "count": 224, "pct": 1.1, "total_min": 55842.0, "total_hrs": 930.7, "time_share_pct": 21.5}, {"label": "6 – 12 hours (Overnight Sleep)", "zone": "Sleep / Overnight", "count": 52, "pct": 0.3, "total_min": 24150.0, "total_hrs": 402.5, "time_share_pct": 9.3}, {"label": "12 – 24 hours", "zone": "Half-to-Full Day", "count": 11, "pct": 0.1, "total_min": 12306.0, "total_hrs": 205.1, "time_share_pct": 4.7}, {"label": "> 24 hours (Multi-day)", "zone": "Multi-Day Break", "count": 7, "pct": 0.0, "total_min": 20991.0, "total_hrs": 349.9, "time_share_pct": 8.1}], "cumulative": [{"threshold": "Instant (< 1 min)", "max_min": 0, "count": 8883, "pct": 45.0}, {"threshold": "≤ 1 min (Ultra-Fast)", "max_min": 1, "count": 12959, "pct": 65.6}, {"threshold": "≤ 5 min (Very Fast)", "max_min": 5, "count": 15485, "pct": 78.4}, {"threshold": "≤ 10 min (Fast)", "max_min": 10, "count": 16539, "pct": 83.8}, {"threshold": "≤ 15 min (Short Time)", "max_min": 15, "count": 17111, "pct": 86.7}, {"threshold": "≤ 30 min (Quick)", "max_min": 30, "count": 18092, "pct": 91.7}, {"threshold": "≤ 60 min (Within 1 Hour)", "max_min": 60, "count": 18793, "pct": 95.2}, {"threshold": "> 1 Hour (Slow / Sleep / Work)", "max_min": 999999, "count": 947, "pct": 4.8}]}, "recent_imung": {"total": 807, "total_wait_min": 54791.0, "total_wait_hrs": 913.2, "total_wait_days": 38.0, "avg_min": 67.9, "non_sleep_avg_min": 26.7, "non_sleep_count": 731, "median_min": 16.0, "awake_median_min": 14.0, "p75_min": 55.0, "p90_min": 202.0, "p95_min": 477.0, "max_min": 663.0, "max_hrs": 11.1, "over_1h_count": 186, "over_1h_pct": 23.0, "over_24h_count": 0, "sleep_6_12_total": 63, "sleep_6_12_overnight": 62, "sleep_6_12_overnight_pct": 98.4, "buckets": [{"label": "Instant (< 1 min)", "zone": "Ultra-Fast", "count": 159, "pct": 19.7, "total_min": 0.0, "total_hrs": 0.0, "time_share_pct": 0.0}, {"label": "1 min", "zone": "Ultra-Fast", "count": 77, "pct": 9.5, "total_min": 77.0, "total_hrs": 1.3, "time_share_pct": 0.1}, {"label": "2 – 5 min", "zone": "Very Fast", "count": 59, "pct": 7.3, "total_min": 208.0, "total_hrs": 3.5, "time_share_pct": 0.4}, {"label": "6 – 15 min", "zone": "Short Time", "count": 108, "pct": 13.4, "total_min": 1061.0, "total_hrs": 17.7, "time_share_pct": 1.9}, {"label": "16 – 30 min", "zone": "Quick", "count": 120, "pct": 14.9, "total_min": 2703.0, "total_hrs": 45.0, "time_share_pct": 4.9}, {"label": "31 – 60 min (½–1h)", "zone": "Within 1 Hour", "count": 98, "pct": 12.1, "total_min": 4308.0, "total_hrs": 71.8, "time_share_pct": 7.9}, {"label": "1 – 2 hours", "zone": "Moderate Delay", "count": 87, "pct": 10.8, "total_min": 7186.0, "total_hrs": 119.8, "time_share_pct": 13.1}, {"label": "2 – 3 hours", "zone": "Busy / Work", "count": 17, "pct": 2.1, "total_min": 2353.0, "total_hrs": 39.2, "time_share_pct": 4.3}, {"label": "3 – 6 hours", "zone": "Long Busy / Work", "count": 19, "pct": 2.4, "total_min": 5762.0, "total_hrs": 96.0, "time_share_pct": 10.5}, {"label": "6 – 12 hours (Overnight Sleep)", "zone": "Sleep / Overnight", "count": 63, "pct": 7.8, "total_min": 31133.0, "total_hrs": 518.9, "time_share_pct": 56.8}, {"label": "12 – 24 hours", "zone": "Half-to-Full Day", "count": 0, "pct": 0.0, "total_min": 0, "total_hrs": 0.0, "time_share_pct": 0.0}, {"label": "> 24 hours (Multi-day)", "zone": "Multi-Day Break", "count": 0, "pct": 0.0, "total_min": 0, "total_hrs": 0.0, "time_share_pct": 0.0}], "cumulative": [{"threshold": "Instant (< 1 min)", "max_min": 0, "count": 159, "pct": 19.7}, {"threshold": "≤ 1 min (Ultra-Fast)", "max_min": 1, "count": 236, "pct": 29.2}, {"threshold": "≤ 5 min (Very Fast)", "max_min": 5, "count": 295, "pct": 36.6}, {"threshold": "≤ 10 min (Fast)", "max_min": 10, "count": 360, "pct": 44.6}, {"threshold": "≤ 15 min (Short Time)", "max_min": 15, "count": 403, "pct": 49.9}, {"threshold": "≤ 30 min (Quick)", "max_min": 30, "count": 523, "pct": 64.8}, {"threshold": "≤ 60 min (Within 1 Hour)", "max_min": 60, "count": 621, "pct": 77.0}, {"threshold": "> 1 Hour (Slow / Sleep / Work)", "max_min": 999999, "count": 186, "pct": 23.0}]}, "recent_cookie": {"total": 806, "total_wait_min": 40574.0, "total_wait_hrs": 676.2, "total_wait_days": 28.2, "avg_min": 50.3, "non_sleep_avg_min": 39.9, "non_sleep_count": 776, "median_min": 16.0, "awake_median_min": 13.0, "p75_min": 55.0, "p90_min": 141.0, "p95_min": 233.0, "max_min": 1399.0, "max_hrs": 23.3, "over_1h_count": 191, "over_1h_pct": 23.7, "over_24h_count": 0, "sleep_6_12_total": 10, "sleep_6_12_overnight": 8, "sleep_6_12_overnight_pct": 80.0, "buckets": [{"label": "Instant (< 1 min)", "zone": "Ultra-Fast", "count": 145, "pct": 18.0, "total_min": 0.0, "total_hrs": 0.0, "time_share_pct": 0.0}, {"label": "1 min", "zone": "Ultra-Fast", "count": 78, "pct": 9.7, "total_min": 78.0, "total_hrs": 1.3, "time_share_pct": 0.2}, {"label": "2 – 5 min", "zone": "Very Fast", "count": 81, "pct": 10.0, "total_min": 242.0, "total_hrs": 4.0, "time_share_pct": 0.6}, {"label": "6 – 15 min", "zone": "Short Time", "count": 94, "pct": 11.7, "total_min": 964.0, "total_hrs": 16.1, "time_share_pct": 2.4}, {"label": "16 – 30 min", "zone": "Quick", "count": 108, "pct": 13.4, "total_min": 2389.0, "total_hrs": 39.8, "time_share_pct": 5.9}, {"label": "31 – 60 min (½–1h)", "zone": "Within 1 Hour", "count": 109, "pct": 13.5, "total_min": 4652.0, "total_hrs": 77.5, "time_share_pct": 11.5}, {"label": "1 – 2 hours", "zone": "Moderate Delay", "count": 91, "pct": 11.3, "total_min": 7622.0, "total_hrs": 127.0, "time_share_pct": 18.8}, {"label": "2 – 3 hours", "zone": "Busy / Work", "count": 36, "pct": 4.5, "total_min": 5168.0, "total_hrs": 86.1, "time_share_pct": 12.7}, {"label": "3 – 6 hours", "zone": "Long Busy / Work", "count": 52, "pct": 6.5, "total_min": 12821.0, "total_hrs": 213.7, "time_share_pct": 31.6}, {"label": "6 – 12 hours (Overnight Sleep)", "zone": "Sleep / Overnight", "count": 10, "pct": 1.2, "total_min": 4355.0, "total_hrs": 72.6, "time_share_pct": 10.7}, {"label": "12 – 24 hours", "zone": "Half-to-Full Day", "count": 2, "pct": 0.2, "total_min": 2283.0, "total_hrs": 38.0, "time_share_pct": 5.6}, {"label": "> 24 hours (Multi-day)", "zone": "Multi-Day Break", "count": 0, "pct": 0.0, "total_min": 0, "total_hrs": 0.0, "time_share_pct": 0.0}], "cumulative": [{"threshold": "Instant (< 1 min)", "max_min": 0, "count": 145, "pct": 18.0}, {"threshold": "≤ 1 min (Ultra-Fast)", "max_min": 1, "count": 223, "pct": 27.7}, {"threshold": "≤ 5 min (Very Fast)", "max_min": 5, "count": 304, "pct": 37.7}, {"threshold": "≤ 10 min (Fast)", "max_min": 10, "count": 355, "pct": 44.0}, {"threshold": "≤ 15 min (Short Time)", "max_min": 15, "count": 398, "pct": 49.4}, {"threshold": "≤ 30 min (Quick)", "max_min": 30, "count": 506, "pct": 62.8}, {"threshold": "≤ 60 min (Within 1 Hour)", "max_min": 60, "count": 615, "pct": 76.3}, {"threshold": "> 1 Hour (Slow / Sleep / Work)", "max_min": 999999, "count": 191, "pct": 23.7}]}, "monthly": [{"month": "2025-06", "imung_total": 1882, "imung_instant": 962, "imung_le1": 1499, "imung_le5": 1698, "imung_le15": 1797, "imung_gt60": 26, "imung_le5_pct": 90.2, "imung_le15_pct": 95.5, "imung_total_hrs": 154.5, "imung_avg": 4.9, "imung_median": 0.0, "cookie_total": 1882, "cookie_le5": 1574, "cookie_le5_pct": 83.6, "cookie_gt60": 43, "cookie_total_hrs": 194.2, "cookie_avg": 6.2, "cookie_median": 1.0}, {"month": "2025-07", "imung_total": 2326, "imung_instant": 1188, "imung_le1": 1774, "imung_le5": 2028, "imung_le15": 2167, "imung_gt60": 47, "imung_le5_pct": 87.2, "imung_le15_pct": 93.2, "imung_total_hrs": 287.4, "imung_avg": 7.4, "imung_median": 0.0, "cookie_total": 2326, "cookie_le5": 1825, "cookie_le5_pct": 78.5, "cookie_gt60": 51, "cookie_total_hrs": 273.1, "cookie_avg": 7.0, "cookie_median": 1.0}, {"month": "2025-08", "imung_total": 2435, "imung_instant": 1308, "imung_le1": 1991, "imung_le5": 2187, "imung_le15": 2307, "imung_gt60": 49, "imung_le5_pct": 89.8, "imung_le15_pct": 94.7, "imung_total_hrs": 279.7, "imung_avg": 6.9, "imung_median": 0.0, "cookie_total": 2435, "cookie_le5": 2123, "cookie_le5_pct": 87.2, "cookie_gt60": 66, "cookie_total_hrs": 273.9, "cookie_avg": 6.7, "cookie_median": 1.0}, {"month": "2025-09", "imung_total": 2318, "imung_instant": 1310, "imung_le1": 1891, "imung_le5": 2049, "imung_le15": 2170, "imung_gt60": 59, "imung_le5_pct": 88.4, "imung_le15_pct": 93.6, "imung_total_hrs": 326.6, "imung_avg": 8.5, "imung_median": 0.0, "cookie_total": 2318, "cookie_le5": 2023, "cookie_le5_pct": 87.3, "cookie_gt60": 43, "cookie_total_hrs": 177.2, "cookie_avg": 4.6, "cookie_median": 0.0}, {"month": "2025-10", "imung_total": 1782, "imung_instant": 954, "imung_le1": 1391, "imung_le5": 1533, "imung_le15": 1643, "imung_gt60": 62, "imung_le5_pct": 86.0, "imung_le15_pct": 92.2, "imung_total_hrs": 330.3, "imung_avg": 11.1, "imung_median": 0.0, "cookie_total": 1781, "cookie_le5": 1525, "cookie_le5_pct": 85.6, "cookie_gt60": 32, "cookie_total_hrs": 162.9, "cookie_avg": 5.5, "cookie_median": 0.0}, {"month": "2025-11", "imung_total": 720, "imung_instant": 310, "imung_le1": 468, "imung_le5": 551, "imung_le15": 608, "imung_gt60": 49, "imung_le5_pct": 76.5, "imung_le15_pct": 84.4, "imung_total_hrs": 232.8, "imung_avg": 19.4, "imung_median": 1.0, "cookie_total": 720, "cookie_le5": 539, "cookie_le5_pct": 74.9, "cookie_gt60": 53, "cookie_total_hrs": 286.2, "cookie_avg": 23.9, "cookie_median": 1.0}, {"month": "2025-12", "imung_total": 1423, "imung_instant": 739, "imung_le1": 1072, "imung_le5": 1199, "imung_le15": 1273, "imung_gt60": 62, "imung_le5_pct": 84.3, "imung_le15_pct": 89.5, "imung_total_hrs": 346.9, "imung_avg": 14.6, "imung_median": 0.0, "cookie_total": 1424, "cookie_le5": 1161, "cookie_le5_pct": 81.5, "cookie_gt60": 47, "cookie_total_hrs": 183.2, "cookie_avg": 7.7, "cookie_median": 1.0}, {"month": "2026-01", "imung_total": 874, "imung_instant": 392, "imung_le1": 581, "imung_le5": 658, "imung_le15": 732, "imung_gt60": 58, "imung_le5_pct": 75.3, "imung_le15_pct": 83.8, "imung_total_hrs": 307.6, "imung_avg": 21.1, "imung_median": 1.0, "cookie_total": 874, "cookie_le5": 626, "cookie_le5_pct": 71.6, "cookie_gt60": 51, "cookie_total_hrs": 237.2, "cookie_avg": 16.3, "cookie_median": 1.0}, {"month": "2026-02", "imung_total": 1370, "imung_instant": 710, "imung_le1": 1030, "imung_le5": 1158, "imung_le15": 1238, "imung_gt60": 56, "imung_le5_pct": 84.5, "imung_le15_pct": 90.4, "imung_total_hrs": 270.3, "imung_avg": 11.8, "imung_median": 0.0, "cookie_total": 1370, "cookie_le5": 1130, "cookie_le5_pct": 82.5, "cookie_gt60": 41, "cookie_total_hrs": 221.5, "cookie_avg": 9.7, "cookie_median": 1.0}, {"month": "2026-03", "imung_total": 1014, "imung_instant": 544, "imung_le1": 777, "imung_le5": 855, "imung_le15": 903, "imung_gt60": 50, "imung_le5_pct": 84.3, "imung_le15_pct": 89.1, "imung_total_hrs": 197.4, "imung_avg": 11.7, "imung_median": 0.0, "cookie_total": 1014, "cookie_le5": 824, "cookie_le5_pct": 81.3, "cookie_gt60": 40, "cookie_total_hrs": 240.1, "cookie_avg": 14.2, "cookie_median": 0.0}, {"month": "2026-04", "imung_total": 373, "imung_instant": 111, "imung_le1": 173, "imung_le5": 211, "imung_le15": 243, "imung_gt60": 71, "imung_le5_pct": 56.6, "imung_le15_pct": 65.1, "imung_total_hrs": 320.4, "imung_avg": 51.5, "imung_median": 2.0, "cookie_total": 373, "cookie_le5": 203, "cookie_le5_pct": 54.4, "cookie_gt60": 65, "cookie_total_hrs": 214.9, "cookie_avg": 34.6, "cookie_median": 4.0}, {"month": "2026-05", "imung_total": 522, "imung_instant": 214, "imung_le1": 321, "imung_le5": 371, "imung_le15": 409, "imung_gt60": 58, "imung_le5_pct": 71.1, "imung_le15_pct": 78.4, "imung_total_hrs": 299.6, "imung_avg": 34.4, "imung_median": 1.0, "cookie_total": 521, "cookie_le5": 364, "cookie_le5_pct": 69.9, "cookie_gt60": 45, "cookie_total_hrs": 201.8, "cookie_avg": 23.2, "cookie_median": 1.0}, {"month": "2026-06", "imung_total": 856, "imung_instant": 414, "imung_le1": 582, "imung_le5": 671, "imung_le15": 729, "imung_gt60": 47, "imung_le5_pct": 78.4, "imung_le15_pct": 85.2, "imung_total_hrs": 276.4, "imung_avg": 19.4, "imung_median": 1.0, "cookie_total": 857, "cookie_le5": 642, "cookie_le5_pct": 74.9, "cookie_gt60": 55, "cookie_total_hrs": 378.1, "cookie_avg": 26.5, "cookie_median": 1.0}, {"month": "2026-07", "imung_total": 316, "imung_instant": 88, "imung_le1": 122, "imung_le5": 157, "imung_le15": 199, "imung_gt60": 50, "imung_le5_pct": 49.7, "imung_le15_pct": 63.0, "imung_total_hrs": 259.0, "imung_avg": 49.2, "imung_median": 6.0, "cookie_total": 315, "cookie_le5": 145, "cookie_le5_pct": 46.0, "cookie_gt60": 67, "cookie_total_hrs": 273.1, "cookie_avg": 52.0, "cookie_median": 8.0}, {"month": "2026-08", "imung_total": 602, "imung_instant": 245, "imung_le1": 336, "imung_le5": 380, "imung_le15": 447, "imung_gt60": 74, "imung_le5_pct": 63.1, "imung_le15_pct": 74.3, "imung_total_hrs": 370.5, "imung_avg": 36.9, "imung_median": 1.0, "cookie_total": 603, "cookie_le5": 394, "cookie_le5_pct": 65.3, "cookie_gt60": 52, "cookie_total_hrs": 299.8, "cookie_avg": 29.8, "cookie_median": 1.0}, {"month": "2026-09", "imung_total": 424, "imung_instant": 123, "imung_le1": 180, "imung_le5": 217, "imung_le15": 273, "imung_gt60": 72, "imung_le5_pct": 51.2, "imung_le15_pct": 64.4, "imung_total_hrs": 337.1, "imung_avg": 47.7, "imung_median": 5.0, "cookie_total": 424, "cookie_le5": 219, "cookie_le5_pct": 51.7, "cookie_gt60": 62, "cookie_total_hrs": 229.6, "cookie_avg": 32.5, "cookie_median": 4.0}, {"month": "2026-10", "imung_total": 300, "imung_instant": 61, "imung_le1": 83, "imung_le5": 98, "imung_le15": 127, "imung_gt60": 78, "imung_le5_pct": 32.7, "imung_le15_pct": 42.3, "imung_total_hrs": 380.0, "imung_avg": 76.0, "imung_median": 21.0, "cookie_total": 300, "cookie_le5": 100, "cookie_le5_pct": 33.3, "cookie_gt60": 84, "cookie_total_hrs": 280.8, "cookie_avg": 56.2, "cookie_median": 19.0}, {"month": "2026-11", "imung_total": 204, "imung_instant": 30, "imung_le1": 46, "imung_le5": 65, "imung_le15": 99, "imung_gt60": 46, "imung_le5_pct": 31.9, "imung_le15_pct": 48.5, "imung_total_hrs": 250.9, "imung_avg": 73.8, "imung_median": 16.0, "cookie_total": 203, "cookie_le5": 68, "cookie_le5_pct": 33.5, "cookie_gt60": 50, "cookie_total_hrs": 191.9, "cookie_avg": 56.7, "cookie_median": 18.0}]};
+const NET_DATA = [{"no": 1, "date": "2026-09-11", "start": "18:55", "end": "", "type": "City / Tower Blackout", "details": "Scheduled electricity blackout affecting cellular/internet signal (#753-#755)", "proof_link": "Video sent in WhatsApp Chat (#753)"}, {"no": 2, "date": "2026-09-15", "start": "12:22", "end": "", "type": "No Signal / Travel", "details": "Traveling to another village with weak/bad internet signal (#1259)", "proof_link": "Video sent in WhatsApp Chat (#1259)"}, {"no": 3, "date": "2026-10-04", "start": "17:00", "end": "23:00", "type": "City / Tower Blackout", "details": "Scheduled 6-hour blackout (17:00–23:00 GMT+8 / 2:30–8:30 PM IST) affecting internet (#3038, #3056)", "proof_link": "Blackout schedule screenshot sent in chat (#3038)"}, {"no": 4, "date": "2026-10-16", "start": "19:46", "end": "22:16", "type": "High Ping / Lag Spike", "details": "200+ ms ping spike while playing MLBB (#4172, #4186)", "proof_link": "Video proof (200+ ping) sent in WhatsApp Chat (#4186)"}, {"no": 5, "date": "2026-10-18", "start": "15:50", "end": "", "type": "Provider Signal Lost", "details": "Field duty in another village & inn with zero provider signal ('this place really doesnt have signal' #4278, #4302, #4307)", "proof_link": "Photo sent in WhatsApp Chat (#4278)"}, {"no": 6, "date": "2026-10-27", "start": "17:05", "end": "22:08", "type": "Provider Signal Lost", "details": "Provider tower outage; almost zero signal bars shown on phone screenshot (#4894, #4914-#4915)", "proof_link": "Signal bar screenshot sent in WhatsApp Chat (#4915)"}, {"no": 7, "date": "2026-10-31", "start": "07:00", "end": "18:15", "type": "City / Tower Blackout", "details": "Entire-city electricity & signal blackout since morning (Sumber Sari) — official PLN ULP Melak channel (#5259-#5271)", "proof_link": "https://whatsapp.com/channel/0029VbDRN7v96H4PRKv3Lw2F"}, {"no": 8, "date": "2026-11-07", "start": "00:13", "end": "", "type": "High Ping / Lag Spike", "details": "Severe mid-game lag; MLBB triggered Bad Connection Protection (#6046-#6047)", "proof_link": "Bad connection screenshot sent in WhatsApp Chat (#6047)"}, {"no": 9, "date": "2026-11-09", "start": "21:00", "end": "23:59", "type": "FUP / Speed Limited", "details": "Internet hit FUP data cap; throttled speed until quota reset on Nov 15 (#6427, #6434, #6563-#6564)", "proof_link": "FUP quota screenshots sent in WhatsApp Chat (#6434, #6564)"}, {"no": 10, "date": "2026-11-14", "start": "18:54", "end": "20:00", "type": "Slow Internet", "details": "Extremely slow internet — couldn't even load/pass captcha while helping download Crimson Desert (#6838)", "proof_link": "Video proof sent in WhatsApp Chat (#6838)"}];
 const W_DATA = [
 [1, "Msg #6920 / L119909", "2026-11-15", "17:09", "14:39", "Gave practical lucid-dream reality-check tip when she was scared & stuck in a bad dream loop", 0, "Immediately offered a helpful cognitive technique alongside agreeing to play MLBB, calming her down after a distressing dream loop.", "Care, Wishes & Prayers", "make habit to questioning is this dream or not, when you realize its dream, you can control it", "Thanks for the tip...I was really lost and couldn't get out of it...I slept for hours because I was stuck in the dream loop", ""],
 [2, "Msg #6792-#6881", "2026-11-14", "16:41", "14:11", "Recorded 3 video tutorials, bypassed Filecrypt captchas twice (despite bad internet), and sent annotated screenshots to keep her safe from viruses", 0, "Went far beyond just sending a link: manually cleared ad-heavy captcha walls twice on slow internet, filmed 3 screen recordings, and highlighted safe buttons so she wouldn't accidentally install malware.", "Tech / Effort Above & Beyond", "[Image] i already did it, so you can just open this link. And the web would be like this. You download each part, make sure the file size is the same | [Video] sometime click on anywhere lead to pop up web", "Cookie followed the Filecrypt container links & safety screenshots to download the game parts", "https://filecrypt.cc/Container/83F072614E.html"],
@@ -1111,7 +1277,7 @@ function switchTab(tab) {
   state.currentTab = tab;
   state.selectedIndex = 0;
 
-  ['assumptions', 'requests', 'agreements', 'sleep', 'willing', 'fastreply'].forEach(t => {
+  ['assumptions', 'requests', 'agreements', 'sleep', 'willing', 'fastreply', 'internet'].forEach(t => {
     const btn = document.getElementById(`tab-${t}`);
     if (t === tab) {
       btn.className = 'px-3 py-1.5 rounded text-xs font-semibold bg-[var(--primary)] text-[var(--primary-foreground)]';
@@ -1123,6 +1289,7 @@ function switchTab(tab) {
   const mainSplit = document.getElementById('main-split-view');
   const sleepView = document.getElementById('sleep-vault-view');
   const fastReplyView = document.getElementById('fast-reply-view');
+  const internetView = document.getElementById('internet-log-view');
   const filterControls = document.getElementById('filter-controls');
   const vf = document.getElementById('verdict-filter');
   const pf = document.getElementById('proof-filter');
@@ -1131,6 +1298,7 @@ function switchTab(tab) {
     mainSplit.classList.add('hidden');
     sleepView.classList.remove('hidden');
     if (fastReplyView) fastReplyView.classList.add('hidden');
+    if (internetView) internetView.classList.add('hidden');
     filterControls.classList.add('hidden');
     renderSleepVault();
     return;
@@ -1140,14 +1308,26 @@ function switchTab(tab) {
     mainSplit.classList.add('hidden');
     sleepView.classList.add('hidden');
     if (fastReplyView) fastReplyView.classList.remove('hidden');
+    if (internetView) internetView.classList.add('hidden');
     filterControls.classList.add('hidden');
     renderFastReplyView();
+    return;
+  }
+
+  if (tab === 'internet') {
+    mainSplit.classList.add('hidden');
+    sleepView.classList.add('hidden');
+    if (fastReplyView) fastReplyView.classList.add('hidden');
+    if (internetView) internetView.classList.remove('hidden');
+    filterControls.classList.add('hidden');
+    renderInternetIssueView();
     return;
   }
 
   mainSplit.classList.remove('hidden');
   sleepView.classList.add('hidden');
   if (fastReplyView) fastReplyView.classList.add('hidden');
+  if (internetView) internetView.classList.add('hidden');
   filterControls.classList.remove('hidden');
 
   if (tab === 'assumptions') {
@@ -1770,7 +1950,9 @@ function mergeSheetRows(cat, rows) {
 
 // Manual Sleep Schedule Tracker Logic + Live Google Sheets Sync
 state.sleepSchedule = state.sleepSchedule || [
-  { no: 1, date: '2026-11-21', startGmt8: '23:30', wakeGmt8: '07:00', note: 'Sample row (edit or overwrite anytime)' }
+  { no: 1, date: '2026-11-20', startGmt8: '23:12', wakeGmt8: '07:49', note: '' },
+  { no: 2, date: '2026-11-21', startGmt8: '22:30', wakeGmt8: '06:30', note: '' },
+  { no: 3, date: '2026-11-22', startGmt8: '22:11', wakeGmt8: '05:35', note: '' }
 ];
 try {
   const saved = localStorage.getItem('whatsapp_cookie_imung_overrides_v3');
@@ -1968,10 +2150,11 @@ window.__onSheetWilling = function(res) {
 
 function onSheetSyncStep() {
   syncDoneCount++;
-  if (syncDoneCount >= 6) {
+  if (syncDoneCount >= 7) {
     updateKPIs();
     renderCurrentTable();
     renderSleepScheduleTable();
+    renderInternetIssueView();
     const st = document.getElementById('sync-status');
     if (st) st.textContent = 'Synced Live ✓';
   }
@@ -1988,7 +2171,8 @@ function syncFromGoogleSheets(manual) {
     { name: 'AgreeDisagree', cb: '__onSheetAgreements' },
     { name: 'Sleep schedule', cb: '__onSheetSleepSchedule' },
     { name: 'Willingly Done Proof', cb: '__onSheetWilling' },
-    { name: 'Reply Time Statistic', cb: '__onSheetFastReply' }
+    { name: 'Reply Time Statistic', cb: '__onSheetFastReply' },
+    { name: 'Internet Issue Log', cb: '__onSheetInternetLog' }
   ];
 
   sheets.forEach(s => {
@@ -2193,9 +2377,274 @@ window.__onSheetFastReply = function(res) {
   onSheetSyncStep();
 };
 
+// Internet Issue & Video Proof Log Logic + Live Google Sheets Auto-Sync
+state.internetIssues = NET_DATA.map(x => ({ ...x }));
+state.selectedNetNo = 1;
+state.localNetMediaMap = {};
+
+function extractGDriveId(url) {
+  if (!url) return null;
+  const m1 = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (m1) return m1[1];
+  const m2 = url.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
+  if (m2) return m2[1];
+  const m3 = url.match(/drive\.google\.com\/uc\?.*id=([a-zA-Z0-9_-]+)/);
+  if (m3) return m3[1];
+  return null;
+}
+
+function calcDurationMin(startStr, endStr) {
+  if (!startStr || !endStr) return null;
+  let d = timeToMinutes(endStr) - timeToMinutes(startStr);
+  if (d <= 0) d += 1440;
+  return d;
+}
+
+function renderInternetIssueView() {
+  const listAll = state.internetIssues || [];
+  const fType = (document.getElementById('net-filter-type') || {}).value || 'ALL';
+  const list = fType === 'ALL' ? listAll : listAll.filter(x => x.type === fType);
+
+  // Update KPIs
+  let totalDurMin = 0, durCnt = 0, linkCnt = 0, proofCnt = 0;
+  const catCounts = {};
+  listAll.forEach(item => {
+    const dm = calcDurationMin(item.start, item.end);
+    if (dm !== null) { totalDurMin += dm; durCnt++; }
+    if (item.proof_link && item.proof_link.startsWith('http')) linkCnt++;
+    if (item.proof_link || state.localNetMediaMap[item.no]) proofCnt++;
+    catCounts[item.type] = (catCounts[item.type] || 0) + 1;
+  });
+
+  const elTot = document.getElementById('net-kpi-total');
+  if (elTot) {
+    elTot.textContent = listAll.length;
+    document.getElementById('net-kpi-proofs').textContent = `${proofCnt} with proof`;
+    const dh = Math.floor(totalDurMin / 60), dm = totalDurMin % 60;
+    document.getElementById('net-kpi-downtime').textContent = `${dh}h ${String(dm).padStart(2,'0')}m`;
+    const avgM = durCnt ? Math.round(totalDurMin / durCnt) : 0;
+    document.getElementById('net-kpi-avgdur').textContent = `Avg ${Math.floor(avgM/60)}h ${String(avgM%60).padStart(2,'0')}m`;
+    document.getElementById('net-kpi-links').textContent = linkCnt;
+    const topEntry = Object.entries(catCounts).sort((a,b) => b[1]-a[1])[0] || ['None', 0];
+    document.getElementById('net-kpi-topcat').textContent = topEntry[0];
+    document.getElementById('net-kpi-topcnt').textContent = `${topEntry[1]}×`;
+    const tabBtn = document.getElementById('tab-internet');
+    if (tabBtn) tabBtn.textContent = `7. Internet Issue Log (${listAll.length})`;
+    const breakdownEl = document.getElementById('net-cat-breakdown');
+    if (breakdownEl) {
+      const cats = [
+        'Slow Internet',
+        'Provider Signal Lost',
+        'City / Tower Blackout',
+        'FUP / Speed Limited',
+        'High Ping / Lag Spike',
+        'No Signal / Travel',
+        'ISP Outage / Disconnected'
+      ];
+      breakdownEl.innerHTML = `<button onclick="filterNetType('ALL')" class="px-2 py-1 rounded font-mono transition ${fType === 'ALL' ? 'bg-[var(--primary)] text-[var(--primary-foreground)] font-bold' : 'bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)]'}">All (${listAll.length})</button>` +
+        cats.map(c => {
+          const cnt = catCounts[c] || 0;
+          const pct = listAll.length ? ((cnt / listAll.length) * 100).toFixed(0) : '0';
+          const isAct = fType === c;
+          const cls = isAct
+            ? 'bg-[var(--primary)] text-[var(--primary-foreground)] font-bold'
+            : (c === 'Slow Internet'
+                ? 'bg-[var(--background)] border border-[var(--warning)] text-[var(--warning)]'
+                : (c === 'Provider Signal Lost'
+                    ? 'bg-[var(--background)] border border-[var(--error)] text-[var(--error)]'
+                    : 'bg-[var(--background)] border border-[var(--border)] text-[var(--muted-foreground)]'));
+          return `<button onclick="filterNetType('${c.replace(/'/g, "\\'")}')" class="px-2 py-1 rounded font-mono transition hover:opacity-90 ${cls}">${escapeHtml(c)}: <strong>${cnt}</strong> (${pct}%)</button>`;
+        }).join('');
+    }
+  }
+
+  const tbody = document.getElementById('net-log-tbody');
+  if (!tbody) return;
+  if (list.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-[var(--muted-foreground)]">No incidents matching this filter.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = list.map(item => {
+    const isSel = item.no === state.selectedNetNo;
+    const startIst = item.start ? minutesToTime(timeToMinutes(item.start) - 150) : '--:--';
+    const endIst = item.end ? minutesToTime(timeToMinutes(item.end) - 150) : '';
+    const dm = calcDurationMin(item.start, item.end);
+    const durText = dm !== null ? `${Math.floor(dm/60)}h ${String(dm%60).padStart(2,'0')}m` : '—';
+    const isUrl = item.proof_link && item.proof_link.startsWith('http');
+    const hasLocal = !!state.localNetMediaMap[item.no];
+    const proofBadge = (isUrl || hasLocal)
+      ? `<span class="px-2 py-0.5 rounded font-bold bg-[var(--success)] text-[var(--primary-foreground)]">🎥 Video/Link</span>`
+      : (item.proof_link
+          ? `<span class="px-2 py-0.5 rounded font-semibold bg-[var(--primary)] text-[var(--primary-foreground)]">💬 Chat Proof</span>`
+          : `<span class="px-2 py-0.5 rounded bg-[var(--background)] border border-[var(--border)] text-[var(--muted-foreground)]">Pending</span>`);
+
+    return `
+      <tr onclick="selectInternetIssue(${item.no})" class="cursor-pointer transition ${isSel ? 'bg-[var(--background)] font-medium' : 'hover:bg-[var(--background)]'}">
+        <td class="py-2.5 px-2 font-mono text-[var(--muted-foreground)] align-top">#${item.no}</td>
+        <td class="py-2.5 px-2 font-mono align-top whitespace-nowrap">
+          <div class="text-[var(--foreground)]">${escapeHtml(item.date)}</div>
+          <div class="text-[var(--muted-foreground)]">${escapeHtml(item.start)}${item.end ? '–' + escapeHtml(item.end) : ''} GMT+8</div>
+          <div class="text-[var(--primary)]">${startIst}${endIst ? '–' + endIst : ''} IST</div>
+        </td>
+        <td class="py-2.5 px-2 font-mono font-semibold text-[var(--warning)] align-top whitespace-nowrap">${durText}</td>
+        <td class="py-2.5 px-2 align-top">
+          <span class="inline-block px-1.5 py-0.5 rounded font-semibold mb-1 ${item.type === 'Slow Internet' ? 'bg-[var(--warning)] text-[var(--primary-foreground)]' : (item.type === 'Provider Signal Lost' ? 'bg-[var(--error)] text-[var(--primary-foreground)]' : 'bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)]')}" style="font-size:10px">${escapeHtml(item.type)}</span>
+          <div class="text-[var(--muted-foreground)] leading-snug">${escapeHtml(item.details)}</div>
+        </td>
+        <td class="py-2.5 px-2 text-center align-top">${proofBadge}</td>
+      </tr>
+    `;
+  }).join('');
+
+  const active = list.find(x => x.no === state.selectedNetNo) || list[0];
+  if (active) {
+    state.selectedNetNo = active.no;
+    renderInternetInspector(active);
+  }
+}
+
+function filterNetType(val) {
+  const sel = document.getElementById('net-filter-type');
+  if (sel) sel.value = val;
+  renderInternetIssueView();
+}
+
+function selectInternetIssue(no) {
+  state.selectedNetNo = no;
+  renderInternetIssueView();
+}
+
+function renderInternetInspector(item) {
+  const startIst = item.start ? minutesToTime(timeToMinutes(item.start) - 150) : '--:--';
+  const endIst = item.end ? minutesToTime(timeToMinutes(item.end) - 150) : '';
+  document.getElementById('net-insp-title').textContent = `Incident #${item.no} — ${item.type}`;
+  document.getElementById('net-insp-meta').textContent = `${item.date} • ${item.start}${item.end ? '–' + item.end : ''} GMT+8 (${startIst}${endIst ? '–' + endIst : ''} IST)`;
+  document.getElementById('net-insp-badge').textContent = item.type;
+  document.getElementById('net-insp-details').textContent = item.details || '(No extra details)';
+  document.getElementById('net-insp-url-input').value = (item.proof_link && item.proof_link.startsWith('http')) ? item.proof_link : '';
+
+  const stage = document.getElementById('net-video-stage');
+  const localMedia = state.localNetMediaMap[item.no];
+  const url = (item.proof_link || '').trim();
+  let htmlOut = '';
+
+  if (localMedia) {
+    if (localMedia.type === 'video') {
+      htmlOut += `<video src="${localMedia.url}" controls class="w-full rounded max-h-64 bg-black"></video><div class="text-[var(--success)] font-semibold">📹 Local Video: ${escapeHtml(localMedia.name)}</div>`;
+    } else {
+      htmlOut += `<img src="${localMedia.url}" alt="Proof" class="w-full rounded max-h-64 object-contain bg-black/20" /><div class="text-[var(--success)] font-semibold">🖼️ Local Screenshot: ${escapeHtml(localMedia.name)}</div>`;
+    }
+  } else if (url.startsWith('http')) {
+    const gdId = extractGDriveId(url);
+    if (gdId) {
+      htmlOut += `
+        <iframe src="https://drive.google.com/file/d/${gdId}/preview" class="w-full h-60 rounded border border-[var(--border)] bg-black" allow="autoplay" allowfullscreen></iframe>
+        <div class="flex items-center justify-between w-full pt-1">
+          <span class="text-[var(--success)] font-semibold">🎥 Embedded Google Drive Video Proof</span>
+          <a href="${escapeHtml(url)}" target="_blank" rel="noopener" class="px-2 py-1 rounded bg-[var(--primary)] text-[var(--primary-foreground)] font-semibold">Open Fullscreen ↗</a>
+        </div>
+      `;
+    } else if (/\.(mp4|webm|mov)(\?|$)/i.test(url)) {
+      htmlOut += `<video src="${escapeHtml(url)}" controls class="w-full rounded max-h-64 bg-black"></video>`;
+    } else {
+      htmlOut += `
+        <div class="space-y-2 py-4">
+          <div class="text-[var(--success)] font-semibold">🔗 External Proof Link Attached</div>
+          <div class="font-mono text-[var(--muted-foreground)] break-all">${escapeHtml(url)}</div>
+          <a href="${escapeHtml(url)}" target="_blank" rel="noopener" class="inline-block px-3 py-1.5 rounded bg-[var(--primary)] text-[var(--primary-foreground)] font-semibold">Open Proof Link ↗</a>
+        </div>
+      `;
+    }
+  } else if (url) {
+    htmlOut += `
+      <div class="space-y-2 py-4">
+        <div class="text-[var(--primary)] font-semibold">💬 Chat Proof Reference</div>
+        <div class="text-[var(--foreground)]">${escapeHtml(url)}</div>
+        <div class="text-[var(--muted-foreground)]">Want playable video here? Upload your screen recording to the Drive Video Folder and paste the link below!</div>
+      </div>
+    `;
+  } else {
+    htmlOut += `<div class="text-[var(--muted-foreground)] py-6">No video attached yet. Upload your screen recording/speedtest video to Google Drive and paste the link below (or in Sheet 8 Col K).</div>`;
+  }
+  stage.innerHTML = htmlOut;
+}
+
+function addInternetIssueRow() {
+  const date = document.getElementById('net-date').value || '2026-11-23';
+  const start = document.getElementById('net-start').value || '19:00';
+  const end = document.getElementById('net-end').value || '';
+  const type = document.getElementById('net-type').value;
+  const details = document.getElementById('net-details').value.trim() || 'Internet connection issue recorded';
+  const proof_link = document.getElementById('net-link').value.trim();
+  const nextNo = state.internetIssues.length ? Math.max(...state.internetIssues.map(x => x.no)) + 1 : 1;
+  state.internetIssues.push({ no: nextNo, date, start, end, type, details, proof_link });
+  state.selectedNetNo = nextNo;
+  renderInternetIssueView();
+}
+
+function saveInternetVideoLink() {
+  const item = (state.internetIssues || []).find(x => x.no === state.selectedNetNo);
+  if (!item) return;
+  const val = document.getElementById('net-insp-url-input').value.trim();
+  item.proof_link = val;
+  renderInternetIssueView();
+}
+
+function previewLocalInternetMedia(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+  const item = (state.internetIssues || []).find(x => x.no === state.selectedNetNo);
+  if (!item) return;
+  state.localNetMediaMap[item.no] = {
+    type: file.type.startsWith('video/') ? 'video' : 'image',
+    url: URL.createObjectURL(file),
+    name: file.name
+  };
+  renderInternetIssueView();
+}
+
+window.__onSheetInternetLog = function(res) {
+  if (res && res.table && res.table.rows) {
+    const parsed = [];
+    res.table.rows.forEach(r => {
+      if (!r || !r.c) return;
+      let offset = 0;
+      const c0 = cellVal(r, 0);
+      const c1 = cellVal(r, 1);
+      if (!/^\d+(\.0)?$/.test(c0) && /^\d+(\.0)?$/.test(c1)) offset = 1;
+      else if (!/^\d+(\.0)?$/.test(c0)) return;
+      const no = parseInt(cellVal(r, offset), 10);
+      const rawDate = cellVal(r, offset + 1);
+      const start = cellVal(r, offset + 2);
+      const end = cellVal(r, offset + 4);
+      const type = cellVal(r, offset + 7) || 'ISP Outage / Disconnected';
+      const details = cellVal(r, offset + 8) || '';
+      const proof_link = cellVal(r, offset + 9) || '';
+      if (no && rawDate && start) {
+        parsed.push({
+          no,
+          date: normalizeDateStr(rawDate),
+          start,
+          end: end || '',
+          type,
+          details,
+          proof_link
+        });
+      }
+    });
+    if (parsed.length > 0) {
+      state.internetIssues = parsed;
+      renderInternetIssueView();
+    }
+  }
+  onSheetSyncStep();
+};
+
 // Initialize dashboard & attempt automatic background live-sync with Google Spreadsheet
 updateKPIs();
 renderSleepScheduleTable();
+renderInternetIssueView();
 switchTab('assumptions');
 setTimeout(() => syncFromGoogleSheets(false), 400);
   </script>
